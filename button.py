@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-hover_sound = pygame.mixer.Sound("/sounds/button_click.wav")
+hover_sound = pygame.mixer.Sound("C:\\Sussex\\Programming\\Software_Eng\\sounds\\button_click.wav")
 
 
 def drop_colors(button_list, old_color, new_color):

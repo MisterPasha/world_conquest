@@ -5,7 +5,7 @@ import numpy as np
 pygame.init()
 
 # Set display mode
-screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)  # (800, 600)/(1280, 720) res for testing
+screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)  # (800, 600)/(1280, 720)/(1024x768) res for testing
 
 clock = pygame.time.Clock()
 
@@ -22,10 +22,12 @@ background_image = pygame.image.load("C:\\Sussex\\Programming\\Software_Eng\\img
 flag_image = pygame.image.load("C:\\Sussex\\Programming\\Software_Eng\\imgs\\flag.png")
 map_image = pygame.image.load("C:\\Sussex\\Programming\\Software_Eng\\imgs\\map2.jpg")
 linen_image = pygame.image.load("C:\\Sussex\\Programming\\Software_Eng\\imgs\\linen.png")
+
 linen_image = pygame.transform.scale(linen_image, (screen.get_width() * 0.55, screen.get_height() * 0.8))
+flag_image = pygame.transform.scale(flag_image, (screen.get_width() * 0.36, screen.get_height() * 0.93))
+map_image = pygame.transform.scale(map_image, (screen.get_width(), screen.get_height()))
 linen_image_rect = linen_image.get_rect(center=(screen.get_width() / 2, screen.get_height() / 2))
 flag_image_rect = flag_image.get_rect(center=(screen.get_width() / 2, flag_image.get_height()/2 * 0.84))
-map_image = pygame.transform.scale(map_image, (screen.get_width(), screen.get_height()))
 
 
 # Game States
@@ -139,20 +141,20 @@ def draw_option_menu():
     for button_ in buttons_opt_AI:
         button_.create_button(screen, width=3, br=30, text_color=WHITE)
     # Draw texts
-    draw_text(screen, "Before you Begin", 50, WHITE, center_x, center_y - (linen_image_rect.height / 2) + 30,
-              font=font2)
-    draw_text(screen, "Choose Players", 35, WHITE, center_x - (linen_image_rect.width / 2) + 170,
-              center_y - (linen_image_rect.height / 2) + 140, font=font1)
-    draw_text(screen, "Choose AI Players", 35, WHITE, center_x - (linen_image_rect.width / 2) + 190,
-              center_y - (linen_image_rect.height / 2) + 300, font=font1)
+    draw_text(screen, "Before you Begin", int(flag_image_rect.width * 0.115), WHITE, center_x,
+              center_y - int(center_y * 0.65), font=font2)
+    draw_text(screen, "Choose Players", int(flag_image_rect.width * 0.07), WHITE,
+              center_x - int(center_x * 0.28), center_y - int(center_y * 0.36), font=font1)
+    draw_text(screen, "Choose AI Players", int(flag_image_rect.width * 0.07), WHITE,
+              center_x - int(center_x * 0.25), center_y + int(center_y * 0.04), font=font1)
 
 
 def draw_main_menu():
     # Draw flag
     screen.blit(flag_image, flag_image_rect)
     # Draw text
-    draw_text(screen, "World", 60, BLACK, center_x, center_y - 320, font=font2)
-    draw_text(screen, "Conquest", 60, BLACK, center_x, center_y - 250, font=font2)
+    draw_text(screen, "World", int(flag_image_rect.width * 0.135), BLACK, center_x, center_y * 0.15, font=font2)
+    draw_text(screen, "Conquest", int(flag_image_rect.width * 0.135), BLACK, center_x, center_y * 0.3, font=font2)
     # Draw Buttons
     button_fullGameMode.check_hover(mouse_pos)
     button_capitalMode.check_hover(mouse_pos)
@@ -164,38 +166,38 @@ def draw_main_menu():
 
 # Main menu Button Rectangles
 center_x, center_y = screen.get_width() / 2, screen.get_height() / 2
-rect_button_width = 250
-rect_button_height = 50
+rect_button_width = flag_image_rect.width * 0.55
+rect_button_height = rect_button_width * 0.2
 rect_button_x = center_x - rect_button_width / 2
-rect_button_y_fullGameMode = center_y - 140
-rect_button_y_capitalMode = center_y - 70
+rect_button_y_fullGameMode = center_y * 0.62
+rect_button_y_capitalMode = center_y * 0.81
 rect_button_y_quit = center_y
 rect_button_fullGameMode = pygame.Rect(rect_button_x, rect_button_y_fullGameMode,
                                        rect_button_width, rect_button_height)
-rect_button_capitalMode = pygame.Rect(rect_button_x + 25, rect_button_y_capitalMode,
-                                      rect_button_width - 50, rect_button_height)
-rect_button_quit = pygame.Rect(rect_button_x + 50, rect_button_y_quit,
-                               rect_button_width - 100, rect_button_height)
+rect_button_capitalMode = pygame.Rect(int(rect_button_x * 1.05), rect_button_y_capitalMode,
+                                      int(rect_button_width * 0.8), rect_button_height)
+rect_button_quit = pygame.Rect(int(rect_button_x * 1.1), rect_button_y_quit,
+                               (rect_button_width * 0.6), rect_button_height)
 
 # Main menu Button Initialisation
-button_fullGameMode = Button(rect_button_fullGameMode, option_menu_button_color,
-                             main_menu_button_color_hover, "World Domination", 25, lambda: switch_state(GAMEPLAY_1),
+button_fullGameMode = Button(rect_button_fullGameMode, option_menu_button_color, main_menu_button_color_hover,
+                             "World Domination", int(flag_image_rect.width * 0.06), lambda: switch_state(GAMEPLAY_1),
                              font=font1)
-button_capitalMode = Button(rect_button_capitalMode, option_menu_button_color,
-                            main_menu_button_color_hover, "Capital Mode", 25, lambda: switch_state(GAMEPLAY_2),
+button_capitalMode = Button(rect_button_capitalMode, option_menu_button_color, main_menu_button_color_hover,
+                            "Capital Mode", int(flag_image_rect.width * 0.06), lambda: switch_state(GAMEPLAY_2),
                             font=font1)
-button_quit = Button(rect_button_quit, option_menu_button_color,
-                     main_menu_button_color_hover, "Quit", 25, lambda: switch_state(EXIT),
+button_quit = Button(rect_button_quit, option_menu_button_color, main_menu_button_color_hover,
+                     "Quit", int(flag_image_rect.width * 0.06), lambda: switch_state(EXIT),
                      font=font1)
 
 # Option Menu Button Rectangles
-rect_button_width_back = 175
-rect_button_height_back = 60
-rect_button_x_back = center_x - (linen_image_rect.width / 2) + 60
-rect_button_y_back = center_y + (linen_image_rect.height / 2) - rect_button_height_back - 70
+rect_button_width_back = int(linen_image_rect.width * 0.28)
+rect_button_height_back = int(rect_button_width_back * 0.29)
+rect_button_x_back = int((center_x - linen_image_rect.width/2) * 1.22)
+rect_button_y_back = int(center_y * 1.5)
+rect_button_x_play = int((center_x + (linen_image_rect.width/2) - rect_button_width_back) * 0.94)
 rect_button_back = pygame.Rect(rect_button_x_back, rect_button_y_back,
                                rect_button_width_back, rect_button_height_back)
-rect_button_x_play = center_x + (linen_image_rect.width / 2) - rect_button_width_back - 60
 rect_button_play = pygame.Rect(rect_button_x_play, rect_button_y_back,          # Uses same coordinates and size
                                rect_button_width_back, rect_button_height_back)  # as button back, except x
 
@@ -205,11 +207,11 @@ rect_opt_buttons_AI = [get_opt_button_rect(i / 10, -0.2) for i in np.arange(-4.5
 
 # Option Menu Button Initialisation
 button_back = Button(rect_button_back, option_menu_button_color,
-                     option_menu_button_color_hover, "Back", 30, lambda: switch_state(MAIN_MENU),
-                     font=font1)
+                     option_menu_button_color_hover, "Back", int(rect_button_height_back * 0.6),
+                     lambda: switch_state(MAIN_MENU), font=font1)
 button_play = Button(rect_button_play, option_menu_button_color,
-                     option_menu_button_color_green, "Play", 30, lambda: close_option_window(),
-                     font=font1)
+                     option_menu_button_color_green, "Play", int(rect_button_height_back * 0.6),
+                     lambda: close_option_window(), font=font1)
 
 buttons_opt_P = init_opt_buttons(rect_opt_buttons_P, set_players, 1)
 buttons_opt_AI = init_opt_buttons(rect_opt_buttons_AI, set_agents, 0)
@@ -264,7 +266,6 @@ while running:
         button_back.create_button(screen, br=30, width=3, text_color=WHITE)
     elif game_state == EXIT:
         running = False
-
 
     pygame.display.flip()
 

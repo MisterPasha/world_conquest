@@ -10,6 +10,7 @@ clock = pygame.time.Clock()
 
 running = True
 
+# Define the center of the screen
 center = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 screen = pygame.display.set_mode((screen.get_width(), screen.get_height()))

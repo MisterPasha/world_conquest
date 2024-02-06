@@ -1,10 +1,11 @@
 from button import *
 import pygame
+import numpy as np
 
 pygame.init()
 
 # Set display mode
-screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)  # (800, 600)/(1280, 720) res for testing
 
 clock = pygame.time.Clock()
 
@@ -13,7 +14,7 @@ running = True
 # Define the center of the screen
 center = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
-screen = pygame.display.set_mode((screen.get_width(), screen.get_height()))
+# Set the caption of the screen
 pygame.display.set_caption("World Conquest")
 
 # Load and scale the background image
@@ -23,7 +24,7 @@ map_image = pygame.image.load("C:\\Sussex\\Programming\\Software_Eng\\imgs\\map2
 linen_image = pygame.image.load("C:\\Sussex\\Programming\\Software_Eng\\imgs\\linen.png")
 linen_image = pygame.transform.scale(linen_image, (screen.get_width() * 0.55, screen.get_height() * 0.8))
 linen_image_rect = linen_image.get_rect(center=(screen.get_width() / 2, screen.get_height() / 2))
-flag_image_rect = flag_image.get_rect(center=(screen.get_width() / 2, flag_image.get_height()/2 - 50))
+flag_image_rect = flag_image.get_rect(center=(screen.get_width() / 2, flag_image.get_height()/2 * 0.84))
 map_image = pygame.transform.scale(map_image, (screen.get_width(), screen.get_height()))
 
 
@@ -47,7 +48,7 @@ option_window = True
 BLACK = pygame.Color("black")
 WHITE = pygame.Color("white")
 main_menu_button_color_hover = (199, 201, 200)
-option_menu_button_color_hover = (1, 16, 64)
+option_menu_button_color_hover = (101, 102, 105)
 option_menu_button_color_green = (84, 133, 97)
 option_menu_button_color = (245, 247, 246)
 
@@ -58,9 +59,9 @@ font2 = "C:\\Sussex\\Programming\\Software_Eng\\fonts\\FFF_Tusj.ttf"
 
 # Function to draw small buttons when choosing players
 def get_opt_button_rect(x, y):
-    rect_opt_button_width = 50
-    rect_opt_button_x = center_x - (linen_image_rect.width / 2) + x
-    rect_opt_button_y = center_y - (linen_image_rect.height / 2) + y
+    rect_opt_button_width = flag_image_rect.width * 0.115
+    rect_opt_button_x = center_x + (center_x * x)  # center_x - (linen_image_rect.width / 2) + x
+    rect_opt_button_y = center_y - (center_y * y)
     return pygame.Rect(rect_opt_button_x, rect_opt_button_y, rect_opt_button_width, rect_opt_button_width)
 
 
@@ -69,7 +70,8 @@ def init_opt_buttons(rect_buttons, action, c):
     buttons = []
     for i, button_ in enumerate(rect_buttons):
         buttons.append(Button(button_, option_menu_button_color,
-                              option_menu_button_color_hover, str(i+c), 45, lambda i=i: action(i+c)))
+                              option_menu_button_color_hover, str(i+c),
+                              int(flag_image_rect.width * 0.09), lambda i=i: action(i+c)))
     return buttons
 
 
@@ -198,8 +200,8 @@ rect_button_play = pygame.Rect(rect_button_x_play, rect_button_y_back,          
                                rect_button_width_back, rect_button_height_back)  # as button back, except x
 
 
-rect_opt_buttons_P = [get_opt_button_rect(i + 60, 200) for i in range(0, 600, 100)]
-rect_opt_buttons_AI = [get_opt_button_rect(i + 60, 360) for i in range(0, 600, 100)]
+rect_opt_buttons_P = [get_opt_button_rect(i / 10, 0.2) for i in np.arange(-4.5, 1.5, 1)]  # (-4.5, 4.5, 1.5)wider points
+rect_opt_buttons_AI = [get_opt_button_rect(i / 10, -0.2) for i in np.arange(-4.5, 1.5, 1)]
 
 # Option Menu Button Initialisation
 button_back = Button(rect_button_back, option_menu_button_color,

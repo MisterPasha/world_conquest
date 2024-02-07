@@ -44,6 +44,7 @@ class Button:
         if self.hover:
             self.action()
 
+    # changes a color of the button
     def change_color(self, new_color):
         self.color = new_color
 

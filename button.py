@@ -3,7 +3,7 @@ pygame.init()
 
 hover_sound = pygame.mixer.Sound("C:\\Sussex\\Programming\\Software_Eng\\sounds\\button_click.wav")
 
-
+# Drops the colors
 def drop_colors(button_list, old_color, new_color):
     for button_ in button_list:
         if button_.color == old_color:

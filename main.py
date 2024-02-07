@@ -4,6 +4,7 @@ import numpy as np
 
 pygame.init()
 
+# HEY CARLA
 # Set display mode
 screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)  # (800, 600)/(1280, 720)/(1024x768) res for testing
 

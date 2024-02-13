@@ -15,6 +15,10 @@ class MainMenu:
     player_images = [pygame.image.load("images\\player1.png"), pygame.image.load("images\\player2.png"),
                      pygame.image.load("images\\player3.png"), pygame.image.load("images\\player4.png"),
                      pygame.image.load("images\\player5.png"), pygame.image.load("images\\player6.png")]
+    robot_image = pygame.image.load("images\\robot.png")
+    human_image = pygame.image.load("images\\human.png")
+    P_or_AI_button = pygame.image.load("images\\choose_P_AI_button.png")
+    P_or_AI_button_clicked = pygame.image.load("images\\choose_P_AI_button_clicked.png")
     font1 = "fonts\\font1.ttf"
 
     def __init__(self, screen):
@@ -31,9 +35,13 @@ class MainMenu:
         self.new_game_paper = pygame.transform.scale(self.new_game_paper, (int(screen.get_width() * 0.4),
                                                                            int(screen.get_height() * 0.9)))
         self.center_x, self.center_y = screen.get_width() / 2, screen.get_height() / 2
+        self.human_image = pygame.transform.scale(self.human_image, (int(self.center_x * 0.055),
+                                                                     int(self.center_x * 0.055)))
+        self.robot_image = pygame.transform.scale(self.robot_image, (int(self.center_x * 0.055),
+                                                                     int(self.center_x * 0.055)))
         self.main_menu_buttons = self.create_main_menu_buttons()
-        self.new_menu_buttons = self.create_new_game_menu_buttons()
         self.player_slots = self.create_player_slots()
+        self.new_menu_buttons = self.create_new_game_menu_buttons()
 
     def draw(self):
         self.screen.blit(self.background_image, (0, 0))
@@ -47,10 +55,14 @@ class MainMenu:
             self.screen.blit(self.new_game_paper, (int(self.center_x * 0.08), int(self.center_y * 0.12)))
             self.draw_text(self.screen, "Players", int(self.center_y * 0.17), (0, 0, 0), int(self.center_x * 0.14),
                            int(self.center_y * 0.18), font=self.font1)
-            for button in self.new_menu_buttons:
-                button.draw(self.screen)
             for slot in self.player_slots:
                 slot.draw(self.screen)
+                self.screen.blit(self.human_image, (int(slot.x + slot.image.get_width() + self.center_x * 0.05),
+                                                    int(slot.y)))
+                self.screen.blit(self.robot_image, (int(slot.x + slot.image.get_width() + self.center_x * 0.05),
+                                                    int(slot.y + self.center_x * 0.06)))
+            for button in self.new_menu_buttons:
+                button.draw(self.screen)
 
     def check_clicks(self, event):
         for button in self.main_menu_buttons:
@@ -80,14 +92,22 @@ class MainMenu:
         return self.state
 
     def add_player(self):
-        if self.players < 6:
+        if (self.players + self.AI_agents) < 6:
             self.players += 1
             self.player_slots[self.players - 1].change_image(self.player_images[self.players - 1])
 
     def remove_player(self):
-        if self.players > 0:
+        if (self.players + self.AI_agents) > 0:
             self.player_slots[self.players - 1].change_image(self.player_slot_image)
             self.players -= 1
+
+    def swap_to(self, player):
+        if player == "human":
+            self.players += 1
+            self.AI_agents -= 1
+        elif player == "ai":
+            self.players -= 1
+            self.AI_agents += 1
 
     def create_main_menu_buttons(self):
         play = Button(self.button_image, (int(self.center_x * 0.2), int(self.center_y * 0.5)), "Play",
@@ -116,7 +136,8 @@ class MainMenu:
                         int(self.center_y * 0.06), int(self.center_x * 0.17), int(self.center_y * 0.12),
                         font=self.font1,
                         action=lambda: self.remove_player())
-        return [play, back, add, remove]
+        small_buttons = self.create_small_buttons_and_icons()
+        return [play, back, add, remove] + small_buttons
 
     def create_player_slots(self):
         slots1 = [Button(self.player_slot_image, (int(self.center_x * 0.2), int(self.center_y * i)), "",
@@ -126,3 +147,20 @@ class MainMenu:
                          1, int(self.center_x * 0.12), int(self.center_x * 0.12))
                   for i in np.arange(0.6, 1.5, 0.3)]
         return slots1 + slots2
+
+    def create_small_buttons_and_icons(self):
+        buttons1 = []
+        buttons2 = []
+        for slot in self.player_slots:
+            x = slot.x
+            y = slot.y
+            buttons1.append(Button(self.P_or_AI_button, (int(x + slot.image.get_width() + self.center_x * 0.01),
+                                                         int(y + self.center_x * 0.018)),
+                                   "", 1, int(self.center_x * 0.035), int(self.center_x * 0.035),
+                                   action=self.swap_to("human")))
+            buttons2.append(Button(self.P_or_AI_button, (int(x + slot.image.get_width() + self.center_x * 0.01),
+                                                         int(y + self.center_x * 0.07)),
+                                   "", 1, int(self.center_x * 0.035), int(self.center_x * 0.035),
+                                   action=self.swap_to("ai")))
+        return buttons1 + buttons2
+

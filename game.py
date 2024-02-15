@@ -28,7 +28,7 @@ class Game:
         while self.running:
             self.events()
             self.draw()
-            self.check_state()
+            #self.check_state()
             self.clock.tick(60)
             pygame.display.flip()
 
@@ -38,15 +38,24 @@ class Game:
                 self.running = False
             elif self.game_state == self.MAIN_MENU:
                 self.main_menu.check_clicks(event)
+            elif self.game_state == self.GAMEPLAY_1:
+                print("1")
+            elif self.game_state == self.GAMEPLAY_2:
+                print("2")
             elif self.game_state == self.EXIT:
                 self.running = False
 
     def draw(self):
         if self.game_state == self.MAIN_MENU:
+            self.check_state()
             self.main_menu.draw()
 
     def check_state(self):
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
+        elif self.main_menu.get_state() == self.GAMEPLAY_1:
+            self.game_state = self.GAMEPLAY_1
+        elif self.main_menu.get_state() == self.GAMEPLAY_2:
+            self.game_state = self.GAMEPLAY_2
         elif self.main_menu.get_state() == self.EXIT:
             self.game_state = self.EXIT

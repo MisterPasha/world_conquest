@@ -103,7 +103,13 @@ class MainMenu:
         self.setting_menu = state
 
     def change_state(self, new_state):
-        self.state = new_state
+        if new_state == 1:
+            if self.players + self.AI_agents == 2:
+                self.state = 2
+            elif self.players + self.AI_agents < 2:
+                pass
+        else:
+            self.state = new_state
 
     def get_state(self):
         return self.state

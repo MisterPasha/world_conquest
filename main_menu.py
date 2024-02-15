@@ -38,8 +38,7 @@ class MainMenu:
         self.state = 0
         self.players = 0
         self.AI_agents = 0
-        self.background_image = pygame.transform.scale(self.background_image,
-                                                       (screen.get_width(), screen.get_height()))
+        self.background_image = pygame.transform.scale(self.background_image, (screen.get_width(), screen.get_height()))
         self.logo_image = pygame.transform.scale(self.logo_image, (int(screen.get_width() * 0.3),
                                                                    int(screen.get_height() * 0.12)))
         self.new_game_paper = pygame.transform.scale(self.new_game_paper, (int(screen.get_width() * 0.4),

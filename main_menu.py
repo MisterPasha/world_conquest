@@ -49,7 +49,7 @@ class MainMenu:
         self.robot_image = pygame.transform.scale(self.robot_image, (int(self.center_x * 0.055),
                                                                      int(self.center_x * 0.055)))
         self.player_slots = self.create_player_slots()
-        self.small_buttons = self.create_small_buttons_and_icons()
+        self.small_buttons = self.create_small_buttons()
         self.main_menu_buttons = self.create_main_menu_buttons()
         self.new_menu_buttons = self.create_new_game_menu_buttons()
 
@@ -106,8 +106,8 @@ class MainMenu:
         if new_state == 1:
             if self.players + self.AI_agents == 2:
                 self.state = 2
-            elif self.players + self.AI_agents < 2:
-                pass
+            elif self.players + self.AI_agents > 2:
+                self.state = 1
         else:
             self.state = new_state
 
@@ -191,7 +191,7 @@ class MainMenu:
                 self.AI_agents += 1
         return action
 
-    def create_small_buttons_and_icons(self):
+    def create_small_buttons(self):
         buttons1 = []
         buttons2 = []
         for slot in self.player_slots:

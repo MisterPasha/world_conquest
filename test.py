@@ -5,6 +5,7 @@ import pygame
 from button import Button
 from main_menu import MainMenu
 
+
 class TestButton(unittest.TestCase):
     def setUp(self):
         pygame.init()
@@ -27,7 +28,7 @@ class TestButton(unittest.TestCase):
         self.button = Button(self.original_image, self.hover_image, self.pos, self.text,
                              self.font_size, self.width, self.height, self.font, self.action)
 
-    def test_check_click_inside(self):
+    def test_check_click(self):
         # Mock the button's rect attribute to control the collidepoint method
         self.button.rect = Mock()
         self.button.rect.collidepoint.return_value = True
@@ -102,7 +103,7 @@ class TestMainMenu(unittest.TestCase):
         for button in self.main_menu.new_menu_buttons:
             button.check_click.assert_called_with(mock_event)
 
-    def test_add_player_within_limit(self):
+    def test_add_player(self):
         initial_players = self.main_menu.players
         self.main_menu.add_player()
         # Check if the number of players increased by 1

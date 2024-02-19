@@ -1,5 +1,6 @@
 import pygame
 from main_menu import MainMenu
+from map import Map
 
 pygame.init()
 
@@ -23,12 +24,12 @@ class Game:
         self.players = 0
         self.AI_agents = 0
         self.main_menu = MainMenu(self.screen)
+        self.map = Map(self.screen, self.players, self.AI_agents)
 
     def run(self):
         while self.running:
             self.events()
             self.draw()
-            #self.check_state()
             self.clock.tick(60)
             pygame.display.flip()
 
@@ -39,23 +40,34 @@ class Game:
             elif self.game_state == self.MAIN_MENU:
                 self.main_menu.check_clicks(event)
             elif self.game_state == self.GAMEPLAY_1:
-                print("1")
+                self.map.check_clicks(event)
             elif self.game_state == self.GAMEPLAY_2:
-                print("2")
+                continue
             elif self.game_state == self.EXIT:
                 self.running = False
 
     def draw(self):
         if self.game_state == self.MAIN_MENU:
-            self.check_state()
+            self.check_state_main_menu()
             self.main_menu.draw()
+        if self.game_state == self.GAMEPLAY_1:
+            self.check_state_gameplay()
+            self.map.draw()
 
-    def check_state(self):
+    def check_state_main_menu(self):
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
             self.game_state = self.GAMEPLAY_1
+            self.map.set_state(self.GAMEPLAY_1)
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
             self.game_state = self.GAMEPLAY_2
+            self.map.set_state(self.GAMEPLAY_2)
         elif self.main_menu.get_state() == self.EXIT:
             self.game_state = self.EXIT
+
+    def check_state_gameplay(self):
+        if self.map.get_state() == self.MAIN_MENU:
+            self.game_state = self.MAIN_MENU
+            self.main_menu.change_state(self.game_state)
+

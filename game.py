@@ -13,6 +13,9 @@ class Game:
     GAMEPLAY_2 = 2  # 2 players game
     GAME_OVER = 3
 
+    # Gameplay stages
+    SETUP = 1
+
     def __init__(self, screen, clock, window_size):
         self.screen = screen
         self.clock = clock
@@ -20,6 +23,8 @@ class Game:
         self.running = True
         # set initial state
         self.game_state = self.MAIN_MENU
+        # set initial gameplay stage
+        self.gameplay_stage = self.SETUP
         # List of Player objects
         self.players = None
         # Current player
@@ -88,6 +93,7 @@ class Game:
         elif self.game_state == self.GAMEPLAY_1:
             pass
 
+    # pass turn to the next player
     def pass_turn(self):
         if self.current_turn == len(self.players) - 1:
             self.current_turn = 0
@@ -95,11 +101,15 @@ class Game:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
 
+    # Gives certain amount of available troops to the players
+    # Players placing their troops until no available troops remain
+    # Then switching to the next gameplay stage
     def occupy_country(self, country):
         current_player = self.players[self.current_turn]
         if country.owner is None:
             country.set_owner(current_player)
             country.set_color()
+            country.set_button_color()
             country.add_troop()
             self.pass_turn()
         elif country.owner is not current_player:
@@ -107,9 +117,11 @@ class Game:
         else:
             country.add_troop()
             self.pass_turn()
-        print(country.owner)
 
+    # This function is specifically for country buttons
+    # It triggers different methods depending on gameplay stage
     def handle_country_clicks(self, mouse_pos):
         for country in self.map.countries:
             if country.country_btn.rect.collidepoint(mouse_pos):
-                self.occupy_country(country)
+                if self.gameplay_stage == self.SETUP:
+                    self.occupy_country(country)

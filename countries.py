@@ -73,11 +73,18 @@ class Country:
     def set_button(self):
         x, y = self.find_country_middle()
         size = self.screen.get_height() * 0.05
-        color = pygame.Color(self.color)
-        colored_button = self.fill_with_color(self.country_button_image, color)
-        btn = pygame.transform.scale(colored_button, (size, size))
-        button = Button(btn, btn, (x - size/2, y - size/2), str(self.troops), int(size * 0.8), size, size)
+        new_color = tuple(color - 20 for color in self.color)
+        color = pygame.Color(new_color)
+        btn = self.fill_with_color(self.country_button_image, color)
+        button = Button(btn, btn, (x - size/2, y - size/2), str(self.troops), int(size * 0.8), size, size, hover=False)
+        #self.country_btn = button
         return button
+
+    def set_button_color(self):
+        new_color = tuple(color - 20 for color in self.color)
+        color = pygame.Color(new_color)
+        new_btn_color = self.fill_with_color(self.country_button_image, color)
+        self.country_btn.change_image(new_btn_color)
 
     def add_troop(self):
         self.troops += 1

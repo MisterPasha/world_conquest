@@ -3,7 +3,6 @@ from button import Button
 from countries import Country
 from main_menu import MainMenu
 from player import Human
-from player import Player
 import random
 
 pygame.init()
@@ -12,6 +11,13 @@ map_img = pygame.image.load("images\\map1.jpg")
 button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
 font1 = "fonts\\font1.ttf"
+# Color sets
+YELLOW = (232, 220, 90)
+PINK = (191, 147, 191)
+BROWN = (173, 136, 94)
+GRAY = (90, 110, 77)
+RED = (173, 37, 28)
+BLUE = (40, 51, 122)
 
 
 class Map:
@@ -25,6 +31,9 @@ class Map:
         self.buttons = self.create_buttons()
         self.countries = self.create_countries()
         self.player_profiles = None
+        self.COLORS = [YELLOW, PINK, BROWN, GRAY, RED, BLUE]
+        self.current_turn = 0
+        self.turn_indicator = self.create_turn_indicator()
 
     def draw(self):
         self.screen.blit(self.map_img, (0, 0))
@@ -34,6 +43,13 @@ class Map:
             country.draw()
         for player in self.player_profiles:
             player.draw_profile()
+        self.draw_turn_indicator()
+
+    def check_clicks(self, event):
+        for button in self.buttons:
+            button.check_click(event)
+        for country in self.countries:
+            country.check_click(event)
 
     def get_state(self):
         return self.state
@@ -45,33 +61,19 @@ class Map:
         self.players = players
         self.AI_players = ai
 
-    def check_clicks(self, event):
-        for button in self.buttons:
-            button.check_click(event)
-
-    def change_color(self):
-        colors = ["red", "blue", "brown", "yellow", "pink", "gray"]
-        for country in self.countries:
-            country.change_color(random.choice(colors))
-
     def create_buttons(self):
         buttons = []
         back = Button(button_image, button_hover_image, (0, 0), "Back",
                       int(self.center_y * 0.08), int(self.center_x * 0.1), int(self.center_y * 0.1), font=font1,
                       action=lambda: self.set_state(0))
-        change_color = Button(button_image, button_hover_image, (self.center_x, self.center_y ), "Change",
-                      int(self.center_y * 0.1), int(self.center_x * 0.2), int(self.center_y * 0.2), font=font1,
-                      action=lambda: self.change_color())
         buttons.append(back)
-        buttons.append(change_color)
         return buttons
 
     def create_players(self):
         all_profiles = MainMenu.player_images
         players_in_game = []
-        colors = ["yellow", "pink", "brown", "gray", "red", "blue"]
         for i in range(self.players + self.AI_players):
-            players_in_game.append(Player(self.screen, all_profiles[i], colors[i]))
+            players_in_game.append(Human(self.screen, all_profiles[i], self.COLORS[i]))
         for i, player in enumerate(players_in_game):
             width = int(self.center_x * 0.1)
             height = width
@@ -79,6 +81,23 @@ class Map:
                                 int(self.screen.get_height() / 8 * (i+1)),
                                 width, height)
         self.player_profiles = players_in_game
+
+    def get_players(self):
+        return self.player_profiles
+
+    def create_turn_indicator(self):
+        size = self.center_y * 0.1
+        turn_indicator = pygame.image.load("images\\green_tri.png")
+        turn_indicator = pygame.transform.scale(turn_indicator, (size, size))
+        return turn_indicator
+
+    def draw_turn_indicator(self):
+        x = self.player_profiles[0].pos[0] - self.turn_indicator.get_width()
+        y = self.player_profiles[self.current_turn].pos[1]
+        self.screen.blit(self.turn_indicator, (x, y))
+
+    def change_turn(self, turn):
+        self.current_turn = turn
 
     def create_countries(self):
         country1 = pygame.image.load("countries\\country1.png").convert_alpha()

@@ -56,3 +56,6 @@ class Button:
         else:
             self.image = pygame.transform.scale(clicked_image, (self.image.get_width(), self.image.get_height()))
             self.clicked = True
+
+    def change_text(self, new_text):
+        self.text = new_text

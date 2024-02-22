@@ -116,13 +116,13 @@ class Game:
                 country.set_owner(current_player)
                 country.set_color()
                 country.set_button_color()
-                country.add_troop()
+                country.add_troops(1)
                 current_player.remove_avail_troop()
                 self.pass_turn()
             elif country.owner is not current_player:
                 print("You are doing something naughty!")
             else:
-                country.add_troop()
+                country.add_troops(1)
                 current_player.remove_avail_troop()
                 self.pass_turn()
         else:
@@ -136,6 +136,7 @@ class Game:
                 if self.gameplay_stage == self.SETUP:
                     self.occupy_country(country)
 
+    # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):
         troops = 0
         if len(self.players) == 3:

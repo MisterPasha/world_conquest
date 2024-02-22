@@ -16,25 +16,34 @@ class Country:
         self.color = (192, 192, 192)
         self.country_btn = self.set_button()
 
+    # Sets a new owner for this country
     def set_owner(self, new_owner):
         self.owner = new_owner
 
+    # Sets an owner's color
     def set_color(self):
         self.color = self.owner.get_color()
 
+    # Pretty obvious...
     def add_troops(self, num_troops):
         self.troops += num_troops
 
+    # Lemme guess? removes one troop from the country...
     def remove_troops(self, num_troops):
         self.troops -= num_troops
 
+    # Draws a country image with appropriate color
+    # Draws country button and keeps track of current text on the button (number of troops)
+    # REQUIRES OPTIMISATION! Need to remove first 3 lines from here and put them somewhere else so they called only
+    # when they needed, not 60 times a second :))
     def draw(self):
         color = pygame.Color(self.color)
         color_image = self.fill_with_color(self.image, color)
+        self.country_btn.change_text(str(self.troops))
         self.screen.blit(color_image, (0, 0))
         self.country_btn.draw(self.screen)
-        self.country_btn.change_text(str(self.troops))
 
+    # function that fills countries with color
     def fill_with_color(self, image, color):
         coloured_image = pygame.Surface(self.image.get_size())
         coloured_image.fill(color)
@@ -43,6 +52,7 @@ class Country:
         final_image.blit(coloured_image, (0, 0), special_flags=pygame.BLEND_MULT)
         return final_image
 
+    # finds a middle pixel of the country
     def find_country_middle(self):
         # Ensure the image is in a format that supports per-pixel access
         if not self.image.get_locked():
@@ -70,6 +80,7 @@ class Country:
         else:
             return None
 
+    # creates a country button
     def set_button(self):
         x, y = self.find_country_middle()
         size = self.screen.get_height() * 0.05
@@ -77,18 +88,16 @@ class Country:
         color = pygame.Color(new_color)
         btn = self.fill_with_color(self.country_button_image, color)
         button = Button(btn, btn, (x - size/2, y - size/2), str(self.troops), int(size * 0.8), size, size, hover=False)
-        #self.country_btn = button
         return button
 
+    # Sets a country button with a color of the country, but little bit darker
     def set_button_color(self):
         new_color = tuple(color - 20 for color in self.color)
         color = pygame.Color(new_color)
         new_btn_color = self.fill_with_color(self.country_button_image, color)
         self.country_btn.change_image(new_btn_color)
 
-    def add_troop(self):
-        self.troops += 1
-
+    # Checks clicks for country button
     def check_click(self, event):
         self.country_btn.check_click(event)
 

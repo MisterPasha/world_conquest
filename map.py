@@ -3,7 +3,6 @@ from button import Button
 from countries import Country
 from main_menu import MainMenu
 from player import Human
-import random
 
 pygame.init()
 
@@ -35,6 +34,7 @@ class Map:
         self.current_turn = 0
         self.turn_indicator = self.create_turn_indicator()
 
+    # Draws all necessary elements on the map
     def draw(self):
         self.screen.blit(self.map_img, (0, 0))
         for button in self.buttons:
@@ -45,6 +45,7 @@ class Map:
             player.draw_profile()
         self.draw_turn_indicator()
 
+    # checks clicks on buttons and countries
     def check_clicks(self, event):
         for button in self.buttons:
             button.check_click(event)
@@ -61,6 +62,8 @@ class Map:
         self.players = players
         self.AI_players = ai
 
+    # Creates all necessary buttons for gameplay
+    # So far just back button
     def create_buttons(self):
         buttons = []
         back = Button(button_image, button_hover_image, (0, 0), "Back",
@@ -69,6 +72,8 @@ class Map:
         buttons.append(back)
         return buttons
 
+    # Creates players
+    # So far creates only Human Players, will be changed when we implement AI
     def create_players(self):
         all_profiles = MainMenu.player_images
         players_in_game = []
@@ -82,23 +87,29 @@ class Map:
                                 width, height)
         self.player_profiles = players_in_game
 
+    # Returns a list of Player objects
     def get_players(self):
         return self.player_profiles
 
+    # Another dummy thing, just to see who's turn it is right now
+    # We gonna think about something better than green triangle
     def create_turn_indicator(self):
         size = self.center_y * 0.1
         turn_indicator = pygame.image.load("images\\green_tri.png")
         turn_indicator = pygame.transform.scale(turn_indicator, (size, size))
         return turn_indicator
 
+    # Same as above
     def draw_turn_indicator(self):
         x = self.player_profiles[0].pos[0] - self.turn_indicator.get_width()
         y = self.player_profiles[self.current_turn].pos[1]
         self.screen.blit(self.turn_indicator, (x, y))
 
+    # Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle
     def change_turn(self, turn):
         self.current_turn = turn
 
+    # Super dummy way of doing it. Will be changed when Countries will be drawn
     def create_countries(self):
         country1 = pygame.image.load("countries\\country1.png").convert_alpha()
         country2 = pygame.image.load("countries\\country2.png").convert_alpha()

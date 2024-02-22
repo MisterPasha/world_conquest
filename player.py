@@ -4,18 +4,26 @@ from main_menu import draw_text
 pygame.init()
 
 
+# Super Class for Human and AI agent
+# Only holds methods and attributes that both Human and AI players will have in common
 class Player:
     def __init__(self, screen, profile_img, color):
         self.screen = screen
         self.profile = profile_img
         self.color = color
+        # Troops that player has in the game
         self.troops_holds = 0
+        # Troops that need to be placed yet
         self.troops_available = 0
+        # list of Card objects that player holds
         self.cards = []
+        # list of Country objects that player holds
         self.countries = []
+        # Position and size of the profile image
         self.pos = None
         self.size = None
 
+    # Adds troops that need to be placed
     def add_avail_troops(self, num_of_troops):
         self.troops_available += num_of_troops
 
@@ -36,7 +44,6 @@ class Player:
                   int(self.pos[0] * 0.9), int(self.pos[1] + 10))
         draw_text(self.screen, f"available: {self.troops_available}", int(self.size[0] * 0.4), (255, 255, 255),
                   int(self.pos[0] * 0.9), int(self.pos[1] + 30))
-
 
     def get_color(self):
         return self.color
@@ -59,3 +66,12 @@ class Human(Player):
 class AI(Player):
     def __init__(self, screen, profile_img, color):
         super().__init__(screen, profile_img, color)
+
+    def attack(self, country):
+        print("attack", country)
+
+    def roll_dice(self):
+        return 0
+
+    def choose_num_of_dice(self):
+        return 0

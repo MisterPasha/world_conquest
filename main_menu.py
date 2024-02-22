@@ -190,7 +190,7 @@ class MainMenu:
                 self.players -= 1
                 self.AI_agents += 1
         return action
-# lkdjbnbngpfdhgf
+
     def create_small_buttons(self):
         buttons1 = []
         buttons2 = []

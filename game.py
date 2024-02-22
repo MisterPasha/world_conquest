@@ -11,21 +11,33 @@ class Game:
     MAIN_MENU = 0
     GAMEPLAY_1 = 1  # 3-6 players game
     GAMEPLAY_2 = 2  # 2 players game
+    GAME_OVER = 3
+
+    # Gameplay stages
+    SETUP = 1
+    PLACE = 2
+    ATTACK = 3
+    FORTIFY = 4
 
     def __init__(self, screen, clock, window_size):
         self.screen = screen
         self.clock = clock
         self.window_size = window_size
-        # self.center = pygame.Vector2(self.screen.get_width() / 2, self.screen.get_height() / 2)
         self.running = True
         # set initial state
         self.game_state = self.MAIN_MENU
-        # Set initial numbers of players
-        self.players = 0
-        self.AI_agents = 0
+        # set initial gameplay stage
+        self.gameplay_stage = self.SETUP
+        # List of Player objects
+        self.players = None
+        # Current player
+        self.current_turn = 0
+        # initialise MainMenu object
         self.main_menu = MainMenu(self.screen)
-        self.map = Map(self.screen, self.players, self.AI_agents)
+        # initialise Map object
+        self.map = Map(self.screen)
 
+    # Main running loop
     def run(self):
         while self.running:
             self.events()
@@ -33,6 +45,7 @@ class Game:
             self.clock.tick(60)
             pygame.display.flip()
 
+    # Controls all event types
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,11 +54,14 @@ class Game:
                 self.main_menu.check_clicks(event)
             elif self.game_state == self.GAMEPLAY_1:
                 self.map.check_clicks(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_country_clicks(event.pos)
             elif self.game_state == self.GAMEPLAY_2:
                 continue
             elif self.game_state == self.EXIT:
                 self.running = False
 
+    # Draws all elements on the screen
     def draw(self):
         if self.game_state == self.MAIN_MENU:
             self.check_state_main_menu()
@@ -54,20 +70,81 @@ class Game:
             self.check_state_gameplay()
             self.map.draw()
 
+    # Keeps track of current game states in objects and activates necessary functions
+    # (for gameplay setup) during MAIN MENU state
     def check_state_main_menu(self):
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
-            self.game_state = self.GAMEPLAY_1
             self.map.set_state(self.GAMEPLAY_1)
+            # When decision on number of players has been done it passes it to Map
+            self.map.set_players_and_ai(self.main_menu.get_num_players(), self.main_menu.get_num_ai_players())
+            self.map.create_players()
+            # Define players
+            self.players = self.map.get_players()
+            self.deal_initial_troops_to_players()
+            self.game_state = self.GAMEPLAY_1
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
             self.game_state = self.GAMEPLAY_2
             self.map.set_state(self.GAMEPLAY_2)
         elif self.main_menu.get_state() == self.EXIT:
             self.game_state = self.EXIT
 
+    # Keeps track of current game states in objects and activates necessary functions during GAMEPLAY1 state
     def check_state_gameplay(self):
         if self.map.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
             self.main_menu.change_state(self.game_state)
+        elif self.game_state == self.GAMEPLAY_1:
+            pass
 
+    # pass turn to the next player
+    def pass_turn(self):
+        if self.current_turn == len(self.players) - 1:
+            self.current_turn = 0
+        else:
+            self.current_turn += 1
+        self.map.change_turn(self.current_turn)
+
+    # Gives certain amount of available troops to the players
+    # Players placing their troops until no available troops remain
+    # Then switching to the next gameplay stage
+    def occupy_country(self, country):
+        current_player = self.players[self.current_turn]
+        if current_player.troops_available > 0:
+            if country.owner is None:
+                country.set_owner(current_player)
+                country.set_color()
+                country.set_button_color()
+                country.add_troop()
+                current_player.remove_avail_troop()
+                self.pass_turn()
+            elif country.owner is not current_player:
+                print("You are doing something naughty!")
+            else:
+                country.add_troop()
+                current_player.remove_avail_troop()
+                self.pass_turn()
+        else:
+            self.gameplay_stage = self.ATTACK
+
+    # This function is specifically for country buttons
+    # It triggers different methods depending on gameplay stage
+    def handle_country_clicks(self, mouse_pos):
+        for country in self.map.countries:
+            if country.country_btn.rect.collidepoint(mouse_pos):
+                if self.gameplay_stage == self.SETUP:
+                    self.occupy_country(country)
+
+    def deal_initial_troops_to_players(self):
+        troops = 0
+        if len(self.players) == 3:
+            troops = 35
+        elif len(self.players) == 4:
+            troops = 30
+        elif len(self.players) == 5:
+            troops = 25
+        elif len(self.players) == 6:
+            troops = 20
+        for player in self.players:
+            player.add_avail_troops(troops)

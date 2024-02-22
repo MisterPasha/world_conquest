@@ -35,6 +35,7 @@ class Button:
         # Draw the text
         screen.blit(text_surf, text_rect)
 
+    # If click on self object is detected it triggers assigned function
     def check_click(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -42,10 +43,12 @@ class Button:
                     if self.action:
                         self.action()
 
+    # Changes current image to the new image
     def change_image(self, new_image):
         new_image = pygame.transform.scale(new_image, (self.image.get_width(), self.image.get_height()))
         self.image = new_image
 
+    # Specific feature for "Switch" type buttons
     def click(self, unclicked_image, clicked_image):
         if self.clicked:
             self.image = pygame.transform.scale(unclicked_image, (self.image.get_width(), self.image.get_height()))
@@ -53,3 +56,6 @@ class Button:
         else:
             self.image = pygame.transform.scale(clicked_image, (self.image.get_width(), self.image.get_height()))
             self.clicked = True
+
+    def change_text(self, new_text):
+        self.text = new_text

@@ -6,17 +6,18 @@ from player import Human
 
 pygame.init()
 
-map_img = pygame.image.load("images\\map1.jpg")
+plate_img = pygame.image.load("images\\dice_table.png")
+map_img = pygame.image.load("images\\map.jpg")
 button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
 font1 = "fonts\\font1.ttf"
 # Color sets
-YELLOW = (232, 220, 90)
-PINK = (191, 147, 191)
-BROWN = (173, 136, 94)
-GRAY = (90, 110, 77)
-RED = (173, 37, 28)
-BLUE = (40, 51, 122)
+YELLOW = (201, 227, 32)
+PINK = (201, 171, 198)
+BROWN = (181, 138, 72)
+GREEN = (84, 199, 153)
+RED = (204, 40, 37)
+BLUE = (47, 122, 250)
 
 
 class Map:
@@ -26,11 +27,13 @@ class Map:
         self.AI_players = 0
         self.center_x, self.center_y = screen.get_width() / 2, screen.get_height() / 2
         self.map_img = pygame.transform.scale(map_img, (screen.get_width(), screen.get_height()))
+        self.plate_img = pygame.transform.scale(plate_img, (int(screen.get_height() / 3.3), int(screen.get_height() / 3.3)))
         self.state = None
         self.buttons = self.create_buttons()
-        self.countries = self.create_countries()
+        self.countries = None
         self.player_profiles = None
-        self.COLORS = [YELLOW, PINK, BROWN, GRAY, RED, BLUE]
+        self.COLORS = [YELLOW, PINK, BROWN, GREEN, RED, BLUE]
+        self.COLORS_STR = ["Yellow", "Pink", "Brown", "Green", "Red", "Blue"]
         self.current_turn = 0
         self.turn_indicator = self.create_turn_indicator()
 
@@ -39,18 +42,21 @@ class Map:
         self.screen.blit(self.map_img, (0, 0))
         for button in self.buttons:
             button.draw(self.screen)
-        for country in self.countries:
-            country.draw()
+        if self.countries:
+            for country in self.countries:
+                country.draw()
         for player in self.player_profiles:
             player.draw_profile()
+        self.draw_dice_plate()
         self.draw_turn_indicator()
 
     # checks clicks on buttons and countries
     def check_clicks(self, event):
         for button in self.buttons:
             button.check_click(event)
-        for country in self.countries:
-            country.check_click(event)
+        if self.countries:
+            for country in self.countries:
+                country.check_click(event)
 
     def get_state(self):
         return self.state
@@ -58,6 +64,7 @@ class Map:
     def set_state(self, new_state):
         self.state = new_state
 
+    # Sets number of human and ai players
     def set_players_and_ai(self, players, ai):
         self.players = players
         self.AI_players = ai
@@ -78,12 +85,12 @@ class Map:
         all_profiles = MainMenu.player_images
         players_in_game = []
         for i in range(self.players + self.AI_players):
-            players_in_game.append(Human(self.screen, all_profiles[i], self.COLORS[i]))
+            players_in_game.append(Human(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i]))
         for i, player in enumerate(players_in_game):
-            width = int(self.center_x * 0.1)
+            width = int(self.center_x * 0.08)
             height = width
             player.set_pos_size(self.screen.get_width() - width,
-                                int(self.screen.get_height() / 8 * (i+1)),
+                                int(self.screen.get_height() / 10 * (i+1)),
                                 width, height)
         self.player_profiles = players_in_game
 
@@ -104,6 +111,10 @@ class Map:
         x = self.player_profiles[0].pos[0] - self.turn_indicator.get_width()
         y = self.player_profiles[self.current_turn].pos[1]
         self.screen.blit(self.turn_indicator, (x, y))
+
+    def draw_dice_plate(self):
+        self.screen.blit(self.plate_img, (self.screen.get_width() - self.plate_img.get_width(),
+                                          self.screen.get_height() - self.plate_img.get_height()))
 
     # Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle
     def change_turn(self, turn):
@@ -129,4 +140,4 @@ class Map:
         country7 = Country(self.screen, country7)
         country8 = Country(self.screen, country8)
         country9 = Country(self.screen, country9)
-        return [country1, country2, country3, country4, country5, country6, country7, country8, country9]
+        self.countries = [country1, country2, country3, country4, country5, country6, country7, country8, country9]

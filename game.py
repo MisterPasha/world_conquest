@@ -1,11 +1,14 @@
 import pygame
 from main_menu import MainMenu
 from map import Map
+from dice import Dice
 
 pygame.init()
 
 
 class Game:
+    paper_img = pygame.image.load("images\\gameplay_paper.png")
+
     # Game States
     EXIT = -1
     MAIN_MENU = 0
@@ -14,6 +17,7 @@ class Game:
     GAME_OVER = 3
 
     # Gameplay stages
+    CHOOSE_FIRST_TURN = 0
     SETUP = 1
     PLACE = 2
     ATTACK = 3
@@ -24,10 +28,12 @@ class Game:
         self.clock = clock
         self.window_size = window_size
         self.running = True
+        # image paper in gameplay
+        self.paper_img = pygame.transform.scale(self.paper_img, (screen.get_width(), screen.get_height()))
         # set initial state
         self.game_state = self.MAIN_MENU
         # set initial gameplay stage
-        self.gameplay_stage = self.SETUP
+        self.gameplay_stage = self.CHOOSE_FIRST_TURN
         # List of Player objects
         self.players = None
         # Current player
@@ -35,7 +41,13 @@ class Game:
         # initialise MainMenu object
         self.main_menu = MainMenu(self.screen)
         # initialise Map object
-        self.map = Map(self.screen)
+        self.map = None  # Map(self.screen)
+        # All necessary dice attributes
+        self.dice = Dice(self.screen)
+        self.showing_dice_animation = False
+        self.animation_start_time = None
+        self.dice_thrown = []
+        self.dice_throw_index = 0
 
     # Main running loop
     def run(self):
@@ -69,6 +81,9 @@ class Game:
         if self.game_state == self.GAMEPLAY_1:
             self.check_state_gameplay()
             self.map.draw()
+            if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
+                self.screen.blit(self.paper_img, (0, 0))
+            self.dice_animate()
 
     # Keeps track of current game states in objects and activates necessary functions
     # (for gameplay setup) during MAIN MENU state
@@ -76,6 +91,8 @@ class Game:
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
+            self.map = Map(self.screen)
+            #self.map.create_countries()
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
             self.map.set_players_and_ai(self.main_menu.get_num_players(), self.main_menu.get_num_ai_players())
@@ -83,6 +100,7 @@ class Game:
             # Define players
             self.players = self.map.get_players()
             self.deal_initial_troops_to_players()
+            #self.choose_first_turn()
             self.game_state = self.GAMEPLAY_1
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
             self.game_state = self.GAMEPLAY_2
@@ -93,10 +111,12 @@ class Game:
     # Keeps track of current game states in objects and activates necessary functions during GAMEPLAY1 state
     def check_state_gameplay(self):
         if self.map.get_state() == self.MAIN_MENU:
+            self.gameplay_stage = self.CHOOSE_FIRST_TURN
             self.game_state = self.MAIN_MENU
             self.main_menu.change_state(self.game_state)
         elif self.game_state == self.GAMEPLAY_1:
-            pass
+            if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
+                self.choose_first_turn()
 
     # pass turn to the next player
     def pass_turn(self):
@@ -105,6 +125,35 @@ class Game:
         else:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
+
+    # This function handles the decision on which player goes first
+    def choose_first_turn(self):
+        self.map.change_turn(self.dice_throw_index)
+        if self.dice_throw_index < len(self.players) and not self.showing_dice_animation:
+            total = [self.dice.throw() for _ in range(3)]  # makes list of 3 random dice values, like 3 dice thrown
+            self.dice_thrown.append(total)
+            self.showing_dice_animation = True
+            self.animation_start_time = pygame.time.get_ticks()
+        elif self.showing_dice_animation:
+            if pygame.time.get_ticks() - self.animation_start_time >= 1500:  # 1 seconds
+                self.showing_dice_animation = False
+                self.dice_throw_index += 1
+                if self.dice_throw_index >= len(self.players):
+                    self.current_turn = self.dice_thrown.index(max(self.dice_thrown))
+                    self.map.change_turn(self.current_turn)
+                    self.dice_thrown = []
+                    self.dice_throw_index = 0
+                    self.gameplay_stage = self.SETUP
+                    self.map.create_countries()
+
+    def dice_animate(self):
+        if self.showing_dice_animation:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.animation_start_time < 3000:  # 2 seconds
+                # Call the dice.animation method to display the animation
+                self.dice.animation(self.dice_thrown[-1], self.players[self.dice_throw_index].get_color_name())
+            else:
+                self.showing_dice_animation = False
 
     # Gives certain amount of available troops to the players
     # Players placing their troops until no available troops remain
@@ -131,10 +180,11 @@ class Game:
     # This function is specifically for country buttons
     # It triggers different methods depending on gameplay stage
     def handle_country_clicks(self, mouse_pos):
-        for country in self.map.countries:
-            if country.country_btn.rect.collidepoint(mouse_pos):
-                if self.gameplay_stage == self.SETUP:
-                    self.occupy_country(country)
+        if self.map.countries is not None:
+            for country in self.map.countries:
+                if country.country_btn.rect.collidepoint(mouse_pos):
+                    if self.gameplay_stage == self.SETUP:
+                        self.occupy_country(country)
 
     # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):

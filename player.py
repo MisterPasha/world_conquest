@@ -4,18 +4,27 @@ from main_menu import draw_text
 pygame.init()
 
 
+# Super Class for Human and AI agent
+# Only holds methods and attributes that both Human and AI players will have in common
 class Player:
-    def __init__(self, screen, profile_img, color):
+    def __init__(self, screen, profile_img, color, color_str):
         self.screen = screen
         self.profile = profile_img
         self.color = color
+        self.color_str = color_str
+        # Troops that player has in the game
         self.troops_holds = 0
+        # Troops that need to be placed yet
         self.troops_available = 0
+        # list of Card objects that player holds
         self.cards = []
+        # list of Country objects that player holds
         self.countries = []
+        # Position and size of the profile image
         self.pos = None
         self.size = None
 
+    # Adds troops that need to be placed
     def add_avail_troops(self, num_of_troops):
         self.troops_available += num_of_troops
 
@@ -32,19 +41,21 @@ class Player:
     # Draws profiles on the map
     def draw_profile(self):
         self.screen.blit(self.profile, self.pos)
-        draw_text(self.screen, f"troops: {self.troops_holds}", int(self.size[0] * 0.4), (255, 255, 255),
-                  int(self.pos[0] * 0.9), int(self.pos[1] + 10))
-        draw_text(self.screen, f"available: {self.troops_available}", int(self.size[0] * 0.4), (255, 255, 255),
-                  int(self.pos[0] * 0.9), int(self.pos[1] + 30))
-
+        draw_text(self.screen, f"troops: {self.troops_holds}", int(self.size[0] * 0.45), (0, 0, 0),
+                  int(self.pos[0] * 0.92), int(self.pos[1] + 10))
+        draw_text(self.screen, f"available: {self.troops_available}", int(self.size[0] * 0.45), (0, 0, 0),
+                  int(self.pos[0] * 0.92), int(self.pos[1] + 30))
 
     def get_color(self):
         return self.color
 
+    def get_color_name(self):
+        return self.color_str
+
 
 class Human(Player):
-    def __init__(self, screen, profile_img, color):
-        super().__init__(screen, profile_img, color)
+    def __init__(self, screen, profile_img, color, color_str):
+        super().__init__(screen, profile_img, color, color_str)
 
     def attack(self, country):
         print("attack", country)
@@ -59,3 +70,12 @@ class Human(Player):
 class AI(Player):
     def __init__(self, screen, profile_img, color):
         super().__init__(screen, profile_img, color)
+
+    def attack(self, country):
+        print("attack", country)
+
+    def roll_dice(self):
+        return 0
+
+    def choose_num_of_dice(self):
+        return 0

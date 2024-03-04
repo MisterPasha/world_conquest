@@ -19,6 +19,10 @@ class Country:
     # Sets a new owner for this country
     def set_owner(self, new_owner):
         self.owner = new_owner
+        self.set_color()
+        self.set_button_color()
+        color = pygame.Color(self.color)
+        self.image = self.fill_with_color(self.image, color)
 
     # Sets an owner's color
     def set_color(self):
@@ -27,20 +31,16 @@ class Country:
     # Pretty obvious...
     def add_troops(self, num_troops):
         self.troops += num_troops
+        self.country_btn.change_text(str(self.troops))
 
     # Lemme guess? removes one troop from the country...
     def remove_troops(self, num_troops):
         self.troops -= num_troops
+        self.country_btn.change_text(str(self.troops))
 
     # Draws a country image with appropriate color
-    # Draws country button and keeps track of current text on the button (number of troops)
-    # REQUIRES OPTIMISATION! Need to remove first 3 lines from here and put them somewhere else so they called only
-    # when they needed, not 60 times a second :))
     def draw(self):
-        color = pygame.Color(self.color)
-        color_image = self.fill_with_color(self.image, color)
-        self.country_btn.change_text(str(self.troops))
-        self.screen.blit(color_image, (0, 0))
+        self.screen.blit(self.image, (0, 0))
         self.country_btn.draw(self.screen)
 
     # function that fills countries with color

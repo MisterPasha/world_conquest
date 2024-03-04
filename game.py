@@ -163,8 +163,6 @@ class Game:
         if current_player.troops_available > 0:
             if country.owner is None:
                 country.set_owner(current_player)
-                country.set_color()
-                country.set_button_color()
                 country.add_troops(1)
                 current_player.remove_avail_troop()
                 self.pass_turn()

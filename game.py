@@ -41,7 +41,7 @@ class Game:
         # initialise MainMenu object
         self.main_menu = MainMenu(self.screen)
         # initialise Map object
-        self.map = None  # Map(self.screen)
+        self.map = None
         # All necessary dice attributes
         self.dice = Dice(self.screen)
         self.showing_dice_animation = False
@@ -92,7 +92,7 @@ class Game:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
             self.map = Map(self.screen)
-            #self.map.create_countries()
+            self.map.create_countries()
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
             self.map.set_players_and_ai(self.main_menu.get_num_players(), self.main_menu.get_num_ai_players())
@@ -100,7 +100,6 @@ class Game:
             # Define players
             self.players = self.map.get_players()
             self.deal_initial_troops_to_players()
-            #self.choose_first_turn()
             self.game_state = self.GAMEPLAY_1
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
             self.game_state = self.GAMEPLAY_2
@@ -144,7 +143,7 @@ class Game:
                     self.dice_thrown = []
                     self.dice_throw_index = 0
                     self.gameplay_stage = self.SETUP
-                    self.map.create_countries()
+                    #self.map.create_countries()
 
     def dice_animate(self):
         if self.showing_dice_animation:

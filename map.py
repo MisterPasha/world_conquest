@@ -3,6 +3,7 @@ from button import Button
 from countries import Country
 from main_menu import MainMenu
 from player import Human
+import threading
 import os
 
 pygame.init()
@@ -28,15 +29,16 @@ class Map:
         self.AI_players = 0
         self.center_x, self.center_y = screen.get_width() / 2, screen.get_height() / 2
         self.map_img = pygame.transform.scale(map_img, (screen.get_width(), screen.get_height()))
-        self.plate_img = pygame.transform.scale(plate_img, (int(screen.get_height() / 3.3), int(screen.get_height() / 3.3)))
+        self.plate_img = pygame.transform.scale(plate_img, (int(screen.get_height() / 4), int(screen.get_height() / 4)))
         self.state = None
         self.buttons = self.create_buttons()
-        self.countries = None
+        self.countries = []
         self.player_profiles = None
         self.COLORS = [YELLOW, PINK, BROWN, GREEN, RED, BLUE]
         self.COLORS_STR = ["Yellow", "Pink", "Brown", "Green", "Red", "Blue"]
         self.current_turn = 0
         self.turn_indicator = self.create_turn_indicator()
+        self.lock = threading.Lock()
 
     # Draws all necessary elements on the map
     def draw(self):
@@ -118,8 +120,18 @@ class Map:
     def change_turn(self, turn):
         self.current_turn = turn
 
-    # Super dummy way of doing it. Will be changed when Countries will be drawn
-    def create_countries(self):
+    def load_country_image(self, image_path):
+        # Load the image and create a Country object (ensure Country's init can handle this properly)
+        country = Country(self.screen, pygame.image.load(image_path).convert_alpha())
+        with self.lock:  # Ensure thread-safe append
+            self.countries.append(country)
+
+    def load_all_images(self):
         folder_path = "country_imgs"
         images = os.listdir(folder_path)
-        self.countries = [Country(self.screen, pygame.image.load(os.path.join(folder_path, file)).convert_alpha()) for file in images]
+        for file in images:
+            self.load_country_image(os.path.join(folder_path, file))
+
+    def create_countries(self):
+        # Start a single thread to load all images
+        threading.Thread(target=self.load_all_images).start()

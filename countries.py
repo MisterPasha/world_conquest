@@ -16,6 +16,14 @@ class Country:
         self.color = (192, 192, 192)
         self.country_btn = self.set_button()
 
+    def set_to_default(self):
+        self.owner = None
+        self.troops = 0
+        self.color = (192, 192, 192)
+        color = pygame.Color(self.color)
+        self.image = self.fill_with_color(self.image, color)
+        self.set_button_color()
+
     # Sets a new owner for this country
     def set_owner(self, new_owner):
         self.owner = new_owner

@@ -1,4 +1,5 @@
 import pygame
+import random
 from main_menu import MainMenu
 from map import Map
 from dice import Dice
@@ -19,7 +20,7 @@ class Game:
     # Gameplay stages
     CHOOSE_FIRST_TURN = 0
     SETUP = 1
-    PLACE = 2
+    DRAFT = 2
     ATTACK = 3
     FORTIFY = 4
 
@@ -42,6 +43,7 @@ class Game:
         self.main_menu = MainMenu(self.screen)
         # initialise Map object
         self.map = None
+        self.countries_divided = False
         # All necessary dice attributes
         self.dice = Dice(self.screen)
         self.showing_dice_animation = False
@@ -69,7 +71,9 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_country_clicks(event.pos)
             elif self.game_state == self.GAMEPLAY_2:
-                continue
+                self.map.check_clicks(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_country_clicks(event.pos)
             elif self.game_state == self.EXIT:
                 self.running = False
 
@@ -79,6 +83,12 @@ class Game:
             self.check_state_main_menu()
             self.main_menu.draw()
         if self.game_state == self.GAMEPLAY_1:
+            self.check_state_gameplay()
+            self.map.draw()
+            if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
+                self.screen.blit(self.paper_img, (0, 0))
+            self.dice_animate()
+        if self.game_state == self.GAMEPLAY_2:
             self.check_state_gameplay()
             self.map.draw()
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
@@ -102,8 +112,14 @@ class Game:
             self.deal_initial_troops_to_players()
             self.game_state = self.GAMEPLAY_1
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
-            self.game_state = self.GAMEPLAY_2
+            self.map = Map(self.screen)
+            self.map.create_countries()
             self.map.set_state(self.GAMEPLAY_2)
+            self.map.set_players_and_ai(self.main_menu.get_num_players(), self.main_menu.get_num_ai_players())
+            self.map.create_players()
+            self.players = self.map.get_players()
+            self.deal_initial_troops_to_players()
+            self.game_state = self.GAMEPLAY_2
         elif self.main_menu.get_state() == self.EXIT:
             self.game_state = self.EXIT
 
@@ -116,6 +132,13 @@ class Game:
         elif self.game_state == self.GAMEPLAY_1:
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
                 self.choose_first_turn()
+        elif self.game_state == self.GAMEPLAY_2:
+            if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
+                self.choose_first_turn()
+            elif self.gameplay_stage == self.SETUP:
+                if not self.countries_divided and len(self.map.countries) == 42:
+                    self.divide_countries()
+                    self.countries_divided = True
 
     # pass turn to the next player
     def pass_turn(self):
@@ -134,7 +157,7 @@ class Game:
             self.showing_dice_animation = True
             self.animation_start_time = pygame.time.get_ticks()
         elif self.showing_dice_animation:
-            if pygame.time.get_ticks() - self.animation_start_time >= 1500:  # 1 seconds
+            if pygame.time.get_ticks() - self.animation_start_time >= 2500:  # 1 seconds
                 self.showing_dice_animation = False
                 self.dice_throw_index += 1
                 if self.dice_throw_index >= len(self.players):
@@ -143,7 +166,6 @@ class Game:
                     self.dice_thrown = []
                     self.dice_throw_index = 0
                     self.gameplay_stage = self.SETUP
-                    #self.map.create_countries()
 
     def dice_animate(self):
         if self.showing_dice_animation:
@@ -154,23 +176,45 @@ class Game:
             else:
                 self.showing_dice_animation = False
 
+    # Specific function for 2 player game.
+    # it sets randomly initial 14 owned countries to each player and sets the rest as neutral.
+    # Adds 1 troop to each country
+    def divide_countries(self):
+        rand_ints = random.sample(range(0, 42), 42)
+        part_size = len(rand_ints) // 3
+        set1 = rand_ints[:part_size]
+        set2 = rand_ints[part_size:part_size*2]
+        set3 = rand_ints[part_size*2:]
+        for country_index in set1:
+            self.map.countries[country_index].set_owner(self.players[0])
+            self.map.countries[country_index].add_troops(1)
+            self.players[0].remove_avail_troop()
+        for country_index in set2:
+            self.map.countries[country_index].set_owner(self.players[1])
+            self.map.countries[country_index].add_troops(1)
+            self.players[1].remove_avail_troop()
+        for country_index in set3:
+            self.map.countries[country_index].add_troops(1)
+
     # Gives certain amount of available troops to the players
     # Players placing their troops until no available troops remain
     # Then switching to the next gameplay stage
     def occupy_country(self, country):
         current_player = self.players[self.current_turn]
         if current_player.troops_available > 0:
-            if country.owner is None:
-                country.set_owner(current_player)
-                country.add_troops(1)
-                current_player.remove_avail_troop()
-                self.pass_turn()
-            elif country.owner is not current_player:
-                print("You are doing something naughty!")
-            else:
-                country.add_troops(1)
-                current_player.remove_avail_troop()
-                self.pass_turn()
+            if len(self.map.countries) == 42:
+                if self.game_state == self.GAMEPLAY_1:  # Occupying neutral countries during setup is only available
+                    if country.owner is None:           # in 3-6 player mode
+                        country.set_owner(current_player)
+                        country.add_troops(1)
+                        current_player.remove_avail_troop()
+                        self.pass_turn()
+                elif country.owner is not current_player:
+                    print("You are doing something naughty!")
+                else:
+                    country.add_troops(1)
+                    current_player.remove_avail_troop()
+                    self.pass_turn()
         else:
             self.gameplay_stage = self.ATTACK
 
@@ -182,11 +226,14 @@ class Game:
                 if country.country_btn.rect.collidepoint(mouse_pos):
                     if self.gameplay_stage == self.SETUP:
                         self.occupy_country(country)
+                        print(country.get_name())
 
     # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):
         troops = 0
-        if len(self.players) == 3:
+        if len(self.players) == 2:
+            troops = 40
+        elif len(self.players) == 3:
             troops = 35
         elif len(self.players) == 4:
             troops = 30

@@ -3,6 +3,7 @@ from button import Button
 from countries import Country
 from main_menu import MainMenu
 from player import Human
+import os
 
 pygame.init()
 
@@ -54,9 +55,6 @@ class Map:
     def check_clicks(self, event):
         for button in self.buttons:
             button.check_click(event)
-        if self.countries:
-            for country in self.countries:
-                country.check_click(event)
 
     def get_state(self):
         return self.state
@@ -122,22 +120,6 @@ class Map:
 
     # Super dummy way of doing it. Will be changed when Countries will be drawn
     def create_countries(self):
-        country1 = pygame.image.load("countries\\country1.png").convert_alpha()
-        country2 = pygame.image.load("countries\\country2.png").convert_alpha()
-        country3 = pygame.image.load("countries\\country3.png").convert_alpha()
-        country4 = pygame.image.load("countries\\country4.png").convert_alpha()
-        country5 = pygame.image.load("countries\\country5.png").convert_alpha()
-        country6 = pygame.image.load("countries\\country6.png").convert_alpha()
-        country7 = pygame.image.load("countries\\country7.png").convert_alpha()
-        country8 = pygame.image.load("countries\\country8.png").convert_alpha()
-        country9 = pygame.image.load("countries\\country9.png").convert_alpha()
-        country1 = Country(self.screen, country1)
-        country2 = Country(self.screen, country2)
-        country3 = Country(self.screen, country3)
-        country4 = Country(self.screen, country4)
-        country5 = Country(self.screen, country5)
-        country6 = Country(self.screen, country6)
-        country7 = Country(self.screen, country7)
-        country8 = Country(self.screen, country8)
-        country9 = Country(self.screen, country9)
-        self.countries = [country1, country2, country3, country4, country5, country6, country7, country8, country9]
+        folder_path = "country_imgs"
+        images = os.listdir(folder_path)
+        self.countries = [Country(self.screen, pygame.image.load(os.path.join(folder_path, file)).convert_alpha()) for file in images]

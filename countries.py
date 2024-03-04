@@ -7,14 +7,17 @@ pygame.init()
 class Country:
     country_button_image = pygame.image.load("images\\country_button.png")
 
-    def __init__(self, screen, image):
-        self.country_name = ""
+    def __init__(self, screen, image, name):
+        self.country_name = name
         self.owner = None
         self.troops = 0
         self.screen = screen
         self.image = pygame.transform.scale(image, (screen.get_width(), screen.get_height()))
         self.color = (192, 192, 192)
         self.country_btn = self.set_button()
+
+    def get_name(self):
+        return self.country_name
 
     # Sets a new owner for this country
     def set_owner(self, new_owner):

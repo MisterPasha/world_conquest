@@ -25,13 +25,13 @@ class Dice:
 
     def draw_dice(self, nums):
         for i, num in enumerate(nums):
-            x = int(self.screen.get_width() * 0.9)
-            y = int(self.screen.get_height() * (0.9 - i * 0.08))
+            x = int(self.screen.get_width() * 0.93)
+            y = int(self.screen.get_height() * (0.9 - i * 0.07))
             self.screen.blit(self.dice_dict[num], (x, y))
 
     def create_dice(self):
         dice_dict = {}
-        size = int(self.screen.get_height() * 0.06)
+        size = int(self.screen.get_height() * 0.05)
         dice = [pygame.transform.scale(die_img, (size, size)) for die_img in self.dice]
         for i, die in enumerate(dice):
             dice_dict[i+1] = die

@@ -33,7 +33,7 @@ class Map:
         self.state = None
         self.buttons = self.create_buttons()
         self.countries = []
-        self.player_profiles = None
+        self.player_profiles = []
         self.COLORS = [YELLOW, PINK, BROWN, GREEN, RED, BLUE]
         self.COLORS_STR = ["Yellow", "Pink", "Brown", "Green", "Red", "Blue"]
         self.current_turn = 0

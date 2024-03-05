@@ -195,6 +195,7 @@ class Game:
             self.players[1].remove_avail_troop()
         for country_index in set3:
             self.map.countries[country_index].add_troops(1)
+        self.countries_divided = True
 
     # Gives certain amount of available troops to the players
     # Players placing their troops until no available troops remain
@@ -202,13 +203,12 @@ class Game:
     def occupy_country(self, country):
         current_player = self.players[self.current_turn]
         if current_player.troops_available > 0:
-            if len(self.map.countries) == 42:
-                if self.game_state == self.GAMEPLAY_1:  # Occupying neutral countries during setup is only available
-                    if country.owner is None:           # in 3-6 player mode
-                        country.set_owner(current_player)
-                        country.add_troops(1)
-                        current_player.remove_avail_troop()
-                        self.pass_turn()
+            if len(self.map.countries) == 42:                                              # Occupying neutral countries during setup is only available
+                if country.owner is None and self.game_state == self.GAMEPLAY_1:           # in 3-6 player mode
+                    country.set_owner(current_player)
+                    country.add_troops(1)
+                    current_player.remove_avail_troop()
+                    self.pass_turn()
                 elif country.owner is not current_player:
                     print("You are doing something naughty!")
                 else:

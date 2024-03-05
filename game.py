@@ -203,8 +203,9 @@ class Game:
     def occupy_country(self, country):
         current_player = self.players[self.current_turn]
         if current_player.troops_available > 0:
-            if len(self.map.countries) == 42:                                              # Occupying neutral countries during setup is only available
-                if country.owner is None and self.game_state == self.GAMEPLAY_1:           # in 3-6 player mode
+            if len(self.map.countries) == 42:
+                # Occupying neutral countries during setup is only available in 3-6 player mode
+                if country.owner is None and self.game_state == self.GAMEPLAY_1:
                     country.set_owner(current_player)
                     country.add_troops(1)
                     current_player.remove_avail_troop()

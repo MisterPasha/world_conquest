@@ -121,7 +121,7 @@ class Map:
         self.current_turn = turn
 
     def load_country_image(self, image_path):
-        # Load the image and create a Country object (ensure Country's init can handle this properly)
+        # Load the image and create a Country object
         cleaned_name = image_path.replace("country_imgs\\", "").replace(".png", "")
         country = Country(self.screen, pygame.image.load(image_path).convert_alpha(), cleaned_name)
         with self.lock:  # Ensure thread-safe append

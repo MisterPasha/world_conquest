@@ -68,8 +68,8 @@ class Human(Player):
 
 
 class AI(Player):
-    def __init__(self, screen, profile_img, color):
-        super().__init__(screen, profile_img, color)
+    def __init__(self, screen, profile_img, color, color_str):
+        super().__init__(screen, profile_img, color, color_str)
 
     def attack(self, country):
         print("attack", country)

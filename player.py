@@ -3,6 +3,7 @@ from main_menu import draw_text
 
 pygame.init()
 
+
 # Super Class for Human and AI agent
 # Only holds methods and attributes that both Human and AI players will have in common
 class Player:
@@ -50,6 +51,13 @@ class Player:
 
     def get_color_name(self):
         return self.color_str
+
+    def add_country(self, country):
+        self.countries.append(country)
+
+    def remove_country(self, country):
+        print("Finish me =)")
+
 
 class Human(Player):
     def __init__(self, screen, profile_img, color, color_str):

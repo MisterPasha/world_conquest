@@ -4,6 +4,7 @@ from main_menu import draw_text
 
 pygame.init()
 
+
 class Dice:
     dice = [pygame.image.load("images\\die1.png"), pygame.image.load("images\\die2.png"),
             pygame.image.load("images\\die3.png"), pygame.image.load("images\\die4.png"),
@@ -35,5 +36,3 @@ class Dice:
         for i, die in enumerate(dice):
             dice_dict[i+1] = die
         return dice_dict
-
-#ehhh wassup doc

@@ -188,10 +188,12 @@ class Game:
             self.map.countries[country_index].set_owner(self.players[0])
             self.map.countries[country_index].add_troops(1)
             self.players[0].remove_avail_troop()
+            self.players[0].add_country(self.map.countries[country_index])
         for country_index in set2:
             self.map.countries[country_index].set_owner(self.players[1])
             self.map.countries[country_index].add_troops(1)
             self.players[1].remove_avail_troop()
+            self.players[1].add_country(self.map.countries[country_index])
         for country_index in set3:
             self.map.countries[country_index].add_troops(1)
         self.countries_divided = True
@@ -208,6 +210,7 @@ class Game:
                     country.set_owner(current_player)
                     country.add_troops(1)
                     current_player.remove_avail_troop()
+                    current_player.add_country(country)
                     self.pass_turn()
                 elif country.owner is not current_player:
                     print("You are doing something naughty!")
@@ -226,7 +229,6 @@ class Game:
                 if country.country_btn.rect.collidepoint(mouse_pos):
                     if self.gameplay_stage == self.SETUP:
                         self.occupy_country(country)
-                        print(country.get_name())
 
     # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):

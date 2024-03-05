@@ -3,7 +3,6 @@ from button import Button
 
 pygame.init()
 
-
 class Country:
     country_button_image = pygame.image.load("images\\country_button.png")
 
@@ -103,7 +102,6 @@ class Country:
     # Checks clicks for country button
     def check_click(self, event):
         self.country_btn.check_click(event)
-
 
 class Continent:
     def __init__(self, name):

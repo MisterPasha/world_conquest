@@ -6,7 +6,6 @@ from dice import Dice
 
 pygame.init()
 
-
 class Game:
     paper_img = pygame.image.load("images\\gameplay_paper.png")
 

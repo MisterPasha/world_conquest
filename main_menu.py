@@ -4,14 +4,12 @@ import numpy as np
 
 pygame.init()
 
-
 def draw_text(screen, text, size, color, x, y, font=None, ):
     font = pygame.font.Font(font, size)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
     text_rect.topleft = (x, y)
     screen.blit(text_surface, text_rect)
-
 
 class MainMenu:
     background_image = pygame.image.load("images\\background_main_high.png")
@@ -113,6 +111,12 @@ class MainMenu:
 
     def get_state(self):
         return self.state
+
+    def get_num_players(self):
+        return self.players
+
+    def get_num_ai_players(self):
+        return self.AI_agents
 
     def add_player(self):
         if (self.players + self.AI_agents) < 6:

@@ -21,7 +21,6 @@ GREEN = (84, 199, 153)
 RED = (204, 40, 37)
 BLUE = (47, 122, 250)
 
-
 class Map:
     def __init__(self, screen):
         self.screen = screen

@@ -4,7 +4,6 @@ from main_menu import draw_text
 
 pygame.init()
 
-
 class Dice:
     dice = [pygame.image.load("images\\die1.png"), pygame.image.load("images\\die2.png"),
             pygame.image.load("images\\die3.png"), pygame.image.load("images\\die4.png"),

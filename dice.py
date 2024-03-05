@@ -35,3 +35,5 @@ class Dice:
         for i, die in enumerate(dice):
             dice_dict[i+1] = die
         return dice_dict
+
+#ehhh wassup doc

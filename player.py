@@ -56,7 +56,7 @@ class Player:
         self.countries.append(country)
 
     def remove_country(self, country):
-        print("Finish me =)")
+        self.countries.remove(country)
 
 
 class Human(Player):

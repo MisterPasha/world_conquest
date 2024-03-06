@@ -14,12 +14,13 @@ button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
 font1 = "fonts\\font1.ttf"
 # Color sets
-YELLOW = (201, 227, 32)
+YELLOW = (206, 222, 100)
 PINK = (201, 171, 198)
-BROWN = (181, 138, 72)
+BROWN = (184, 149, 95)
 GREEN = (84, 199, 153)
-RED = (204, 40, 37)
-BLUE = (47, 122, 250)
+RED = (168, 69, 67)    # (204, 40, 37)
+BLUE = (57, 108, 196)  # (47, 122, 250)
+
 
 class Map:
     def __init__(self, screen):
@@ -137,10 +138,13 @@ class Map:
         # Start a single thread to load all images
         threading.Thread(target=self.load_all_images).start()
 
+    def get_neighbours(self, country_name):
+        return self.neighbours[country_name]
+
     def create_neighbours(self):
         dictionary = {"Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
                       "Alberta": ["Alaska", "Northwest Territory", "Ontario", "Western US"],
-                      "Central America": ["Venezuela, Eastern US", "Western US"],
+                      "Central America": ["Venezuela", "Eastern US", "Western US"],
                       "Eastern US": ["Central America", "Western US", "Ontario", "Quebec"],
                       "Greenland": ["Iceland", "Quebec", "Ontario", "Northwest Territory"],
                       "Northwest Territory": ["Alaska", "Alberta", "Ontario", "Greenland"],
@@ -148,10 +152,10 @@ class Map:
                       "Quebec": ["Ontario", "Eastern US", "Greenland"],
                       "Western US": ["Central America", "Eastern US", "Ontario", "Alberta"],
                       "Argentina": ["Peru", "Brazil"],
-                      "Brazil": ["Argentina", "Peru", "Venezuela", "North America"],
+                      "Brazil": ["Argentina", "Peru", "Venezuela", "North Africa"],
                       "Venezuela": ["Central America", "Peru", "Brazil"],
                       "Peru": ["Venezuela", "Brazil", "Argentina"],
-                      "Congo": ["Eastern Africa", "North Africa", "South Africa"],
+                      "Congo": ["East Africa", "North Africa", "South Africa"],
                       "East Africa": ["Madagascar", "South Africa", "Congo", "North Africa", "Egypt", "Middle East"],
                       "Egypt": ["North Africa", "East Africa", "Middle East", "Southern Europe"],
                       "Madagascar": ["South Africa", "East Africa"],
@@ -162,7 +166,7 @@ class Map:
                       "Indonesia": ["Siam", "New Guinea", "Western Australia"],
                       "Western Australia": ["Eastern Australia", "New Guinea", "Indonesia"],
                       "Afghanistan": ["Ukraine", "Ural", "China", "India", "Middle East"],
-                      "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia"],
+                      "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia", "Siberia"],
                       "India": ["Middle East", "Afghanistan", "China", "Siam"],
                       "Irkutsk": ["Mongolia", "Kamchatka", "Yakutsk", "Siberia"],
                       "Japan": ["Mongolia", "Kamchatka"],

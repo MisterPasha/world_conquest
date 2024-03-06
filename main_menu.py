@@ -4,12 +4,14 @@ import numpy as np
 
 pygame.init()
 
+
 def draw_text(screen, text, size, color, x, y, font=None, ):
     font = pygame.font.Font(font, size)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
     text_rect.topleft = (x, y)
     screen.blit(text_surface, text_rect)
+
 
 class MainMenu:
     background_image = pygame.image.load("images\\background_main_high.png")

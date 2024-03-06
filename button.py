@@ -2,6 +2,7 @@ import pygame
 
 pygame.init()
 
+
 class Button:
     def __init__(self, original_image, hover_image, pos, text, font_size, width, height, font=None, action=None,
                  hover=True):

@@ -2,7 +2,7 @@ import pygame
 from game import Game
 import tkinter as tk
 
-#Grab the resoulution of the screen
+#Grab the resolution of the screen
 root = tk.Tk()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()

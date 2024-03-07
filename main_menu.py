@@ -146,6 +146,9 @@ class MainMenu:
     def set_setting_menu(self, state):
         self.setting_menu = state
 
+    def set_faq_menu(self, state):
+        self.faq_menu = state
+
     def change_state(self, new_state):
         if new_state == 1:
             if self.players + self.AI_agents == 2:
@@ -213,10 +216,21 @@ class MainMenu:
             font=self.font1,
             action=lambda: self.set_setting_menu(True),
         )
-        quit_b = Button(
+        FAQ = Button(
             self.button_image,
             self.button_hover_image,
             (int(self.center_x * 0.2), int(self.center_y * 1.1)),
+            "FAQ",
+            int(self.center_y * 0.12),
+            int(self.center_x * 0.35),
+            int(self.center_y * 0.2),
+            font=self.font1,
+            action=lambda: self.set_faq_menu(True),
+        )
+        quit_b = Button(
+            self.button_image,
+            self.button_hover_image,
+            (int(self.center_x * 0.2), int(self.center_y * 1.4)),
             "Quit",
             int(self.center_y * 0.12),
             int(self.center_x * 0.35),
@@ -224,7 +238,7 @@ class MainMenu:
             font=self.font1,
             action=lambda: self.change_state(-1),
         )
-        return [play, settings, quit_b]
+        return [play, settings, FAQ, quit_b]
 
     def create_new_game_menu_buttons(self):
         play = Button(

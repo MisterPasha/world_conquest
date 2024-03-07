@@ -6,6 +6,7 @@ from dice import Dice
 
 pygame.init()
 
+
 class Game:
     paper_img = pygame.image.load("images\\gameplay_paper.png")
 
@@ -49,6 +50,9 @@ class Game:
         self.animation_start_time = None
         self.dice_thrown = []
         self.dice_throw_index = 0
+        # Attributes for attacking phase
+        self.country_selected = None
+        self.selected = False
 
     # Main running loop
     def run(self):
@@ -188,10 +192,12 @@ class Game:
             self.map.countries[country_index].set_owner(self.players[0])
             self.map.countries[country_index].add_troops(1)
             self.players[0].remove_avail_troop()
+            self.players[0].add_country(self.map.countries[country_index])
         for country_index in set2:
             self.map.countries[country_index].set_owner(self.players[1])
             self.map.countries[country_index].add_troops(1)
             self.players[1].remove_avail_troop()
+            self.players[1].add_country(self.map.countries[country_index])
         for country_index in set3:
             self.map.countries[country_index].add_troops(1)
         self.countries_divided = True
@@ -208,6 +214,7 @@ class Game:
                     country.set_owner(current_player)
                     country.add_troops(1)
                     current_player.remove_avail_troop()
+                    current_player.add_country(country)
                     self.pass_turn()
                 elif country.owner is not current_player:
                     print("You are doing something naughty!")
@@ -226,7 +233,48 @@ class Game:
                 if country.country_btn.rect.collidepoint(mouse_pos):
                     if self.gameplay_stage == self.SETUP:
                         self.occupy_country(country)
-                        print(country.get_name())
+                    elif self.gameplay_stage == self.ATTACK:
+                        if self.selected:
+                            self.attack_country(country)
+                        else:
+                            self.select_country(country)
+
+    def attack_country(self, country):
+        current_player = self.players[self.current_turn]
+        if country == self.country_selected:   # Unselect Country by second click
+            self.highlight_neighbour_countries(self.country_selected, False)
+            self.selected = False
+            self.country_selected = None
+            print("unselected")
+        elif country in current_player.countries:  # Error message when trying to attack own country
+            print("It is dumb to attack yourself")
+        elif country.get_name() in self.map.get_neighbours(self.country_selected.get_name()):  # Attack!
+            country.remove_troops(1)
+            if country.troops <= 0:
+                country.owner.remove_country(country)
+                country.set_owner(current_player)
+                current_player.add_country(country)
+            self.highlight_neighbour_countries(self.country_selected, False)
+            self.selected = False
+            self.country_selected = None
+            self.pass_turn()
+        else:
+            print("You can only attack neighbour countries")
+
+    def select_country(self, country):
+        current_player = self.players[self.current_turn]
+        if country.owner is not current_player:
+            print("Can select only owned country!")
+        else:
+            self.selected = True
+            self.country_selected = country
+            self.highlight_neighbour_countries(self.country_selected, True)
+
+    def highlight_neighbour_countries(self, country, highlight):
+        neighbour_country_names = self.map.get_neighbours(country.get_name())
+        for c in self.map.countries:
+            if c.get_name() in neighbour_country_names and c not in self.players[self.current_turn].countries:
+                c.highlighted = True if highlight else False
 
     # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):

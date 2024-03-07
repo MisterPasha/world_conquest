@@ -14,12 +14,13 @@ button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
 font1 = "fonts\\font1.ttf"
 # Color sets
-YELLOW = (201, 227, 32)
+YELLOW = (206, 222, 100)
 PINK = (201, 171, 198)
-BROWN = (181, 138, 72)
+BROWN = (184, 149, 95)
 GREEN = (84, 199, 153)
-RED = (204, 40, 37)
-BLUE = (47, 122, 250)
+RED = (168, 69, 67)    # (204, 40, 37)
+BLUE = (57, 108, 196)  # (47, 122, 250)
+
 
 class Map:
     def __init__(self, screen):
@@ -32,6 +33,7 @@ class Map:
         self.state = None
         self.buttons = self.create_buttons()
         self.countries = []
+        self.neighbours = self.create_neighbours()
         self.player_profiles = []
         self.COLORS = [YELLOW, PINK, BROWN, GREEN, RED, BLUE]
         self.COLORS_STR = ["Yellow", "Pink", "Brown", "Green", "Red", "Blue"]
@@ -135,3 +137,55 @@ class Map:
     def create_countries(self):
         # Start a single thread to load all images
         threading.Thread(target=self.load_all_images).start()
+
+    def get_neighbours(self, country_name):
+        return self.neighbours[country_name]
+
+    def create_neighbours(self):
+        dictionary = {"Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
+                      "Alberta": ["Alaska", "Northwest Territory", "Ontario", "Western US"],
+                      "Central America": ["Venezuela", "Eastern US", "Western US"],
+                      "Eastern US": ["Central America", "Western US", "Ontario", "Quebec"],
+                      "Greenland": ["Iceland", "Quebec", "Ontario", "Northwest Territory"],
+                      "Northwest Territory": ["Alaska", "Alberta", "Ontario", "Greenland"],
+                      "Ontario": ["Northwest Territory", "Alberta", "Western US", "Eastern US", "Quebec", "Greenland"],
+                      "Quebec": ["Ontario", "Eastern US", "Greenland"],
+                      "Western US": ["Central America", "Eastern US", "Ontario", "Alberta"],
+                      "Argentina": ["Peru", "Brazil"],
+                      "Brazil": ["Argentina", "Peru", "Venezuela", "North Africa"],
+                      "Venezuela": ["Central America", "Peru", "Brazil"],
+                      "Peru": ["Venezuela", "Brazil", "Argentina"],
+                      "Congo": ["East Africa", "North Africa", "South Africa"],
+                      "East Africa": ["Madagascar", "South Africa", "Congo", "North Africa", "Egypt", "Middle East"],
+                      "Egypt": ["North Africa", "East Africa", "Middle East", "Southern Europe"],
+                      "Madagascar": ["South Africa", "East Africa"],
+                      "North Africa": ["Brazil", "Western Europe", "Southern Europe", "Egypt", "East Africa", "Congo"],
+                      "South Africa": ["Congo", "East Africa", "Madagascar"],
+                      "Eastern Australia": ["Western Australia", "New Guinea"],
+                      "New Guinea": ["Eastern Australia", "Western Australia", "Indonesia"],
+                      "Indonesia": ["Siam", "New Guinea", "Western Australia"],
+                      "Western Australia": ["Eastern Australia", "New Guinea", "Indonesia"],
+                      "Afghanistan": ["Ukraine", "Ural", "China", "India", "Middle East"],
+                      "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia", "Siberia"],
+                      "India": ["Middle East", "Afghanistan", "China", "Siam"],
+                      "Irkutsk": ["Mongolia", "Kamchatka", "Yakutsk", "Siberia"],
+                      "Japan": ["Mongolia", "Kamchatka"],
+                      "Kamchatka": ["Japan", "Mongolia", "Irkutsk", "Yakutsk", "Alaska"],
+                      "Middle East": ["East Africa", "Egypt", "Southern Europe", "Ukraine", "Afghanistan", "India"],
+                      "Mongolia": ["China", "Siberia", "Irkutsk", "Kamchatka", "Japan"],
+                      "Siam": ["India", "China", "Indonesia"],
+                      "Siberia": ["Ural", "China", "Mongolia", "Irkutsk", "Yakutsk"],
+                      "Ural": ["Ukraine", "Afghanistan", "China", "Siberia"],
+                      "Yakutsk": ["Siberia", "Irkutsk", "Kamchatka"],
+                      "Great Britain": ["Iceland", "Scandinavia", "Northern Europe", "Western Europe"],
+                      "Iceland": ["Greenland", "Great Britain", "Scandinavia"],
+                      "Northern Europe": ["Southern Europe", "Western Europe", "Great Britain", "Scandinavia",
+                                          "Ukraine"],
+                      "Scandinavia": ["Ukraine", "Northern Europe", "Iceland", "Great Britain"],
+                      "Southern Europe": ["North Africa", "Egypt", "Middle East", "Ukraine", "Northern Europe",
+                                          "Western Europe"],
+                      "Ukraine": ["Ural", "Afghanistan", "Middle East", "Southern Europe", "Northern Europe",
+                                  "Scandinavia"],
+                      "Western Europe": ["North Africa", "Southern Europe", "Northern Europe", "Great Britain"]
+                      }
+        return dictionary

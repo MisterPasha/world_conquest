@@ -3,6 +3,7 @@ from button import Button
 
 pygame.init()
 
+
 class Country:
     country_button_image = pygame.image.load("images\\country_button.png")
 
@@ -11,20 +12,32 @@ class Country:
         self.owner = None
         self.troops = 0
         self.screen = screen
-        self.image = pygame.transform.scale(image, (screen.get_width(), screen.get_height()))
+        self.plain_image = pygame.transform.scale(image, (screen.get_width(), screen.get_height()))
+        self.image = self.plain_image
         self.color = (192, 192, 192)
         self.country_btn = self.set_button()
+        # Separate image of when country needs to be highlighted
+        self.image_highlighted = self.image
+        # When True country is Highlighted
+        self.highlighted = False
+
+    # Draws a country image with appropriate color
+    def draw(self):
+        self.screen.blit(self.image_highlighted, (0, 0)) if self.highlighted else self.screen.blit(self.image, (0, 0))
+        self.country_btn.draw(self.screen)
 
     def get_name(self):
         return self.country_name
 
     # Sets a new owner for this country
     def set_owner(self, new_owner):
+        self.highlighted = False
         self.owner = new_owner
         self.set_color()
         self.set_button_color()
         color = pygame.Color(self.color)
-        self.image = self.fill_with_color(self.image, color)
+        self.image = self.fill_with_color(self.plain_image, color)
+        self.set_highlight_color()
 
     # Sets an owner's color
     def set_color(self):
@@ -40,16 +53,10 @@ class Country:
         self.troops -= num_troops
         self.country_btn.change_text(str(self.troops))
 
-    # Draws a country image with appropriate color
-    def draw(self):
-        self.screen.blit(self.image, (0, 0))
-        self.country_btn.draw(self.screen)
-
     # function that fills countries with color
     def fill_with_color(self, image, color):
         coloured_image = pygame.Surface(self.image.get_size())
         coloured_image.fill(color)
-
         final_image = image.copy()
         final_image.blit(coloured_image, (0, 0), special_flags=pygame.BLEND_MULT)
         return final_image
@@ -99,9 +106,34 @@ class Country:
         new_btn_color = self.fill_with_color(self.country_button_image, color)
         self.country_btn.change_image(new_btn_color)
 
+    # Sets a color of the country when highlighted
+    def set_highlight_color(self):
+        yellow = (206, 222, 100)
+        pink = (201, 171, 198)
+        brown = (184, 149, 95)
+        green = (84, 199, 153)
+        red = (168, 69, 67)
+        blue = (57, 108, 196)
+        new_color = ()
+        if self.color == yellow:
+            new_color = (233, 250, 2)
+        elif self.color == pink:
+            new_color = (240, 117, 227)
+        elif self.color == brown:
+            new_color = (194, 111, 39)
+        elif self.color == green:
+            new_color = (2, 247, 149)
+        elif self.color == red:
+            new_color = (247, 5, 5)
+        elif self.color == blue:
+            new_color = (15, 4, 179)
+        color_highlighted = pygame.Color(new_color)
+        self.image_highlighted = self.fill_with_color(self.image, color_highlighted)
+
     # Checks clicks for country button
     def check_click(self, event):
         self.country_btn.check_click(event)
+
 
 class Continent:
     def __init__(self, name):

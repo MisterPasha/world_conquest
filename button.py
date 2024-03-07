@@ -4,8 +4,19 @@ pygame.init()
 
 
 class Button:
-    def __init__(self, original_image, hover_image, pos, text, font_size, width, height, font=None, action=None,
-                 hover=True):
+    def __init__(
+        self,
+        original_image,
+        hover_image,
+        pos,
+        text,
+        font_size,
+        width,
+        height,
+        font=None,
+        action=None,
+        hover=True,
+    ):
         self.original_image = pygame.transform.scale(original_image, (width, height))
         self.hover_image = pygame.transform.scale(hover_image, (width, height))
         self.image = self.original_image
@@ -45,16 +56,22 @@ class Button:
 
     # Changes current image to the new image
     def change_image(self, new_image):
-        new_image = pygame.transform.scale(new_image, (self.image.get_width(), self.image.get_height()))
+        new_image = pygame.transform.scale(
+            new_image, (self.image.get_width(), self.image.get_height())
+        )
         self.image = new_image
 
     # Specific feature for "Switch" type buttons
     def click(self, unclicked_image, clicked_image):
         if self.clicked:
-            self.image = pygame.transform.scale(unclicked_image, (self.image.get_width(), self.image.get_height()))
+            self.image = pygame.transform.scale(
+                unclicked_image, (self.image.get_width(), self.image.get_height())
+            )
             self.clicked = False
         else:
-            self.image = pygame.transform.scale(clicked_image, (self.image.get_width(), self.image.get_height()))
+            self.image = pygame.transform.scale(
+                clicked_image, (self.image.get_width(), self.image.get_height())
+            )
             self.clicked = True
 
     def change_text(self, new_text):

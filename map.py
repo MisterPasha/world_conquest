@@ -13,12 +13,13 @@ map_img = pygame.image.load("images\\map.jpg")
 button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
 font1 = "fonts\\font1.ttf"
+
 # Color sets
 YELLOW = (206, 222, 100)
 PINK = (201, 171, 198)
 BROWN = (184, 149, 95)
 GREEN = (84, 199, 153)
-RED = (168, 69, 67)    # (204, 40, 37)
+RED = (168, 69, 67)  # (204, 40, 37)
 BLUE = (57, 108, 196)  # (47, 122, 250)
 
 
@@ -28,8 +29,14 @@ class Map:
         self.players = 0
         self.AI_players = 0
         self.center_x, self.center_y = screen.get_width() / 2, screen.get_height() / 2
-        self.map_img = pygame.transform.scale(map_img, (screen.get_width(), screen.get_height()))
-        self.plate_img = pygame.transform.scale(plate_img, (int(screen.get_height() / 4), int(screen.get_height() / 4)))
+
+        self.map_img = pygame.transform.scale(
+            map_img, (screen.get_width(), screen.get_height())
+        )
+        self.plate_img = pygame.transform.scale(
+            plate_img, (int(screen.get_height() / 4), int(screen.get_height() / 4))
+        )
+
         self.state = None
         self.buttons = self.create_buttons()
         self.countries = []
@@ -65,7 +72,7 @@ class Map:
     def set_state(self, new_state):
         self.state = new_state
 
-    # Sets number of human and ai players
+    # Sets number of human and AI players
     def set_players_and_ai(self, players, ai):
         self.players = players
         self.AI_players = ai
@@ -74,9 +81,17 @@ class Map:
     # So far just back button
     def create_buttons(self):
         buttons = []
-        back = Button(button_image, button_hover_image, (0, 0), "Back",
-                      int(self.center_y * 0.08), int(self.center_x * 0.1), int(self.center_y * 0.1), font=font1,
-                      action=lambda: self.set_state(0))
+        back = Button(
+            button_image,
+            button_hover_image,
+            (0, 0),
+            "Back",
+            int(self.center_y * 0.08),
+            int(self.center_x * 0.1),
+            int(self.center_y * 0.1),
+            font=font1,
+            action=lambda: self.set_state(0),
+        )
         buttons.append(back)
         return buttons
 
@@ -86,13 +101,18 @@ class Map:
         all_profiles = MainMenu.player_images
         players_in_game = []
         for i in range(self.players + self.AI_players):
-            players_in_game.append(Human(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i]))
+            players_in_game.append(
+                Human(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i])
+            )
         for i, player in enumerate(players_in_game):
             width = int(self.center_x * 0.08)
             height = width
-            player.set_pos_size(self.screen.get_width() - width,
-                                int(self.screen.get_height() / 10 * (i+1)),
-                                width, height)
+            player.set_pos_size(
+                self.screen.get_width() - width,
+                int(self.screen.get_height() / 10 * (i + 1)),
+                width,
+                height,
+            )
         self.player_profiles = players_in_game
 
     # Returns a list of Player objects
@@ -100,7 +120,7 @@ class Map:
         return self.player_profiles
 
     # Another dummy thing, just to see who's turn it is right now
-    # We gonna think about something better than green triangle
+    # Were going to think about something better than green triangle
     def create_turn_indicator(self):
         size = self.center_y * 0.1
         turn_indicator = pygame.image.load("images\\green_tri.png")
@@ -114,8 +134,13 @@ class Map:
         self.screen.blit(self.turn_indicator, (x, y))
 
     def draw_dice_plate(self):
-        self.screen.blit(self.plate_img, (self.screen.get_width() - self.plate_img.get_width(),
-                                          self.screen.get_height() - self.plate_img.get_height()))
+        self.screen.blit(
+            self.plate_img,
+            (
+                self.screen.get_width() - self.plate_img.get_width(),
+                self.screen.get_height() - self.plate_img.get_height(),
+            ),
+        )
 
     # Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle
     def change_turn(self, turn):
@@ -124,7 +149,9 @@ class Map:
     def load_country_image(self, image_path):
         # Load the image and create a Country object
         cleaned_name = image_path.replace("country_imgs\\", "").replace(".png", "")
-        country = Country(self.screen, pygame.image.load(image_path).convert_alpha(), cleaned_name)
+        country = Country(
+            self.screen, pygame.image.load(image_path).convert_alpha(), cleaned_name
+        )
         with self.lock:  # Ensure thread-safe append
             self.countries.append(country)
 
@@ -142,50 +169,87 @@ class Map:
         return self.neighbours[country_name]
 
     def create_neighbours(self):
-        dictionary = {"Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
-                      "Alberta": ["Alaska", "Northwest Territory", "Ontario", "Western US"],
-                      "Central America": ["Venezuela", "Eastern US", "Western US"],
-                      "Eastern US": ["Central America", "Western US", "Ontario", "Quebec"],
-                      "Greenland": ["Iceland", "Quebec", "Ontario", "Northwest Territory"],
-                      "Northwest Territory": ["Alaska", "Alberta", "Ontario", "Greenland"],
-                      "Ontario": ["Northwest Territory", "Alberta", "Western US", "Eastern US", "Quebec", "Greenland"],
-                      "Quebec": ["Ontario", "Eastern US", "Greenland"],
-                      "Western US": ["Central America", "Eastern US", "Ontario", "Alberta"],
-                      "Argentina": ["Peru", "Brazil"],
-                      "Brazil": ["Argentina", "Peru", "Venezuela", "North Africa"],
-                      "Venezuela": ["Central America", "Peru", "Brazil"],
-                      "Peru": ["Venezuela", "Brazil", "Argentina"],
-                      "Congo": ["East Africa", "North Africa", "South Africa"],
-                      "East Africa": ["Madagascar", "South Africa", "Congo", "North Africa", "Egypt", "Middle East"],
-                      "Egypt": ["North Africa", "East Africa", "Middle East", "Southern Europe"],
-                      "Madagascar": ["South Africa", "East Africa"],
-                      "North Africa": ["Brazil", "Western Europe", "Southern Europe", "Egypt", "East Africa", "Congo"],
-                      "South Africa": ["Congo", "East Africa", "Madagascar"],
-                      "Eastern Australia": ["Western Australia", "New Guinea"],
-                      "New Guinea": ["Eastern Australia", "Western Australia", "Indonesia"],
-                      "Indonesia": ["Siam", "New Guinea", "Western Australia"],
-                      "Western Australia": ["Eastern Australia", "New Guinea", "Indonesia"],
-                      "Afghanistan": ["Ukraine", "Ural", "China", "India", "Middle East"],
-                      "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia", "Siberia"],
-                      "India": ["Middle East", "Afghanistan", "China", "Siam"],
-                      "Irkutsk": ["Mongolia", "Kamchatka", "Yakutsk", "Siberia"],
-                      "Japan": ["Mongolia", "Kamchatka"],
-                      "Kamchatka": ["Japan", "Mongolia", "Irkutsk", "Yakutsk", "Alaska"],
-                      "Middle East": ["East Africa", "Egypt", "Southern Europe", "Ukraine", "Afghanistan", "India"],
-                      "Mongolia": ["China", "Siberia", "Irkutsk", "Kamchatka", "Japan"],
-                      "Siam": ["India", "China", "Indonesia"],
-                      "Siberia": ["Ural", "China", "Mongolia", "Irkutsk", "Yakutsk"],
-                      "Ural": ["Ukraine", "Afghanistan", "China", "Siberia"],
-                      "Yakutsk": ["Siberia", "Irkutsk", "Kamchatka"],
-                      "Great Britain": ["Iceland", "Scandinavia", "Northern Europe", "Western Europe"],
-                      "Iceland": ["Greenland", "Great Britain", "Scandinavia"],
-                      "Northern Europe": ["Southern Europe", "Western Europe", "Great Britain", "Scandinavia",
-                                          "Ukraine"],
-                      "Scandinavia": ["Ukraine", "Northern Europe", "Iceland", "Great Britain"],
-                      "Southern Europe": ["North Africa", "Egypt", "Middle East", "Ukraine", "Northern Europe",
-                                          "Western Europe"],
-                      "Ukraine": ["Ural", "Afghanistan", "Middle East", "Southern Europe", "Northern Europe",
-                                  "Scandinavia"],
-                      "Western Europe": ["North Africa", "Southern Europe", "Northern Europe", "Great Britain"]
+        dictionary = {
+            "Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
+
+            "Alberta": ["Alaska", "Northwest Territory", "Ontario", "Western US"],
+
+            "Central America": ["Venezuela", "Eastern US", "Western US"],
+
+            "Eastern US": ["Central America", "Western US", "Ontario", "Quebec"],
+
+            "Greenland": ["Iceland", "Quebec", "Ontario", "Northwest Territory"],
+
+            "Northwest Territory": ["Alaska", "Alberta", "Ontario", "Greenland"],
+
+            "Ontario": ["Northwest Territory", "Alberta", "Western US", "Eastern US", "Quebec", "Greenland"],
+
+            "Quebec": ["Ontario", "Eastern US", "Greenland"],
+
+            "Western US": ["Central America", "Eastern US", "Ontario", "Alberta"],
+
+            "Argentina": ["Peru", "Brazil"],
+
+            "Brazil": ["Argentina", "Peru", "Venezuela", "North Africa"],
+
+            "Venezuela": ["Central America", "Peru", "Brazil"],
+
+            "Peru": ["Venezuela", "Brazil", "Argentina"],
+
+            "Congo": ["East Africa", "North Africa", "South Africa"],
+
+            "East Africa": ["Madagascar", "South Africa", "Congo", "North Africa", "Egypt", "Middle East"],
+
+            "Egypt": ["North Africa", "East Africa", "Middle East", "Southern Europe"],
+
+            "Madagascar": ["South Africa", "East Africa"],
+
+            "North Africa": ["Brazil", "Western Europe", "Southern Europe", "Egypt", "East Africa", "Congo"],
+
+            "South Africa": ["Congo", "East Africa", "Madagascar"],
+
+            "Eastern Australia": ["Western Australia", "New Guinea"],
+
+            "New Guinea": ["Eastern Australia", "Western Australia", "Indonesia"],
+
+            "Indonesia": ["Siam", "New Guinea", "Western Australia"],
+
+            "Western Australia": ["Eastern Australia", "New Guinea", "Indonesia"],
+
+            "Afghanistan": ["Ukraine", "Ural", "China", "India", "Middle East"],
+
+            "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia", "Siberia"],
+
+            "India": ["Middle East", "Afghanistan", "China", "Siam"],
+
+            "Irkutsk": ["Mongolia", "Kamchatka", "Yakutsk", "Siberia"],
+
+            "Japan": ["Mongolia", "Kamchatka"], "Kamchatka": ["Japan", "Mongolia", "Irkutsk", "Yakutsk", "Alaska"],
+
+            "Middle East": ["East Africa", "Egypt", "Southern Europe", "Ukraine", "Afghanistan", "India"],
+
+            "Mongolia": ["China", "Siberia", "Irkutsk", "Kamchatka", "Japan"],
+
+            "Siam": ["India", "China", "Indonesia"],
+
+            "Siberia": ["Ural", "China", "Mongolia", "Irkutsk", "Yakutsk"],
+
+            "Ural": ["Ukraine", "Afghanistan", "China", "Siberia"],
+
+            "Yakutsk": ["Siberia", "Irkutsk", "Kamchatka"],
+
+            "Great Britain": ["Iceland", "Scandinavia", "Northern Europe", "Western Europe"],
+
+            "Iceland": ["Greenland", "Great Britain", "Scandinavia"],
+
+            "Northern Europe": ["Southern Europe", "Western Europe", "Great Britain", "Scandinavia", "Ukraine"],
+
+            "Scandinavia": ["Ukraine", "Northern Europe", "Iceland", "Great Britain"],
+
+            "Southern Europe": ["North Africa", "Egypt", "Middle East", "Ukraine", "Northern Europe", "Western Europe"],
+
+            "Ukraine": ["Ural", "Afghanistan", "Middle East", "Southern Europe", "Northern Europe", "Scandinavia"],
+
+            "Western Europe": ["North Africa", "Southern Europe", "Northern Europe", "Great Britain"]
                       }
         return dictionary

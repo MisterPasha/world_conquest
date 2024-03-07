@@ -2,7 +2,7 @@ import pygame
 from game import Game
 import tkinter as tk
 
-#Grab the resolution of the screen
+# Grab the resolution of the screen
 root = tk.Tk()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -10,7 +10,8 @@ screen_height = root.winfo_screenheight()
 pygame.init()
 
 # Set display mode
-screen = pygame.display.set_mode((screen_width, screen_height))  # (800, 600)/(1280, 720)/(1024x768) res for testing
+screen = pygame.display.set_mode((screen_width, screen_height))
+# (800, 600)/(1280, 720)/(1024x768) res for testing
 
 clock = pygame.time.Clock()
 

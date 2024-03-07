@@ -3,9 +3,10 @@ from main_menu import draw_text
 
 pygame.init()
 
-
 # Super Class for Human and AI agent
 # Only holds methods and attributes that both Human and AI players will have in common
+
+
 class Player:
     def __init__(self, screen, profile_img, color, color_str):
         self.screen = screen
@@ -71,6 +72,7 @@ class Human(Player):
 
     def choose_num_of_dice(self):
         return 0
+
 
 class AI(Player):
     def __init__(self, screen, profile_img, color, color_str):

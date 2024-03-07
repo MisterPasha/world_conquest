@@ -12,7 +12,11 @@ class Country:
         self.owner = None
         self.troops = 0
         self.screen = screen
-        self.plain_image = pygame.transform.scale(image, (screen.get_width(), screen.get_height()))
+
+        self.plain_image = pygame.transform.scale(
+            image, (screen.get_width(), screen.get_height())
+        )
+
         self.image = self.plain_image
         self.color = (192, 192, 192)
         self.country_btn = self.set_button()
@@ -23,7 +27,10 @@ class Country:
 
     # Draws a country image with appropriate color
     def draw(self):
-        self.screen.blit(self.image_highlighted, (0, 0)) if self.highlighted else self.screen.blit(self.image, (0, 0))
+        self.screen.blit(
+            self.image_highlighted, (0, 0)
+        ) \
+            if self.highlighted else self.screen.blit(self.image, (0, 0))
         self.country_btn.draw(self.screen)
 
     def get_name(self):
@@ -48,7 +55,7 @@ class Country:
         self.troops += num_troops
         self.country_btn.change_text(str(self.troops))
 
-    # Lemme guess? removes one troop from the country...
+    # Let me guess? removes one troop from the country...
     def remove_troops(self, num_troops):
         self.troops -= num_troops
         self.country_btn.change_text(str(self.troops))
@@ -96,10 +103,19 @@ class Country:
         new_color = tuple(color - 20 for color in self.color)
         color = pygame.Color(new_color)
         btn = self.fill_with_color(self.country_button_image, color)
-        button = Button(btn, btn, (x - size/2, y - size/2), str(self.troops), int(size * 0.8), size, size, hover=False)
+        button = Button(
+            btn,
+            btn,
+            (x - size / 2, y - size / 2),
+            str(self.troops),
+            int(size * 0.8),
+            size,
+            size,
+            hover=False,
+        )
         return button
 
-    # Sets a country button with a color of the country, but little bit darker
+    # Sets a country button with a color of the country, but a little bit darker
     def set_button_color(self):
         new_color = tuple(color - 20 for color in self.color)
         color = pygame.Color(new_color)

@@ -8,8 +8,7 @@ from player import Player
 from countries import Country
 from map import Map
 
-
-#class TestButton(unittest.TestCase):
+# class TestButton(unittest.TestCase):
 #    def setUp(self):
 #        pygame.init()
 #        pygame.display.set_mode((1280, 720))  # Mock display setup for Pygame
@@ -52,7 +51,7 @@ from map import Map
 #        self.assertFalse(self.button.clicked)
 #
 #
-#class TestMainMenu(unittest.TestCase):
+# class TestMainMenu(unittest.TestCase):
 #    def setUp(self):
 #        # Mock pygame functionalities used by MainMenu
 #        pygame.init()
@@ -116,7 +115,7 @@ from map import Map
 #            self.main_menu.player_images[initial_players])
 #
 #
-#class TestPlayer(unittest.TestCase):
+# class TestPlayer(unittest.TestCase):
 #    def setUp(self):
 #        pygame.init()
 #        self.screen = pygame.display.set_mode((800, 600))
@@ -145,7 +144,7 @@ from map import Map
 #        self.assertIsNotNone(self.player.profile)
 #
 #
-#class TestCountry(unittest.TestCase):
+# class TestCountry(unittest.TestCase):
 #    def setUp(self):
 #        # Initialize pygame and create a mock screen
 #        pygame.init()
@@ -185,22 +184,25 @@ class TestMap(unittest.TestCase):
         # Mocking images and other Pygame objects that are used within the Map class
         self.mock_map_img = pygame.Surface((50, 50))
         self.mock_plate_img = pygame.Surface((50, 50))
-        with patch('map.map_img', self.mock_map_img), patch('map.plate_img', self.mock_plate_img):
+        with patch("map.map_img", self.mock_map_img), patch(
+            "map.plate_img", self.mock_plate_img
+        ):
             self.map = Map(self.screen)
 
     def test_draw(self):
         # Test draw method. This test checks if the method can be called without errors.
         # Actual drawing to the screen cannot be easily tested in a unit test.
-        with patch.object(self.map, 'draw_dice_plate') as \
-                mock_draw_plate, patch.object(self.map, 'draw_turn_indicator') as mock_draw_turn_indicator:
+        with patch.object(self.map, "draw_dice_plate") as mock_draw_plate, patch.object(
+            self.map, "draw_turn_indicator"
+        ) as mock_draw_turn_indicator:
             self.map.draw()
             mock_draw_plate.assert_called_once()
             mock_draw_turn_indicator.assert_called_once()
 
     def test_set_state(self):
         self.assertIsNone(self.map.get_state())
-        self.map.set_state('NEW_STATE')
-        self.assertEqual(self.map.get_state(), 'NEW_STATE')
+        self.map.set_state("NEW_STATE")
+        self.assertEqual(self.map.get_state(), "NEW_STATE")
 
     def test_set_players_and_ai(self):
         self.assertEqual(self.map.players, 0)
@@ -215,5 +217,5 @@ class TestMap(unittest.TestCase):
         self.assertEqual(self.map.current_turn, 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

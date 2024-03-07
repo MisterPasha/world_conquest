@@ -30,7 +30,9 @@ class Game:
         self.window_size = window_size
         self.running = True
         # image paper in gameplay
-        self.paper_img = pygame.transform.scale(self.paper_img, (screen.get_width(), screen.get_height()))
+        self.paper_img = pygame.transform.scale(
+            self.paper_img, (screen.get_width(), screen.get_height())
+        )
         # set initial state
         self.game_state = self.MAIN_MENU
         # set initial gameplay stage
@@ -108,7 +110,9 @@ class Game:
             self.map.create_countries()
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
-            self.map.set_players_and_ai(self.main_menu.get_num_players(), self.main_menu.get_num_ai_players())
+            self.map.set_players_and_ai(
+                self.main_menu.get_num_players(), self.main_menu.get_num_ai_players()
+            )
             self.map.create_players()
             # Define players
             self.players = self.map.get_players()
@@ -118,7 +122,9 @@ class Game:
             self.map = Map(self.screen)
             self.map.create_countries()
             self.map.set_state(self.GAMEPLAY_2)
-            self.map.set_players_and_ai(self.main_menu.get_num_players(), self.main_menu.get_num_ai_players())
+            self.map.set_players_and_ai(
+                self.main_menu.get_num_players(), self.main_menu.get_num_ai_players()
+            )
             self.map.create_players()
             self.players = self.map.get_players()
             self.deal_initial_troops_to_players()
@@ -154,8 +160,13 @@ class Game:
     # This function handles the decision on which player goes first
     def choose_first_turn(self):
         self.map.change_turn(self.dice_throw_index)
-        if self.dice_throw_index < len(self.players) and not self.showing_dice_animation:
-            total = [self.dice.throw() for _ in range(3)]  # makes list of 3 random dice values, like 3 dice thrown
+        if (
+            self.dice_throw_index < len(self.players)
+            and not self.showing_dice_animation
+        ):
+            total = [
+                self.dice.throw() for _ in range(3)
+            ]  # makes list of 3 random dice values, like 3 dice thrown
             self.dice_thrown.append(total)
             self.showing_dice_animation = True
             self.animation_start_time = pygame.time.get_ticks()
@@ -175,7 +186,10 @@ class Game:
             current_time = pygame.time.get_ticks()
             if current_time - self.animation_start_time < 3000:  # 2 seconds
                 # Call the dice.animation method to display the animation
-                self.dice.animation(self.dice_thrown[-1], self.players[self.dice_throw_index].get_color_name())
+                self.dice.animation(
+                    self.dice_thrown[-1],
+                    self.players[self.dice_throw_index].get_color_name(),
+                )
             else:
                 self.showing_dice_animation = False
 
@@ -186,8 +200,8 @@ class Game:
         rand_ints = random.sample(range(0, 42), 42)
         part_size = len(rand_ints) // 3
         set1 = rand_ints[:part_size]
-        set2 = rand_ints[part_size:part_size*2]
-        set3 = rand_ints[part_size*2:]
+        set2 = rand_ints[part_size: part_size * 2]
+        set3 = rand_ints[part_size * 2:]
         for country_index in set1:
             self.map.countries[country_index].set_owner(self.players[0])
             self.map.countries[country_index].add_troops(1)
@@ -202,7 +216,7 @@ class Game:
             self.map.countries[country_index].add_troops(1)
         self.countries_divided = True
 
-    # Gives certain amount of available troops to the players
+    # Gives certain amount of available troops to the players.
     # Players placing their troops until no available troops remain
     # Then switching to the next gameplay stage
     def occupy_country(self, country):
@@ -241,14 +255,18 @@ class Game:
 
     def attack_country(self, country):
         current_player = self.players[self.current_turn]
-        if country == self.country_selected:   # Unselect Country by second click
+        if country == self.country_selected:  # Unselect Country by second click
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
             self.country_selected = None
             print("unselected")
-        elif country in current_player.countries:  # Error message when trying to attack own country
+        elif (
+            country in current_player.countries
+        ):  # Error message when trying to attack own country
             print("It is dumb to attack yourself")
-        elif country.get_name() in self.map.get_neighbours(self.country_selected.get_name()):  # Attack!
+        elif country.get_name() in self.map.get_neighbours(
+            self.country_selected.get_name()
+        ):  # Attack!
             country.remove_troops(1)
             if country.troops <= 0:
                 country.owner.remove_country(country)
@@ -273,7 +291,10 @@ class Game:
     def highlight_neighbour_countries(self, country, highlight):
         neighbour_country_names = self.map.get_neighbours(country.get_name())
         for c in self.map.countries:
-            if c.get_name() in neighbour_country_names and c not in self.players[self.current_turn].countries:
+            if (
+                c.get_name() in neighbour_country_names
+                and c not in self.players[self.current_turn].countries
+            ):
                 c.highlighted = True if highlight else False
 
     # Depending on number of players it deals different amount of initial troops during setup

@@ -4,6 +4,7 @@ from main_menu import draw_text
 
 pygame.init()
 
+
 class Dice:
     # Loading dice face images
     # Assumes that all dice images are of the same dimensions and format
@@ -56,4 +57,4 @@ class Dice:
             dice_dict[i + 1] = die
         return dice_dict
 
-# ehhh wassup doc -test push
+# eh-hh was-sup doc -test push

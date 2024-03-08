@@ -22,6 +22,7 @@ def draw_text(
 
 
 class MainMenu:
+    #...
     background_image = pygame.image.load("images\\background_main_high.png")
     button_image = pygame.image.load("images\\button_high.png")
     button_hover_image = pygame.image.load("images\\button_hover.png")
@@ -45,9 +46,14 @@ class MainMenu:
     font1 = "fonts\\font1.ttf"
 
     def __init__(self, screen):
+        """
+
+        :param screen:
+        """
         self.screen = screen
         self.opt_menu = False
         self.setting_menu = False
+        self.faq_menu = False
         self.state = 0
         self.players = 0
         self.AI_agents = 0
@@ -77,8 +83,13 @@ class MainMenu:
         self.small_buttons = self.create_small_buttons()
         self.main_menu_buttons = self.create_main_menu_buttons()
         self.new_menu_buttons = self.create_new_game_menu_buttons()
+        self.faq_menu_buttons = self.create_faq_menu_buttons()
 
     def draw(self):
+        """
+
+        :return:
+        """
         self.screen.blit(self.background_image, (0, 0))
         self.screen.blit(
             self.logo_image, (int(self.center_x * 1.3), int(self.center_y * 0.1))
@@ -87,8 +98,14 @@ class MainMenu:
             for button in self.main_menu_buttons:
                 button.draw(self.screen)
         self.draw_opt_menu()
+        if self.faq_menu:
+            self.draw_faq_menu()
 
     def draw_opt_menu(self):
+        """
+
+        :return:
+        """
         if self.opt_menu:
             self.screen.blit(
                 self.new_game_paper,
@@ -112,9 +129,37 @@ class MainMenu:
                 self.small_buttons[i].draw(self.screen)
                 self.small_buttons[i + 6].draw(self.screen)
 
+    def draw_faq_menu(self):
+        """
+
+        :return:
+        """
+        self.screen.blit(
+            self.new_game_paper,
+            (int(self.center_x * 0.08), int(self.center_y * 0.12)),
+        )
+        draw_text(
+            self.screen,
+            "FAQ",
+            int(self.center_y * 0.17),
+            (0, 0, 0),
+            int(self.center_x * 0.14),
+            int(self.center_y * 0.18),
+            font=self.font1,
+        )
+        for button in self.faq_menu_buttons:
+            button.draw(self.screen)
+
     def check_clicks(self, event):
+        """
+
+        :param event:
+        :return:
+        """
         if not self.opt_menu:
             for button in self.main_menu_buttons:
+                button.check_click(event)
+            for button in self.faq_menu_buttons:
                 button.check_click(event)
         else:
             for button in self.new_menu_buttons:
@@ -124,6 +169,11 @@ class MainMenu:
                 self.small_buttons[i + 6].check_click(event)
 
     def draw_icon(self, slot):
+        """
+
+        :param slot:
+        :return:
+        """
         self.screen.blit(
             self.human_image,
             (int(slot.x + slot.image.get_width() + self.center_x * 0.05), int(slot.y)),
@@ -137,6 +187,11 @@ class MainMenu:
         )
 
     def set_opt_menu(self, state):
+        """
+
+        :param state:
+        :return:
+        """
         self.opt_menu = state
         self.players = 0
         self.AI_agents = 0
@@ -144,12 +199,27 @@ class MainMenu:
             slot.change_image(self.player_slot_image)
 
     def set_setting_menu(self, state):
+        """
+
+        :param state:
+        :return:
+        """
         self.setting_menu = state
 
     def set_faq_menu(self, state):
+        """
+
+        :param state:
+        :return:
+        """
         self.faq_menu = state
 
     def change_state(self, new_state):
+        """
+
+        :param new_state:
+        :return:
+        """
         if new_state == 1:
             if self.players + self.AI_agents == 2:
                 self.state = 2
@@ -159,15 +229,31 @@ class MainMenu:
             self.state = new_state
 
     def get_state(self):
+        """
+
+        :return:
+        """
         return self.state
 
     def get_num_players(self):
+        """
+
+        :return:
+        """
         return self.players
 
     def get_num_ai_players(self):
+        """
+
+        :return:
+        """
         return self.AI_agents
 
     def add_player(self):
+        """
+
+        :return:
+        """
         if (self.players + self.AI_agents) < 6:
             self.players += 1
             self.player_slots[(self.players + self.AI_agents) - 1].change_image(
@@ -175,6 +261,10 @@ class MainMenu:
             )
 
     def remove_player(self):
+        """
+
+        :return:
+        """
         if (self.players + self.AI_agents) > 0:
 
             self.player_slots[(self.players + self.AI_agents) - 1].change_image(
@@ -194,6 +284,10 @@ class MainMenu:
                 )
 
     def create_main_menu_buttons(self):
+        """
+
+        :return:
+        """
         play = Button(
             self.button_image,
             self.button_hover_image,
@@ -225,7 +319,7 @@ class MainMenu:
             int(self.center_x * 0.35),
             int(self.center_y * 0.2),
             font=self.font1,
-            action=lambda: self.set_faq_menu(True),
+            action=lambda: self.set_faq_menu(True)  # Use lambda to defer execution
         )
         quit_b = Button(
             self.button_image,
@@ -241,6 +335,10 @@ class MainMenu:
         return [play, settings, FAQ, quit_b]
 
     def create_new_game_menu_buttons(self):
+        """
+
+        :return:
+        """
         play = Button(
             self.button_image,
             self.button_hover_image,
@@ -287,7 +385,29 @@ class MainMenu:
         )
         return [play, back, add, remove]
 
+    def create_faq_menu_buttons(self):
+        """
+
+        :return:
+        """
+        back = Button(
+            self.button_image,
+            self.button_hover_image,
+            (int(self.center_x * 0.13), int(self.center_y * 1.7)),
+            "Back",
+            int(self.center_y * 0.08),
+            int(self.center_x * 0.2),
+            int(self.center_y * 0.15),
+            font=self.font1,
+            action=lambda: self.set_faq_menu(False),
+        )
+        return [back]
+
     def create_player_slots(self):
+        """
+
+        :return:
+        """
         slots1 = [
             Button(
                 self.player_slot_image,
@@ -317,6 +437,12 @@ class MainMenu:
         return slots1 + slots2
 
     def swap_to(self, button, player):
+        """
+
+        :param button:
+        :param player:
+        :return:
+        """
         def action():
             index = self.small_buttons.index(button)
             if player == "human" and button.clicked is False:
@@ -337,6 +463,10 @@ class MainMenu:
         return action
 
     def create_small_buttons(self):
+        """
+
+        :return:
+        """
         buttons1 = []
         buttons2 = []
         for slot in self.player_slots:

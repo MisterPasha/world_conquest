@@ -9,6 +9,13 @@ pygame.init()
 
 class Player:
     def __init__(self, screen, profile_img, color, color_str):
+        """
+
+        :param screen:
+        :param profile_img:
+        :param color:
+        :param color_str:
+        """
         self.screen = screen
         self.profile = profile_img
         self.color = color
@@ -27,20 +34,41 @@ class Player:
 
     # Adds troops that need to be placed
     def add_avail_troops(self, num_of_troops):
+        """
+
+        :param num_of_troops:
+        :return:
+        """
         self.troops_available += num_of_troops
 
     def remove_avail_troop(self):
+        """
+
+        :return:
+        """
         self.troops_available -= 1
         self.troops_holds += 1
 
     # Set Position and size of the profile image
     def set_pos_size(self, x, y, width, height):
+        """
+
+        :param x:
+        :param y:
+        :param width:
+        :param height:
+        :return:
+        """
         self.pos = (x, y)
         self.size = (width, height)
         self.profile = pygame.transform.scale(self.profile, self.size)
 
     # Draws profiles on the map
     def draw_profile(self):
+        """
+
+        :return:
+        """
         self.screen.blit(self.profile, self.pos)
         draw_text(self.screen, f"troops: {self.troops_holds}", int(self.size[0] * 0.45), (0, 0, 0),
                   int(self.pos[0] * 0.92), int(self.pos[1] + 10))
@@ -48,29 +76,67 @@ class Player:
                   int(self.pos[0] * 0.92), int(self.pos[1] + 30))
 
     def get_color(self):
+        """
+
+        :return:
+        """
         return self.color
 
     def get_color_name(self):
+        """
+
+        :return:
+        """
         return self.color_str
 
     def add_country(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         self.countries.append(country)
 
     def remove_country(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         self.countries.remove(country)
 
 
 class Human(Player):
     def __init__(self, screen, profile_img, color, color_str):
+        """
+
+        :param screen:
+        :param profile_img:
+        :param color:
+        :param color_str:
+        """
         super().__init__(screen, profile_img, color, color_str)
 
     def attack(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         print("attack", country)
 
     def roll_dice(self):
+        """
+
+        :return:
+        """
         return 0
 
     def choose_num_of_dice(self):
+        """
+
+        :return:
+        """
         return 0
 
 

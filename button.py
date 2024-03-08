@@ -1,10 +1,11 @@
 import pygame
 
 pygame.init()
-
+pygame.mixer.init()
 
 class Button:
     def __init__(
+        #...
         self,
         original_image,
         hover_image,
@@ -31,7 +32,11 @@ class Button:
         self.hover_enabled = hover
 
     def draw(self, screen):
-        # Change image when cursor hovers button
+        """
+        Change image when cursor hovers button
+        :param screen:
+        :return:
+        """
         if self.hover_enabled:
             if self.rect.collidepoint(pygame.mouse.get_pos()):
                 self.image = self.hover_image
@@ -73,6 +78,7 @@ class Button:
                 clicked_image, (self.image.get_width(), self.image.get_height())
             )
             self.clicked = True
+
 
     def change_text(self, new_text):
         self.text = new_text

@@ -58,6 +58,8 @@ class Game:
         self.animation_start_time = None
         self.dice_thrown = []
         self.dice_throw_index = 0
+        self.attack_dice = []
+        self.defend_dice = []
         # Attributes for attacking phase
         self.country_selected = None
         self.selected = False
@@ -72,7 +74,7 @@ class Game:
             self.events()
             self.draw()
             self.clock.tick(60)
-            pygame.display.flip()
+            pygame.display.update()  # pygame.display.flip() ?
 
     # Controls all event types
     def events(self):
@@ -110,13 +112,19 @@ class Game:
             self.map.draw()
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
                 self.screen.blit(self.paper_img, (0, 0))
-            self.dice_animate()
+                self.dice_animate()
+            elif self.gameplay_stage == self.ATTACK:
+                self.dice.draw_dice_w(self.defend_dice)
+                self.dice.draw_dice_r(self.attack_dice)
         if self.game_state == self.GAMEPLAY_2:
             self.check_state_gameplay()
             self.map.draw()
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
                 self.screen.blit(self.paper_img, (0, 0))
-            self.dice_animate()
+                self.dice_animate()
+            elif self.gameplay_stage == self.ATTACK:
+                self.dice.draw_dice_w(self.defend_dice)
+                self.dice.draw_dice_r(self.attack_dice)
 
     def check_state_main_menu(self):
         """
@@ -317,14 +325,17 @@ class Game:
             self.selected = False
             self.country_selected = None
             print("unselected")
-        elif (
-            country in current_player.countries
-        ):  # Error message when trying to attack own country
+        elif country in current_player.countries:  # Error message when trying to attack own country
             print("It is dumb to attack yourself")
         elif country.get_name() in self.map.get_neighbours(
             self.country_selected.get_name()
         ):  # Attack!
-            country.remove_troops(1)
+            attacker_lost_armies, defender_lost_armies, a, d = \
+                current_player.attack(self.country_selected, country)
+            self.attack_dice = a
+            self.defend_dice = d
+            country.remove_troops(defender_lost_armies)
+            self.country_selected.remove_troops(attacker_lost_armies)
             if country.troops <= 0:
                 country.owner.remove_country(country)
                 country.set_owner(current_player)
@@ -332,7 +343,7 @@ class Game:
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
             self.country_selected = None
-            self.pass_turn()
+            #self.pass_turn()
         else:
             print("You can only attack neighbour countries")
 
@@ -345,6 +356,8 @@ class Game:
         current_player = self.players[self.current_turn]
         if country.owner is not current_player:
             print("Can select only owned country!")
+        elif country.troops < 2:
+            print("Not enough troops")
         else:
             self.selected = True
             self.country_selected = country

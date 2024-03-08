@@ -7,13 +7,22 @@ pygame.init()
 
 class Dice:
     # Loading dice face images.
-    dice = [
+    dice_w = [
         pygame.image.load("images\\die1.png"),
         pygame.image.load("images\\die2.png"),
         pygame.image.load("images\\die3.png"),
         pygame.image.load("images\\die4.png"),
         pygame.image.load("images\\die5.png"),
         pygame.image.load("images\\die6.png"),
+    ]
+
+    dice_r = [
+        pygame.image.load("images\\red_die1.png"),
+        pygame.image.load("images\\red_die2.png"),
+        pygame.image.load("images\\red_die3.png"),
+        pygame.image.load("images\\red_die4.png"),
+        pygame.image.load("images\\red_die5.png"),
+        pygame.image.load("images\\red_die6.png"),
     ]
 
     def __init__(self, screen):
@@ -48,11 +57,11 @@ class Dice:
             int(self.screen.get_width() * 0.3),
             int(self.screen.get_height() * 0.7),
         )
-        self.draw_dice(nums)
+        self.draw_dice_w(nums)
 
-    def draw_dice(self, nums):
+    def draw_dice_w(self, nums):
         """
-        Draws the dice images on the screen based on the rolls provided in `nums`.
+        Draws the white dice images on the screen based on the rolls provided in `nums`.
         It positions each die image on the screen
         :param nums:
         :return:
@@ -60,18 +69,30 @@ class Dice:
         for i, num in enumerate(nums):
             x = int(self.screen.get_width() * 0.93)
             y = int(self.screen.get_height() * (0.9 - i * 0.07))
-            self.screen.blit(self.dice_dict[num], (x, y))
+            self.screen.blit(self.dice_dict["w"][num], (x, y))
+
+    def draw_dice_r(self, nums):
+        """
+        Draws the red dice images on the screen based on the rolls provided in `nums`.
+        It positions each die image on the screen
+        :param nums:
+        :return:
+        """
+        for i, num in enumerate(nums):
+            x = int(self.screen.get_width() * 0.89)
+            y = int(self.screen.get_height() * (0.9 - i * 0.07))
+            self.screen.blit(self.dice_dict["r"][num], (x, y))
 
     def create_dice(self):
         """
         Prepares and returns a dictionary mapping each die face value (1 through 6) to its corresponding scaled image.
         :return: dice_dict
         """
-        dice_dict = {}
         size = int(self.screen.get_height() * 0.05)
-        dice = [pygame.transform.scale(die_img, (size, size)) for die_img in self.dice]
-        for i, die in enumerate(dice):
-            dice_dict[i + 1] = die
+        dice_w = [pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w]
+        dice_r = [pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w]
+        dice_dict = {"w": {}, "r": {}}
+        for i, (die_w, die_r) in enumerate(zip(dice_w, dice_r)):
+            dice_dict["w"][i + 1] = die_w
+            dice_dict["r"][i + 1] = die_r
         return dice_dict
-
-# eh-hh was-sup doc -test push

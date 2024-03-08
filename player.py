@@ -1,5 +1,6 @@
 import pygame
 from main_menu import draw_text
+from dice import Dice
 
 pygame.init()
 
@@ -117,27 +118,38 @@ class Human(Player):
         """
         super().__init__(screen, profile_img, color, color_str)
 
-    def attack(self, country):
+    def attack(self, my_country, defending_country):
         """
-
-        :param country:
+        :param my_country:
+        :param defending_country:
         :return:
         """
-        print("attack", country)
+        die = Dice(self.screen)
 
-    def roll_dice(self):
-        """
+        # define number of attacking troops (Should be chosen by player, but hardcoded for now)
+        attackers = my_country.troops - 1 if my_country.troops <= 3 else 3
+        # define number of defending troops (Should be chosen by player, but hardcoded for now)
+        defenders = defending_country.troops if defending_country.troops <= 2 else 2
 
-        :return:
-        """
-        return 0
+        attack_dice_values = [die.throw() for _ in range(attackers)]
+        defend_dice_values = [die.throw() for _ in range(defenders)]
 
-    def choose_num_of_dice(self):
-        """
+        # sort values in descending order to compare dice
+        sorted_attack_values = sorted(attack_dice_values, reverse=True)
+        sorted_defend_values = sorted(defend_dice_values, reverse=True)
 
-        :return:
-        """
-        return 0
+        # Initialize counters for lost troops
+        attacker_lost_armies = 0
+        defender_lost_armies = 0
+
+        # Compare dice rolls
+        for a_value, d_value in zip(sorted_attack_values, sorted_defend_values):
+            if a_value > d_value:
+                defender_lost_armies += 1
+            else:
+                attacker_lost_armies += 1
+
+        return attacker_lost_armies, defender_lost_armies, attack_dice_values, defend_dice_values
 
 
 class AI(Player):
@@ -147,8 +159,3 @@ class AI(Player):
     def attack(self, country):
         print("attack", country)
 
-    def roll_dice(self):
-        return 0
-
-    def choose_num_of_dice(self):
-        return 0

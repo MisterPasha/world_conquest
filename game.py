@@ -25,6 +25,12 @@ class Game:
     FORTIFY = 4
 
     def __init__(self, screen, clock, window_size):
+        """
+
+        :param screen:
+        :param clock:
+        :param window_size:
+        """
         self.screen = screen
         self.clock = clock
         self.window_size = window_size
@@ -58,6 +64,10 @@ class Game:
 
     # Main running loop
     def run(self):
+        """
+
+        :return:
+        """
         while self.running:
             self.events()
             self.draw()
@@ -66,6 +76,10 @@ class Game:
 
     # Controls all event types
     def events(self):
+        """
+
+        :return:
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -84,6 +98,10 @@ class Game:
 
     # Draws all elements on the screen
     def draw(self):
+        """
+
+        :return:
+        """
         if self.game_state == self.MAIN_MENU:
             self.check_state_main_menu()
             self.main_menu.draw()
@@ -100,9 +118,12 @@ class Game:
                 self.screen.blit(self.paper_img, (0, 0))
             self.dice_animate()
 
-    # Keeps track of current game states in objects and activates necessary functions
-    # (for gameplay setup) during MAIN MENU state
     def check_state_main_menu(self):
+        """
+        Keeps track of current game states in objects and activates necessary functions.
+        (for gameplay setup) during MAIN MENU state
+        :return:
+        """
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
@@ -132,8 +153,11 @@ class Game:
         elif self.main_menu.get_state() == self.EXIT:
             self.game_state = self.EXIT
 
-    # Keeps track of current game states in objects and activates necessary functions during GAMEPLAY1 state
     def check_state_gameplay(self):
+        """
+        Keeps track of current game states in objects and activates necessary functions during GAMEPLAY1 state
+        :return:
+        """
         if self.map.get_state() == self.MAIN_MENU:
             self.gameplay_stage = self.CHOOSE_FIRST_TURN
             self.game_state = self.MAIN_MENU
@@ -151,14 +175,21 @@ class Game:
 
     # pass turn to the next player
     def pass_turn(self):
+        """
+
+        :return:
+        """
         if self.current_turn == len(self.players) - 1:
             self.current_turn = 0
         else:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
 
-    # This function handles the decision on which player goes first
     def choose_first_turn(self):
+        """
+        This function handles the decision on which player goes first
+        :return:
+        """
         self.map.change_turn(self.dice_throw_index)
         if (
             self.dice_throw_index < len(self.players)
@@ -182,6 +213,10 @@ class Game:
                     self.gameplay_stage = self.SETUP
 
     def dice_animate(self):
+        """
+
+        :return:
+        """
         if self.showing_dice_animation:
             current_time = pygame.time.get_ticks()
             if current_time - self.animation_start_time < 3000:  # 2 seconds
@@ -197,6 +232,12 @@ class Game:
     # it sets randomly initial 14 owned countries to each player and sets the rest as neutral.
     # Adds 1 troop to each country
     def divide_countries(self):
+        """
+        Specific function for 2 player game.
+        It sets randomly initial 14 owned countries to each player and sets the rest as neutral.
+        Adds 1 troop to each country
+        :return:
+        """
         rand_ints = random.sample(range(0, 42), 42)
         part_size = len(rand_ints) // 3
         set1 = rand_ints[:part_size]
@@ -220,6 +261,13 @@ class Game:
     # Players placing their troops until no available troops remain
     # Then switching to the next gameplay stage
     def occupy_country(self, country):
+        """
+        Gives certain amount of available troops to the players.
+        Players placing their troops until no available troops remain.
+        Then switching to the next gameplay stage
+        :param country:
+        :return:
+        """
         current_player = self.players[self.current_turn]
         if current_player.troops_available > 0:
             if len(self.map.countries) == 42:
@@ -239,9 +287,13 @@ class Game:
         else:
             self.gameplay_stage = self.ATTACK
 
-    # This function is specifically for country buttons
-    # It triggers different methods depending on gameplay stage
     def handle_country_clicks(self, mouse_pos):
+        """
+        This function is specifically for country buttons.
+        It triggers different methods depending on gameplay stage
+        :param mouse_pos:
+        :return:
+        """
         if self.map.countries is not None:
             for country in self.map.countries:
                 if country.country_btn.rect.collidepoint(mouse_pos):
@@ -254,6 +306,11 @@ class Game:
                             self.select_country(country)
 
     def attack_country(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         current_player = self.players[self.current_turn]
         if country == self.country_selected:  # Unselect Country by second click
             self.highlight_neighbour_countries(self.country_selected, False)
@@ -280,6 +337,11 @@ class Game:
             print("You can only attack neighbour countries")
 
     def select_country(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         current_player = self.players[self.current_turn]
         if country.owner is not current_player:
             print("Can select only owned country!")
@@ -289,6 +351,12 @@ class Game:
             self.highlight_neighbour_countries(self.country_selected, True)
 
     def highlight_neighbour_countries(self, country, highlight):
+        """
+
+        :param country:
+        :param highlight:
+        :return:
+        """
         neighbour_country_names = self.map.get_neighbours(country.get_name())
         for c in self.map.countries:
             if (
@@ -299,6 +367,10 @@ class Game:
 
     # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):
+        """
+
+        :return:
+        """
         troops = 0
         if len(self.players) == 2:
             troops = 40

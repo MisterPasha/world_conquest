@@ -3,20 +3,21 @@ import pygame
 pygame.init()
 pygame.mixer.init()
 
+
 class Button:
     def __init__(
-        #...
-        self,
-        original_image,
-        hover_image,
-        pos,
-        text,
-        font_size,
-        width,
-        height,
-        font=None,
-        action=None,
-        hover=True,
+            # ...
+            self,
+            original_image,
+            hover_image,
+            pos,
+            text,
+            font_size,
+            width,
+            height,
+            font=None,
+            action=None,
+            hover=True,
     ):
         self.original_image = pygame.transform.scale(original_image, (width, height))
         self.hover_image = pygame.transform.scale(hover_image, (width, height))
@@ -53,6 +54,11 @@ class Button:
 
     # If click on self object is detected it triggers assigned function
     def check_click(self, event):
+        """
+
+        :param event:
+        :return:
+        """
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if self.rect.collidepoint(event.pos):
@@ -61,6 +67,11 @@ class Button:
 
     # Changes current image to the new image
     def change_image(self, new_image):
+        """
+
+        :param new_image:
+        :return:
+        """
         new_image = pygame.transform.scale(
             new_image, (self.image.get_width(), self.image.get_height())
         )
@@ -68,6 +79,12 @@ class Button:
 
     # Specific feature for "Switch" type buttons
     def click(self, unclicked_image, clicked_image):
+        """
+
+        :param unclicked_image:
+        :param clicked_image:
+        :return:
+        """
         if self.clicked:
             self.image = pygame.transform.scale(
                 unclicked_image, (self.image.get_width(), self.image.get_height())
@@ -79,6 +96,10 @@ class Button:
             )
             self.clicked = True
 
-
     def change_text(self, new_text):
+        """
+
+        :param new_text:
+        :return:
+        """
         self.text = new_text

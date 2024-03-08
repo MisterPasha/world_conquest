@@ -8,6 +8,7 @@ import os
 
 pygame.init()
 
+# ...
 plate_img = pygame.image.load("images\\dice_table.png")
 map_img = pygame.image.load("images\\map.jpg")
 button_image = pygame.image.load("images\\button_high.png")
@@ -25,6 +26,10 @@ BLUE = (57, 108, 196)  # (47, 122, 250)
 
 class Map:
     def __init__(self, screen):
+        """
+
+        :param screen:
+        """
         self.screen = screen
         self.players = 0
         self.AI_players = 0
@@ -48,8 +53,11 @@ class Map:
         self.turn_indicator = self.create_turn_indicator()
         self.lock = threading.Lock()
 
-    # Draws all necessary elements on the map
     def draw(self):
+        """
+        Draws all necessary elements on the map
+        :return:
+        """
         self.screen.blit(self.map_img, (0, 0))
         for button in self.buttons:
             button.draw(self.screen)
@@ -61,25 +69,47 @@ class Map:
         self.draw_dice_plate()
         self.draw_turn_indicator()
 
-    # checks clicks on buttons and countries
     def check_clicks(self, event):
+        """
+        Checks clicks on buttons and countries
+        :param event:
+        :return:
+        """
         for button in self.buttons:
             button.check_click(event)
 
     def get_state(self):
+        """
+
+        :return: self.state
+        """
         return self.state
 
     def set_state(self, new_state):
+        """
+
+        :param new_state:
+        :return:
+        """
         self.state = new_state
 
     # Sets number of human and AI players
     def set_players_and_ai(self, players, ai):
+        """
+
+        :param players:
+        :param ai:
+        :return:
+        """
         self.players = players
         self.AI_players = ai
 
-    # Creates all necessary buttons for gameplay
-    # So far just back button
     def create_buttons(self):
+        """
+        Creates all necessary buttons for gameplay.
+        So far just back button
+        :return: buttons
+        """
         buttons = []
         back = Button(
             button_image,
@@ -95,9 +125,12 @@ class Map:
         buttons.append(back)
         return buttons
 
-    # Creates players
-    # So far creates only Human Players, will be changed when we implement AI
     def create_players(self):
+        """
+        Creates players.
+        So far creates only Human Players, will be changed when we implement AI
+        :return:
+        """
         all_profiles = MainMenu.player_images
         players_in_game = []
         for i in range(self.players + self.AI_players):
@@ -115,13 +148,19 @@ class Map:
             )
         self.player_profiles = players_in_game
 
-    # Returns a list of Player objects
     def get_players(self):
+        """
+        Returns a list of Player objects
+        :return: self.player_profiles
+        """
         return self.player_profiles
 
-    # Another dummy thing, just to see who's turn it is right now
-    # Were going to think about something better than green triangle
     def create_turn_indicator(self):
+        """
+        Another dummy thing, just to see who's turn it is right now.
+        Were going to think about something better than green triangle
+        :return: turn_indicator
+        """
         size = self.center_y * 0.1
         turn_indicator = pygame.image.load("images\\green_tri.png")
         turn_indicator = pygame.transform.scale(turn_indicator, (size, size))
@@ -129,11 +168,19 @@ class Map:
 
     # Same as above
     def draw_turn_indicator(self):
+        """
+
+        :return:
+        """
         x = self.player_profiles[0].pos[0] - self.turn_indicator.get_width()
         y = self.player_profiles[self.current_turn].pos[1]
         self.screen.blit(self.turn_indicator, (x, y))
 
     def draw_dice_plate(self):
+        """
+
+        :return:
+        """
         self.screen.blit(
             self.plate_img,
             (
@@ -144,9 +191,19 @@ class Map:
 
     # Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle
     def change_turn(self, turn):
+        """
+
+        :param turn:
+        :return:
+        """
         self.current_turn = turn
 
     def load_country_image(self, image_path):
+        """
+
+        :param image_path:
+        :return:
+        """
         # Load the image and create a Country object
         cleaned_name = image_path.replace("country_imgs\\", "").replace(".png", "")
         country = Country(
@@ -156,19 +213,35 @@ class Map:
             self.countries.append(country)
 
     def load_all_images(self):
+        """
+
+        :return:
+        """
         folder_path = "country_imgs"
         images = os.listdir(folder_path)
         for file in images:
             self.load_country_image(os.path.join(folder_path, file))
 
     def create_countries(self):
-        # Start a single thread to load all images
+        """
+        Start a single thread to load all images
+        :return:
+        """
         threading.Thread(target=self.load_all_images).start()
 
     def get_neighbours(self, country_name):
+        """
+
+        :param country_name:
+        :return: self.neighbours[country_name]
+        """
         return self.neighbours[country_name]
 
     def create_neighbours(self):
+        """
+        A dictionary of a country and its neighbours
+        :return: 'dictionary' Neighbours
+        """
         dictionary = {
             "Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
 
@@ -251,5 +324,5 @@ class Map:
             "Ukraine": ["Ural", "Afghanistan", "Middle East", "Southern Europe", "Northern Europe", "Scandinavia"],
 
             "Western Europe": ["North Africa", "Southern Europe", "Northern Europe", "Great Britain"]
-                      }
+        }
         return dictionary

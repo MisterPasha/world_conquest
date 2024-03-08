@@ -5,9 +5,16 @@ pygame.init()
 
 
 class Country:
+    #...
     country_button_image = pygame.image.load("images\\country_button.png")
 
     def __init__(self, screen, image, name):
+        """
+
+        :param screen:
+        :param image:
+        :param name:
+        """
         self.country_name = name
         self.owner = None
         self.troops = 0
@@ -27,6 +34,10 @@ class Country:
 
     # Draws a country image with appropriate color
     def draw(self):
+        """
+
+        :return:
+        """
         self.screen.blit(
             self.image_highlighted, (0, 0)
         ) \
@@ -34,10 +45,19 @@ class Country:
         self.country_btn.draw(self.screen)
 
     def get_name(self):
+        """
+
+        :return:
+        """
         return self.country_name
 
     # Sets a new owner for this country
     def set_owner(self, new_owner):
+        """
+
+        :param new_owner:
+        :return:
+        """
         self.highlighted = False
         self.owner = new_owner
         self.set_color()
@@ -48,20 +68,40 @@ class Country:
 
     # Sets an owner's color
     def set_color(self):
+        """
+
+        :return:
+        """
         self.color = self.owner.get_color()
 
     # Pretty obvious...
     def add_troops(self, num_troops):
+        """
+
+        :param num_troops:
+        :return:
+        """
         self.troops += num_troops
         self.country_btn.change_text(str(self.troops))
 
     # Let me guess? removes one troop from the country...
     def remove_troops(self, num_troops):
+        """
+
+        :param num_troops:
+        :return:
+        """
         self.troops -= num_troops
         self.country_btn.change_text(str(self.troops))
 
     # function that fills countries with color
     def fill_with_color(self, image, color):
+        """
+
+        :param image:
+        :param color:
+        :return:
+        """
         coloured_image = pygame.Surface(self.image.get_size())
         coloured_image.fill(color)
         final_image = image.copy()
@@ -70,7 +110,10 @@ class Country:
 
     # finds a middle pixel of the country
     def find_country_middle(self):
-        # Ensure the image is in a format that supports per-pixel access
+        """
+        Ensure the image is in a format that supports per-pixel access
+        :return:
+        """
         if not self.image.get_locked():
             self.image.lock()
 
@@ -98,6 +141,10 @@ class Country:
 
     # creates a country button
     def set_button(self):
+        """
+
+        :return:
+        """
         x, y = self.find_country_middle()
         size = self.screen.get_height() * 0.05
         new_color = tuple(color - 20 for color in self.color)
@@ -115,8 +162,11 @@ class Country:
         )
         return button
 
-    # Sets a country button with a color of the country, but a little bit darker
     def set_button_color(self):
+        """
+        Sets a country button with a color of the country, but a little bit darker
+        :return:
+        """
         new_color = tuple(color - 20 for color in self.color)
         color = pygame.Color(new_color)
         new_btn_color = self.fill_with_color(self.country_button_image, color)
@@ -124,6 +174,10 @@ class Country:
 
     # Sets a color of the country when highlighted
     def set_highlight_color(self):
+        """
+
+        :return:
+        """
         yellow = (206, 222, 100)
         pink = (201, 171, 198)
         brown = (184, 149, 95)
@@ -146,15 +200,28 @@ class Country:
         color_highlighted = pygame.Color(new_color)
         self.image_highlighted = self.fill_with_color(self.image, color_highlighted)
 
-    # Checks clicks for country button
     def check_click(self, event):
+        """
+        Checks clicks for country button
+        :param event:
+        :return:
+        """
         self.country_btn.check_click(event)
 
 
 class Continent:
     def __init__(self, name):
+        """
+
+        :param name:
+        """
         self.name = name
         self.list_of_countries = []
 
     def add_countries(self, countries):
+        """
+
+        :param countries:
+        :return:
+        """
         self.list_of_countries = countries

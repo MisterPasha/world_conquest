@@ -179,6 +179,10 @@ from map import Map
 
 class TestMap(unittest.TestCase):
     def setUp(self):
+        """
+
+        :return:
+        """
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
         # Mocking images and other Pygame objects that are used within the Map class
@@ -190,8 +194,11 @@ class TestMap(unittest.TestCase):
             self.map = Map(self.screen)
 
     def test_draw(self):
-        # Test draw method. This test checks if the method can be called without errors.
-        # Actual drawing to the screen cannot be easily tested in a unit test.
+        """
+        Test draw method. This test checks if the method can be called without errors.
+        Actual drawing to the screen cannot be easily tested in a unit test.
+        :return:
+        """
         with patch.object(self.map, "draw_dice_plate") as mock_draw_plate, patch.object(
             self.map, "draw_turn_indicator"
         ) as mock_draw_turn_indicator:
@@ -200,11 +207,19 @@ class TestMap(unittest.TestCase):
             mock_draw_turn_indicator.assert_called_once()
 
     def test_set_state(self):
+        """
+
+        :return:
+        """
         self.assertIsNone(self.map.get_state())
         self.map.set_state("NEW_STATE")
         self.assertEqual(self.map.get_state(), "NEW_STATE")
 
     def test_set_players_and_ai(self):
+        """
+
+        :return:
+        """
         self.assertEqual(self.map.players, 0)
         self.assertEqual(self.map.AI_players, 0)
         self.map.set_players_and_ai(2, 1)
@@ -212,10 +227,14 @@ class TestMap(unittest.TestCase):
         self.assertEqual(self.map.AI_players, 1)
 
     def test_change_turn(self):
+        """
+
+        :return:
+        """
         self.assertEqual(self.map.current_turn, 0)
         self.map.change_turn(1)
         self.assertEqual(self.map.current_turn, 1)
 
-
+# ...
 if __name__ == "__main__":
     unittest.main()

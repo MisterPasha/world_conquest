@@ -6,13 +6,14 @@ pygame.init()
 
 
 def draw_text(
-    screen,
-    text,
-    size,
-    color,
-    x,
-    y,
-    font=None,
+        # ...
+        screen,
+        text,
+        size,
+        color,
+        x,
+        y,
+        font=None,
 ):
     font = pygame.font.Font(font, size)
     text_surface = font.render(text, True, color)
@@ -22,7 +23,7 @@ def draw_text(
 
 
 class MainMenu:
-    #...
+    # ...
     background_image = pygame.image.load("images\\background_main_high.png")
     button_image = pygame.image.load("images\\button_high.png")
     button_hover_image = pygame.image.load("images\\button_hover.png")
@@ -443,6 +444,7 @@ class MainMenu:
         :param player:
         :return:
         """
+
         def action():
             index = self.small_buttons.index(button)
             if player == "human" and button.clicked is False:

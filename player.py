@@ -1,7 +1,8 @@
-import pygame
-from main_menu import draw_text
-from dice import Dice
+import pygame  # Import the pygame library for game development
+from main_menu import draw_text  # Import draw_text function from main_menu module
+from dice import Dice  # Import Dice class from dice module
 
+# Initialize pygame
 pygame.init()
 
 # Super Class for Human and AI agent
@@ -11,11 +12,11 @@ pygame.init()
 class Player:
     def __init__(self, screen, profile_img, color, color_str):
         """
-
-        :param screen:
-        :param profile_img:
-        :param color:
-        :param color_str:
+        Initialize Player object with common attributes
+        :param screen: Pygame screen surface
+        :param profile_img: Image representing player's profile
+        :param color: RGB color tuple representing player's color
+        :param color_str: String representing player's colour name
         """
         self.screen = screen
         self.profile = profile_img
@@ -36,14 +37,14 @@ class Player:
     def add_avail_troops(self, num_of_troops):
         """
         Adds troops that need to be placed
-        :param num_of_troops:
+        :param num_of_troops: Number of troops to add
         :return:
         """
         self.troops_available += num_of_troops
 
     def remove_avail_troop(self):
         """
-
+        Removes one troop from available troops and adds it to held troops
         :return:
         """
         self.troops_available -= 1
@@ -52,10 +53,10 @@ class Player:
     def set_pos_size(self, x, y, width, height):
         """
         Set Position and size of the profile image
-        :param x:
-        :param y:
-        :param width:
-        :param height:
+        :param x: X coordinate of the position
+        :param y: Y coordinate of the position
+        :param width: Width of the image
+        :param height: Height of the image
         :return:
         """
         self.pos = (x, y)
@@ -87,30 +88,30 @@ class Player:
 
     def get_color(self):
         """
-
+        Get player's color as RGB tuple
         :return:
         """
         return self.color
 
     def get_color_name(self):
         """
-
+        Get player's color name
         :return:
         """
         return self.color_str
 
     def add_country(self, country):
         """
-
-        :param country:
+        Add country to player's owned countries
+        :param country: Country object to add
         :return:
         """
         self.countries.append(country)
 
     def remove_country(self, country):
         """
-
-        :param country:
+        Remove country from player's owned countries
+        :param country: Country object to remove
         :return:
         """
         self.countries.remove(country)
@@ -119,19 +120,20 @@ class Player:
 class Human(Player):
     def __init__(self, screen, profile_img, color, color_str):
         """
-
-        :param screen:
-        :param profile_img:
-        :param color:
-        :param color_str:
+        Initialize Human player object
+        :param screen: Pygame screen surface
+        :param profile_img: Image representing player's profile
+        :param color: RGB color tuple representing player's color
+        :param color_str: String representing player's color name
         """
         super().__init__(screen, profile_img, color, color_str)
 
     def attack(self, my_country, defending_country):
         """
-        :param my_country:
-        :param defending_country:
-        :return:
+        Execute attack between human player's country and defending country
+        :param my_country: Player's country object
+        :param defending_country: Defending country object
+        :return: Tuple containing information about the outcome of the attack
         """
         die = Dice(self.screen)
 
@@ -169,18 +171,18 @@ class Human(Player):
 class AI(Player):
     def __init__(self, screen, profile_img, color, color_str):
         """
-
-        :param screen:
-        :param profile_img:
-        :param color:
-        :param color_str:
+        Initialize AI player object
+        :param screen: Pygame screen surface
+        :param profile_img: Image representing player's profile
+        :param color: RGB color tuple representing player's color
+        :param color_str: String representing player's color name
         """
         super().__init__(screen, profile_img, color, color_str)
 
     def attack(self, country):
         """
-
-        :param country:
+        Execute attack for AI player
+        :param country: Country object to attack
         :return:
         """
         print("attack", country)

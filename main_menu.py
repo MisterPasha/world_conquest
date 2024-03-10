@@ -1,12 +1,13 @@
-import pygame
-from button import Button
-import numpy as np
+import pygame  # Import the pygame library for game development
+from button import Button  # Importing Button class from another module
+import numpy as np  # Importing numpy for array manipulation
 
+# Initialize pygame
 pygame.init()
 
 
 def draw_text(
-        # ...
+        # Parameters for the function
         screen,
         text,
         size,
@@ -15,6 +16,17 @@ def draw_text(
         y,
         font=None,
 ):
+    """
+    Draw text on the screen
+    :param screen: Pygame screen surface
+    :param text: Text to display
+    :param size: Font size
+    :param color: Color of the text
+    :param x: X-coordinate of the text
+    :param y: Y-coordinate of the text
+    :param font: Font to use
+    :return:
+    """
     font = pygame.font.Font(font, size)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
@@ -23,7 +35,7 @@ def draw_text(
 
 
 class MainMenu:
-    # ...
+    # All images
     background_image = pygame.image.load("images\\background_main_high.png")
     button_image = pygame.image.load("images\\button_high.png")
     button_hover_image = pygame.image.load("images\\button_hover.png")
@@ -33,6 +45,7 @@ class MainMenu:
     button_paper_hover_image = pygame.image.load("images\\button_paper_hover.png")
     player_slot_image = pygame.image.load("images\\player_slot.png")
     player_images = [
+        # Player images
         pygame.image.load("images\\player1.png"),
         pygame.image.load("images\\player2.png"),
         pygame.image.load("images\\player3.png"),
@@ -48,8 +61,8 @@ class MainMenu:
 
     def __init__(self, screen):
         """
-
-        :param screen:
+        Initialize the main menu
+        :param screen: Pygame screen surface
         """
         self.screen = screen
         self.opt_menu = False
@@ -59,6 +72,7 @@ class MainMenu:
         self.players = 0
         self.AI_agents = 0
 
+        # Load images and scale them accordingly
         self.background_image = pygame.transform.scale(
             self.background_image, (screen.get_width(), screen.get_height())
         )
@@ -80,6 +94,7 @@ class MainMenu:
             self.robot_image, (int(self.center_x * 0.055), int(self.center_x * 0.055))
         )
 
+        # Initialize various attributes and elements of the menu
         self.player_slots = self.create_player_slots()
         self.small_buttons = self.create_small_buttons()
         self.main_menu_buttons = self.create_main_menu_buttons()
@@ -88,9 +103,10 @@ class MainMenu:
 
     def draw(self):
         """
-
+        Draw the main menu on the screen
         :return:
         """
+        # Draw background, logo, buttons, etc
         self.screen.blit(self.background_image, (0, 0))
         self.screen.blit(
             self.logo_image, (int(self.center_x * 1.3), int(self.center_y * 0.1))
@@ -104,9 +120,10 @@ class MainMenu:
 
     def draw_opt_menu(self):
         """
-
+        Draw the options (new game) menu on the screen
         :return:
         """
+        # Draw background, buttons, player slots, etc.
         if self.opt_menu:
             self.screen.blit(
                 self.new_game_paper,
@@ -132,7 +149,7 @@ class MainMenu:
 
     def draw_faq_menu(self):
         """
-
+        Draw the FAQ menu on the screen
         :return:
         """
         self.screen.blit(
@@ -153,10 +170,11 @@ class MainMenu:
 
     def check_clicks(self, event):
         """
-
-        :param event:
+        Check for mouse clicks on buttons in the menu
+        :param event: Pygame event object
         :return:
         """
+        # Check for clicks on buttons based on the menu state
         if not self.opt_menu:
             for button in self.main_menu_buttons:
                 button.check_click(event)
@@ -171,8 +189,8 @@ class MainMenu:
 
     def draw_icon(self, slot):
         """
-
-        :param slot:
+        Draw icons (Human and AI) beside a player slot
+        :param slot: Player slot Button object
         :return:
         """
         self.screen.blit(
@@ -189,8 +207,8 @@ class MainMenu:
 
     def set_opt_menu(self, state):
         """
-
-        :param state:
+        Set the state of the options (for new game) menu
+        :param state: Boolean indicating whether the menu should be displayed or not
         :return:
         """
         self.opt_menu = state
@@ -201,24 +219,24 @@ class MainMenu:
 
     def set_setting_menu(self, state):
         """
-
-        :param state:
+        Sets the state of the setting menu
+        :param state: Boolean indicating whether the menu should be displayed or not
         :return:
         """
         self.setting_menu = state
 
     def set_faq_menu(self, state):
         """
-
-        :param state:
+        Sets the state of the FAQ menu
+        :param state: Boolean indicating whether the menu should be displayed or not
         :return:
         """
         self.faq_menu = state
 
     def change_state(self, new_state):
         """
-
-        :param new_state:
+        Changes the state of the game
+        :param new_state: The new state to be set
         :return:
         """
         if new_state == 1:
@@ -231,28 +249,28 @@ class MainMenu:
 
     def get_state(self):
         """
-
-        :return:
+        Get the current state of the game
+        :return: The current state
         """
         return self.state
 
     def get_num_players(self):
         """
-
-        :return:
+        Get the number of human players in the game
+        :return: The number of human players
         """
         return self.players
 
     def get_num_ai_players(self):
         """
-
-        :return:
+        Get the number of AI players in the game
+        :return: The number of AI players
         """
         return self.AI_agents
 
     def add_player(self):
         """
-
+        Add a player to the game if the total number of players (human and AI) is less than 6
         :return:
         """
         if (self.players + self.AI_agents) < 6:
@@ -263,7 +281,7 @@ class MainMenu:
 
     def remove_player(self):
         """
-
+        Remove a player from the game
         :return:
         """
         if (self.players + self.AI_agents) > 0:
@@ -286,8 +304,8 @@ class MainMenu:
 
     def create_main_menu_buttons(self):
         """
-
-        :return:
+        Create buttons for the main menu
+        :return: A list of main menu buttons
         """
         play = Button(
             self.button_image,
@@ -337,8 +355,8 @@ class MainMenu:
 
     def create_new_game_menu_buttons(self):
         """
-
-        :return:
+        Create buttons for the new game menu
+        :return: A list of new game menu buttons
         """
         play = Button(
             self.button_image,
@@ -388,8 +406,8 @@ class MainMenu:
 
     def create_faq_menu_buttons(self):
         """
-
-        :return:
+        Create buttons for the FAQ menu
+        :return: A list of FAQ menu buttons
         """
         back = Button(
             self.button_image,
@@ -406,8 +424,8 @@ class MainMenu:
 
     def create_player_slots(self):
         """
-
-        :return:
+        Create player slots
+        :return: A list of player slots
         """
         slots1 = [
             Button(
@@ -439,10 +457,10 @@ class MainMenu:
 
     def swap_to(self, button, player):
         """
-
-        :param button:
-        :param player:
-        :return:
+        Swaps the button's functionality between human and AI selection
+        :param button: The button to swap
+        :param player: The player type to swap to (Human or AI)
+        :return: The action function to execute the swap
         """
 
         def action():
@@ -466,8 +484,8 @@ class MainMenu:
 
     def create_small_buttons(self):
         """
-
-        :return:
+        Creates small buttons for player selection
+        :return: A list of small buttons
         """
         buttons1 = []
         buttons2 = []

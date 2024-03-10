@@ -6,7 +6,7 @@ pygame.mixer.init()
 
 class Button:
     def __init__(
-            # ...
+            # To be initialized
             self,
             original_image,
             hover_image,
@@ -19,6 +19,19 @@ class Button:
             action=None,
             hover=True,
     ):
+        """
+        Initialize a Button object
+        :param original_image: Surface of the button's original image
+        :param hover_image: Surface of the button's image when hovered
+        :param pos: Tuple representing the position of the button (x, y)
+        :param text: Text to be displayed on the button
+        :param font_size: Size of the font for the button text
+        :param width: Width of the button
+        :param height: Height of the button
+        :param font: Font for the button text
+        :param action: Function to be executed when the button is clicked
+        :param hover: Boolean indicating whether hover effect is enabled
+        """
         self.original_image = pygame.transform.scale(original_image, (width, height))
         self.hover_image = pygame.transform.scale(hover_image, (width, height))
         self.image = self.original_image
@@ -35,7 +48,7 @@ class Button:
     def draw(self, screen):
         """
         Change image when cursor hovers button
-        :param screen:
+        :param screen: Pygame screen surface
         :return:
         """
         if self.hover_enabled:
@@ -55,8 +68,8 @@ class Button:
     # If click on self object is detected it triggers assigned function
     def check_click(self, event):
         """
-
-        :param event:
+        Check if the button is clicked and execute its action if assigned
+        :param event: Pygame event
         :return:
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -68,8 +81,8 @@ class Button:
     # Changes current image to the new image
     def change_image(self, new_image):
         """
-
-        :param new_image:
+        Change the button's current image to a new image
+        :param new_image: New image surface
         :return:
         """
         new_image = pygame.transform.scale(
@@ -80,9 +93,9 @@ class Button:
     # Specific feature for "Switch" type buttons
     def click(self, unclicked_image, clicked_image):
         """
-
-        :param unclicked_image:
-        :param clicked_image:
+        Toggle between clicked and unclicked states of the button
+        :param unclicked_image: Image surface for unclicked state
+        :param clicked_image: Image surface for clicked state
         :return:
         """
         if self.clicked:
@@ -98,8 +111,8 @@ class Button:
 
     def change_text(self, new_text):
         """
-
-        :param new_text:
+        Change the text displayed on the button
+        :param new_text: New text for the button
         :return:
         """
         self.text = new_text

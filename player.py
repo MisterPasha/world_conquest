@@ -5,6 +5,7 @@ from dice import Dice  # Import Dice class from dice module
 # Initialize pygame
 pygame.init()
 
+
 # Super Class for Human and AI agent
 # Only holds methods and attributes that both Human and AI players will have in common
 
@@ -69,14 +70,16 @@ class Player:
         :return:
         """
         self.screen.blit(self.profile, self.pos)
+        # Draw the text indicating the number of troops held by the player
         draw_text(
-            self.screen,
+            self.screen,  # Pygame screen surface
             f"troops: {self.troops_holds}",
-            int(self.size[0] * 0.45),
+            int(self.size[0] * 0.45),  # Font size
             (0, 0, 0),
-            int(self.pos[0] * 0.92),
-            int(self.pos[1] + 10),
+            int(self.pos[0] * 0.92),  # X position of the text (aligned to the right of the profile image)
+            int(self.pos[1] + 10),  # Y position of the text (slightly below the profile image)
         )
+        # Draw the text indicating the number of troops available for placement
         draw_text(
             self.screen,
             f"available: {self.troops_available}",

@@ -1,5 +1,6 @@
-import pygame
+import pygame  # Import the pygame library for game development
 
+# Initialize pygame
 pygame.init()
 pygame.mixer.init()
 

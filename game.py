@@ -236,9 +236,6 @@ class Game:
             else:
                 self.showing_dice_animation = False
 
-    # Specific function for 2 player game.
-    # it sets randomly initial 14 owned countries to each player and sets the rest as neutral.
-    # Adds 1 troop to each country
     def divide_countries(self):
         """
         Specific function for 2 player game.
@@ -249,8 +246,8 @@ class Game:
         rand_ints = random.sample(range(0, 42), 42)
         part_size = len(rand_ints) // 3
         set1 = rand_ints[:part_size]
-        set2 = rand_ints[part_size: part_size * 2]
-        set3 = rand_ints[part_size * 2:]
+        set2 = rand_ints[part_size : part_size * 2]
+        set3 = rand_ints[part_size * 2 :]
         for country_index in set1:
             self.map.countries[country_index].set_owner(self.players[0])
             self.map.countries[country_index].add_troops(1)
@@ -265,9 +262,6 @@ class Game:
             self.map.countries[country_index].add_troops(1)
         self.countries_divided = True
 
-    # Gives certain amount of available troops to the players.
-    # Players placing their troops until no available troops remain
-    # Then switching to the next gameplay stage
     def occupy_country(self, country):
         """
         Gives certain amount of available troops to the players.
@@ -325,13 +319,16 @@ class Game:
             self.selected = False
             self.country_selected = None
             print("unselected")
-        elif country in current_player.countries:  # Error message when trying to attack own country
+        elif (
+            country in current_player.countries
+        ):  # Error message when trying to attack own country
             print("It is dumb to attack yourself")
         elif country.get_name() in self.map.get_neighbours(
             self.country_selected.get_name()
         ):  # Attack!
-            attacker_lost_armies, defender_lost_armies, a, d = \
-                current_player.attack(self.country_selected, country)
+            attacker_lost_armies, defender_lost_armies, a, d = current_player.attack(
+                self.country_selected, country
+            )
             self.attack_dice = a
             self.defend_dice = d
             country.remove_troops(defender_lost_armies)
@@ -343,7 +340,7 @@ class Game:
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
             self.country_selected = None
-            #self.pass_turn()
+            # self.pass_turn()
         else:
             print("You can only attack neighbour countries")
 
@@ -378,10 +375,9 @@ class Game:
             ):
                 c.highlighted = True if highlight else False
 
-    # Depending on number of players it deals different amount of initial troops during setup
     def deal_initial_troops_to_players(self):
         """
-
+        Depending on number of players it deals different amount of initial troops during setup
         :return:
         """
         troops = 0

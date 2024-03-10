@@ -33,10 +33,9 @@ class Player:
         self.pos = None
         self.size = None
 
-    # Adds troops that need to be placed
     def add_avail_troops(self, num_of_troops):
         """
-
+        Adds troops that need to be placed
         :param num_of_troops:
         :return:
         """
@@ -50,10 +49,9 @@ class Player:
         self.troops_available -= 1
         self.troops_holds += 1
 
-    # Set Position and size of the profile image
     def set_pos_size(self, x, y, width, height):
         """
-
+        Set Position and size of the profile image
         :param x:
         :param y:
         :param width:
@@ -64,17 +62,28 @@ class Player:
         self.size = (width, height)
         self.profile = pygame.transform.scale(self.profile, self.size)
 
-    # Draws profiles on the map
     def draw_profile(self):
         """
-
+        Draws profiles on the map
         :return:
         """
         self.screen.blit(self.profile, self.pos)
-        draw_text(self.screen, f"troops: {self.troops_holds}", int(self.size[0] * 0.45), (0, 0, 0),
-                  int(self.pos[0] * 0.92), int(self.pos[1] + 10))
-        draw_text(self.screen, f"available: {self.troops_available}", int(self.size[0] * 0.45), (0, 0, 0),
-                  int(self.pos[0] * 0.92), int(self.pos[1] + 30))
+        draw_text(
+            self.screen,
+            f"troops: {self.troops_holds}",
+            int(self.size[0] * 0.45),
+            (0, 0, 0),
+            int(self.pos[0] * 0.92),
+            int(self.pos[1] + 10),
+        )
+        draw_text(
+            self.screen,
+            f"available: {self.troops_available}",
+            int(self.size[0] * 0.45),
+            (0, 0, 0),
+            int(self.pos[0] * 0.92),
+            int(self.pos[1] + 30),
+        )
 
     def get_color(self):
         """
@@ -149,13 +158,29 @@ class Human(Player):
             else:
                 attacker_lost_armies += 1
 
-        return attacker_lost_armies, defender_lost_armies, attack_dice_values, defend_dice_values
+        return (
+            attacker_lost_armies,
+            defender_lost_armies,
+            attack_dice_values,
+            defend_dice_values,
+        )
 
 
 class AI(Player):
     def __init__(self, screen, profile_img, color, color_str):
+        """
+
+        :param screen:
+        :param profile_img:
+        :param color:
+        :param color_str:
+        """
         super().__init__(screen, profile_img, color, color_str)
 
     def attack(self, country):
-        print("attack", country)
+        """
 
+        :param country:
+        :return:
+        """
+        print("attack", country)

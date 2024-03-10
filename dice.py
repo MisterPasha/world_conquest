@@ -89,8 +89,12 @@ class Dice:
         :return: dice_dict
         """
         size = int(self.screen.get_height() * 0.05)
-        dice_w = [pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w]
-        dice_r = [pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w]
+        dice_w = [
+            pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w
+        ]
+        dice_r = [
+            pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w
+        ]
         dice_dict = {"w": {}, "r": {}}
         for i, (die_w, die_r) in enumerate(zip(dice_w, dice_r)):
             dice_dict["w"][i + 1] = die_w

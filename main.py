@@ -1,7 +1,6 @@
 import pygame
 from game import Game
 import tkinter as tk
-import winsound
 
 # Grab the resolution of the screen
 root = tk.Tk()

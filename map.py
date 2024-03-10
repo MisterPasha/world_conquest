@@ -189,10 +189,9 @@ class Map:
             ),
         )
 
-    # Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle
     def change_turn(self, turn):
         """
-
+        Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle
         :param turn:
         :return:
         """

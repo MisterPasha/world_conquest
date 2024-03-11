@@ -67,8 +67,8 @@ class Dice:
         :return:
         """
         for i, num in enumerate(nums):
-            x = int(self.screen.get_width() * 0.93)
-            y = int(self.screen.get_height() * (0.9 - i * 0.07))
+            x = int(self.screen.get_width() * 0.94)
+            y = int(self.screen.get_height() * (0.93 - i * 0.06))
             self.screen.blit(self.dice_dict["w"][num], (x, y))
 
     def draw_dice_r(self, nums):
@@ -79,8 +79,8 @@ class Dice:
         :return:
         """
         for i, num in enumerate(nums):
-            x = int(self.screen.get_width() * 0.89)
-            y = int(self.screen.get_height() * (0.9 - i * 0.07))
+            x = int(self.screen.get_width() * 0.91)
+            y = int(self.screen.get_height() * (0.93 - i * 0.06))
             self.screen.blit(self.dice_dict["r"][num], (x, y))
 
     def create_dice(self):
@@ -88,12 +88,12 @@ class Dice:
         Prepares and returns a dictionary mapping each die face value (1 through 6) to its corresponding scaled image.
         :return: dice_dict
         """
-        size = int(self.screen.get_height() * 0.05)
+        size = int(self.screen.get_height() * 0.04)
         dice_w = [
             pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w
         ]
         dice_r = [
-            pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_w
+            pygame.transform.scale(die_img, (size, size)) for die_img in self.dice_r
         ]
         dice_dict = {"w": {}, "r": {}}
         for i, (die_w, die_r) in enumerate(zip(dice_w, dice_r)):

@@ -61,8 +61,10 @@ class Game:
         self.attack_dice = []
         self.defend_dice = []
         # Attributes for attacking phase
-        self.country_selected = None
-        self.selected = False
+        self.country_selected = None  # Holds country that is currently selected
+        self.selected = False  # Boolean whether any country is selected
+        # Boolean whether any country has been captured now, used when moving troops to captured country
+        self.captured = False
 
     # Main running loop
     def run(self):
@@ -87,14 +89,10 @@ class Game:
                 self.running = False
             elif self.game_state == self.MAIN_MENU:
                 self.main_menu.check_clicks(event)
-            elif self.game_state == self.GAMEPLAY_1:
+            elif self.game_state == self.GAMEPLAY_1 or self.game_state == self.GAMEPLAY_2:
                 self.map.check_clicks(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.handle_country_clicks(event.pos)
-            elif self.game_state == self.GAMEPLAY_2:
-                self.map.check_clicks(event)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.handle_country_clicks(event.pos)
+                    self.handle_country_clicks(event.pos, event.button)
             elif self.game_state == self.EXIT:
                 self.running = False
 
@@ -200,8 +198,8 @@ class Game:
         """
         self.map.change_turn(self.dice_throw_index)
         if (
-            self.dice_throw_index < len(self.players)
-            and not self.showing_dice_animation
+                self.dice_throw_index < len(self.players)
+                and not self.showing_dice_animation
         ):
             total = [
                 self.dice.throw() for _ in range(3)
@@ -246,8 +244,8 @@ class Game:
         rand_ints = random.sample(range(0, 42), 42)
         part_size = len(rand_ints) // 3
         set1 = rand_ints[:part_size]
-        set2 = rand_ints[part_size : part_size * 2]
-        set3 = rand_ints[part_size * 2 :]
+        set2 = rand_ints[part_size: part_size * 2]
+        set3 = rand_ints[part_size * 2:]
         for country_index in set1:
             self.map.countries[country_index].set_owner(self.players[0])
             self.map.countries[country_index].add_troops(1)
@@ -289,23 +287,41 @@ class Game:
         else:
             self.gameplay_stage = self.ATTACK
 
-    def handle_country_clicks(self, mouse_pos):
+    def handle_country_clicks(self, mouse_pos, event_button):
         """
         This function is specifically for country buttons.
         It triggers different methods depending on gameplay stage
-        :param mouse_pos:
+        :param mouse_pos: Holds mouse position coordinates
+        :param event_button: Holds event button type. like left, right mouse click, wheel up or down
         :return:
         """
         if self.map.countries is not None:
             for country in self.map.countries:
                 if country.country_btn.rect.collidepoint(mouse_pos):
-                    if self.gameplay_stage == self.SETUP:
-                        self.occupy_country(country)
-                    elif self.gameplay_stage == self.ATTACK:
-                        if self.selected:
-                            self.attack_country(country)
-                        else:
-                            self.select_country(country)
+                    if event_button == 1:
+                        if self.gameplay_stage == self.SETUP:
+                            self.occupy_country(country)
+                        elif self.gameplay_stage == self.ATTACK:
+                            if self.selected:
+                                self.attack_country(country)
+                            else:
+                                self.select_country(country)
+                    elif event_button == 4:
+                        if self.captured and country.highlighted:
+                            self.move_troop_to_captured(country)
+                    elif event_button == 5:
+                        if self.captured and country.highlighted:
+                            self.move_troop_from_captured(country)
+
+    def move_troop_to_captured(self, country):
+        if self.country_selected.troops > 1:
+            self.country_selected.remove_troops(1)
+            country.add_troops(1)
+
+    def move_troop_from_captured(self, country):
+        if country.troops > len(self.attack_dice):
+            country.remove_troops(1)
+            self.country_selected.add_troops(1)
 
     def attack_country(self, country):
         """
@@ -317,14 +333,14 @@ class Game:
         if country == self.country_selected:  # Unselect Country by second click
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
-            self.country_selected = None
+            # self.country_selected = None
             print("unselected")
         elif (
-            country in current_player.countries
+                country in current_player.countries
         ):  # Error message when trying to attack own country
             print("It is dumb to attack yourself")
         elif country.get_name() in self.map.get_neighbours(
-            self.country_selected.get_name()
+                self.country_selected.get_name()
         ):  # Attack!
             attacker_lost_armies, defender_lost_armies, a, d = current_player.attack(
                 self.country_selected, country
@@ -333,13 +349,18 @@ class Game:
             self.defend_dice = d
             country.remove_troops(defender_lost_armies)
             self.country_selected.remove_troops(attacker_lost_armies)
+            # If opponents country has 0 troops now, then overtake
             if country.troops <= 0:
                 country.owner.remove_country(country)
                 country.set_owner(current_player)
                 current_player.add_country(country)
+                country.add_troops(len(a))
+                self.country_selected.remove_troops(len(a))
+                self.highlight_captured(country, True)
+                self.captured = True
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
-            self.country_selected = None
+            # self.country_selected = None
             # self.pass_turn()
         else:
             print("You can only attack neighbour countries")
@@ -357,8 +378,13 @@ class Game:
             print("Not enough troops")
         else:
             self.selected = True
+            self.highlight_captured(country, False)
+            self.captured = False
             self.country_selected = country
             self.highlight_neighbour_countries(self.country_selected, True)
+
+    def highlight_captured(self, country, highlight):
+        country.highlighted = True if highlight else False
 
     def highlight_neighbour_countries(self, country, highlight):
         """
@@ -370,8 +396,8 @@ class Game:
         neighbour_country_names = self.map.get_neighbours(country.get_name())
         for c in self.map.countries:
             if (
-                c.get_name() in neighbour_country_names
-                and c not in self.players[self.current_turn].countries
+                    c.get_name() in neighbour_country_names
+                    and c not in self.players[self.current_turn].countries
             ):
                 c.highlighted = True if highlight else False
 

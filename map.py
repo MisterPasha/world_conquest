@@ -39,7 +39,7 @@ class Map:
             map_img, (screen.get_width(), screen.get_height())
         )
         self.plate_img = pygame.transform.scale(
-            plate_img, (int(screen.get_height() / 4), int(screen.get_height() / 4))
+            plate_img, (int(screen.get_height() / 4.5), int(screen.get_height() / 4.5))
         )
 
         self.state = None

@@ -292,29 +292,29 @@ class Game:
         if self.map.countries is not None:
             for country in self.map.countries:
                 if country.country_btn.rect.collidepoint(mouse_pos):
-                    if event_button == 1:
-                        if self.gameplay_stage == self.SETUP:
-                            self.occupy_country(country)
-                        elif self.gameplay_stage == self.ATTACK:
+                    if self.gameplay_stage == self.SETUP:
+                        self.occupy_country(country)
+                    elif self.gameplay_stage == self.ATTACK:
+                        if event_button == 1:
                             if self.selected:
                                 self.attack_country(country)
                             else:
                                 self.select_country(country)
-                    elif event_button == 4:
-                        if self.captured and country.highlighted:
-                            self.move_troop_to_captured(country)
-                    elif event_button == 5:
-                        if self.captured and country.highlighted:
-                            self.move_troop_from_captured(country)
+                        elif event_button == 4:
+                            if self.captured and country.highlighted:
+                                self.move_troop_to_captured()
+                        elif event_button == 5:
+                            if self.captured and country.highlighted:
+                                self.move_troop_from_captured()
 
-    def move_troop_to_captured(self, country):
+    def move_troop_to_captured(self):
         if self.country_selected.troops > 1:
             self.country_selected.remove_troops(1)
-            country.add_troops(1)
+            self.captured_country.add_troops(1)
 
-    def move_troop_from_captured(self, country):
-        if country.troops > len(self.attack_dice):
-            country.remove_troops(1)
+    def move_troop_from_captured(self):
+        if self.captured_country.troops > len(self.attack_dice):
+            self.captured_country.remove_troops(1)
             self.country_selected.add_troops(1)
 
     def attack_country(self, country):

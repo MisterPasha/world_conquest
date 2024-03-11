@@ -3,6 +3,7 @@ import random
 from main_menu import MainMenu
 from map import Map
 from dice import Dice
+from button import Button
 
 pygame.init()
 
@@ -65,6 +66,8 @@ class Game:
         self.selected = False  # Boolean whether any country is selected
         # Boolean whether any country has been captured now, used when moving troops to captured country
         self.captured = False
+        self.captured_country = None
+        self.next_phase_button = self.create_next_phase_button()
 
     # Main running loop
     def run(self):
@@ -91,6 +94,7 @@ class Game:
                 self.main_menu.check_clicks(event)
             elif self.game_state == self.GAMEPLAY_1 or self.game_state == self.GAMEPLAY_2:
                 self.map.check_clicks(event)
+                self.next_phase_button.check_click(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_country_clicks(event.pos, event.button)
             elif self.game_state == self.EXIT:
@@ -105,18 +109,10 @@ class Game:
         if self.game_state == self.MAIN_MENU:
             self.check_state_main_menu()
             self.main_menu.draw()
-        if self.game_state == self.GAMEPLAY_1:
+        if self.game_state == self.GAMEPLAY_1 or self.game_state == self.GAMEPLAY_2:
             self.check_state_gameplay()
             self.map.draw()
-            if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
-                self.screen.blit(self.paper_img, (0, 0))
-                self.dice_animate()
-            elif self.gameplay_stage == self.ATTACK:
-                self.dice.draw_dice_w(self.defend_dice)
-                self.dice.draw_dice_r(self.attack_dice)
-        if self.game_state == self.GAMEPLAY_2:
-            self.check_state_gameplay()
-            self.map.draw()
+            self.next_phase_button.draw(self.screen)
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
                 self.screen.blit(self.paper_img, (0, 0))
                 self.dice_animate()
@@ -284,8 +280,6 @@ class Game:
                     country.add_troops(1)
                     current_player.remove_avail_troop()
                     self.pass_turn()
-        else:
-            self.gameplay_stage = self.ATTACK
 
     def handle_country_clicks(self, mouse_pos, event_button):
         """
@@ -351,12 +345,13 @@ class Game:
             self.country_selected.remove_troops(attacker_lost_armies)
             # If opponents country has 0 troops now, then overtake
             if country.troops <= 0:
-                country.owner.remove_country(country)
-                country.set_owner(current_player)
-                current_player.add_country(country)
-                country.add_troops(len(a))
+                self.captured_country = country
+                self.captured_country.owner.remove_country(country)
+                self.captured_country.set_owner(current_player)
+                current_player.add_country(self.captured_country)
+                self.captured_country.add_troops(len(a))
                 self.country_selected.remove_troops(len(a))
-                self.highlight_captured(country, True)
+                self.highlight_captured(True)
                 self.captured = True
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
@@ -372,23 +367,29 @@ class Game:
         :return:
         """
         current_player = self.players[self.current_turn]
+        self.highlight_captured(False)
         if country.owner is not current_player:
             print("Can select only owned country!")
         elif country.troops < 2:
             print("Not enough troops")
         else:
             self.selected = True
-            self.highlight_captured(country, False)
             self.captured = False
             self.country_selected = country
             self.highlight_neighbour_countries(self.country_selected, True)
 
-    def highlight_captured(self, country, highlight):
-        country.highlighted = True if highlight else False
+    def highlight_captured(self, highlight):
+        """
+        Makes colour of just captured country brighter
+        :param highlight:
+        :return:
+        """
+        if self.captured_country:
+            self.captured_country.highlighted = True if highlight else False
 
     def highlight_neighbour_countries(self, country, highlight):
         """
-
+        Makes colours of neighbouring countries brighter to highlight them during attack
         :param country:
         :param highlight:
         :return:
@@ -419,3 +420,37 @@ class Game:
             troops = 20
         for player in self.players:
             player.add_avail_troops(troops)
+
+    def switch_to_next_phase(self):
+        if self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
+            self.gameplay_stage = self.ATTACK
+            self.next_phase_button.change_text("To Fortify phase")
+        elif self.gameplay_stage == self.ATTACK:
+            self.gameplay_stage = self.FORTIFY
+            self.next_phase_button.change_text("End Turn")
+        elif self.gameplay_stage == self.FORTIFY:
+            self.gameplay_stage = self.DRAFT
+            self.pass_turn()
+            self.next_phase_button.change_text("To Attack phase")
+        elif self.gameplay_stage == self.DRAFT:
+            self.gameplay_stage = self.ATTACK
+            self.next_phase_button.change_text("To Fortify phase")
+
+    def create_next_phase_button(self):
+        button_image = pygame.image.load("images\\button_high.png")
+        button_hover_image = pygame.image.load("images\\button_hover.png")
+        x = int(self.screen.get_width() * 0.25)
+        y = int(self.screen.get_height() * 0.93)
+        width = int(self.screen.get_width() * 0.15)
+        height = int(self.screen.get_height() * 0.07)
+        font_size = int(self.screen.get_height() * 0.04)
+        button = Button(button_image,
+                        button_hover_image,
+                        (x, y),
+                        "To Attack phase",
+                        font_size,
+                        width,
+                        height,
+                        action=lambda: self.switch_to_next_phase()
+                        )
+        return button

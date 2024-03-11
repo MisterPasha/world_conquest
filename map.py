@@ -120,7 +120,7 @@ class Map:
             int(self.center_x * 0.1),
             int(self.center_y * 0.1),
             font=font1,
-            action=lambda: self.set_state(0),
+            action=lambda: self.set_state(0)
         )
         buttons.append(back)
         return buttons

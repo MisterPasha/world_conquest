@@ -46,8 +46,7 @@ class Country:
         """
         self.screen.blit(
             self.image_highlighted, (0, 0)
-        ) \
-            if self.highlighted else self.screen.blit(self.image, (0, 0))
+        ) if self.highlighted else self.screen.blit(self.image, (0, 0))
         # Draw the country button on the screen
         self.country_btn.draw(self.screen)
 
@@ -196,7 +195,7 @@ class Country:
             (184, 149, 95): (194, 111, 39),  # Brown
             (84, 199, 153): (2, 247, 149),  # Green
             (168, 69, 67): (247, 5, 5),  # Red
-            (57, 108, 196): (15, 4, 179)  # Blue
+            (57, 108, 196): (15, 4, 179),  # Blue
         }
 
         # Retrieve the highlighted colour based on the current color

@@ -1,7 +1,8 @@
-import pygame
-import random
-from main_menu import draw_text
+import pygame  # Import the pygame library for game development
+import random  # RNG
+from main_menu import draw_text  # Import draw_text class from main_menu
 
+# Initialize pygame
 pygame.init()
 
 
@@ -29,7 +30,7 @@ class Dice:
         """
         Initialise DiceHandler in accordance to the screen
         + dictionary of dice images
-        :param screen:
+        :param screen: Pygame screen surface
         """
         self.screen = screen
         self.dice_dict = self.create_dice()
@@ -45,9 +46,9 @@ class Dice:
     def animation(self, nums, name):
         """
         Displays an animation for dice rolls
-        :param nums:
-        :param name:
-        :return: Shows the correct die
+        :param nums: List of dice values rolled
+        :param name: Name of the player who rolled the dice
+        :return: [NONE]
         """
         draw_text(
             self.screen,
@@ -63,8 +64,8 @@ class Dice:
         """
         Draws the white dice images on the screen based on the rolls provided in `nums`.
         It positions each die image on the screen
-        :param nums:
-        :return:
+        :param nums: List of dice values rolled
+        :return: [NONE]
         """
         for i, num in enumerate(nums):
             x = int(self.screen.get_width() * 0.94)
@@ -75,8 +76,8 @@ class Dice:
         """
         Draws the red dice images on the screen based on the rolls provided in `nums`.
         It positions each die image on the screen
-        :param nums:
-        :return:
+        :param nums: List of dice values rolled
+        :return: [NONE]
         """
         for i, num in enumerate(nums):
             x = int(self.screen.get_width() * 0.91)
@@ -86,7 +87,7 @@ class Dice:
     def create_dice(self):
         """
         Prepares and returns a dictionary mapping each die face value (1 through 6) to its corresponding scaled image.
-        :return: dice_dict
+        :return: dice_dict (Dictionary mapping die face values to images)
         """
         size = int(self.screen.get_height() * 0.04)
         dice_w = [

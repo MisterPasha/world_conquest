@@ -78,6 +78,7 @@ class Player:
         Removes one troop from available troops and adds it to held troops.
         'self.troops_available' & 'self.troops_holds' is updated
         :return: [NONE]
+        d
         """
         self.troops_available -= 1
         self.troops_holds += 1

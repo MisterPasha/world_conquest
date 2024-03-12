@@ -4,6 +4,7 @@ from main_menu import MainMenu
 from map import Map
 from dice import Dice
 from button import Button
+from deck import Deck
 
 pygame.init()
 
@@ -67,7 +68,10 @@ class Game:
         # Boolean whether any country has been captured now, used when moving troops to captured country
         self.captured = False
         self.captured_country = None
+        self.captured_countries_in_turn = 0
         self.next_phase_button = self.create_next_phase_button()
+        # Initialise Deck object
+        self.deck = Deck(self.screen)
 
     # Main running loop
     def run(self):
@@ -353,10 +357,9 @@ class Game:
                 self.country_selected.remove_troops(len(a))
                 self.highlight_captured(True)
                 self.captured = True
+                self.captured_countries_in_turn += 1
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
-            # self.country_selected = None
-            # self.pass_turn()
         else:
             print("You can only attack neighbour countries")
 
@@ -423,11 +426,17 @@ class Game:
 
     def switch_to_next_phase(self):
         if self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
+            self.deck.create_cards(self.map)  # Creates a deck of cards, couldn't find a better place for it :)
+            print(len(self.deck.cards))
             self.gameplay_stage = self.ATTACK
             self.next_phase_button.change_text("To Fortify phase")
         elif self.gameplay_stage == self.ATTACK:
             self.gameplay_stage = self.FORTIFY
             self.next_phase_button.change_text("End Turn")
+            # If at least one country has been captured by current player he gets a card
+            if self.captured_countries_in_turn > 0:
+                self.players[self.current_turn].add_card(self.deck.get_card())
+            self.captured_countries_in_turn = 0
         elif self.gameplay_stage == self.FORTIFY:
             self.gameplay_stage = self.DRAFT
             self.pass_turn()

@@ -9,6 +9,8 @@ pygame.init()
 # Super Class for Human and AI agent
 # Only holds methods and attributes that both Human and AI players will have in common
 
+new_game_paper = pygame.image.load("images\\new_game_paper_resized.png")
+
 
 class Player:
     def __init__(self, screen, profile_img, color, color_str):
@@ -34,6 +36,18 @@ class Player:
         # Position and size of the profile image
         self.pos = None
         self.size = None
+        self.rect = None
+        self.info_window = pygame.image.load("images\\new_game_paper_resized.png")
+        self.info_window = pygame.transform.scale(
+            self.info_window,
+            (int(screen.get_width() * 0.6), int(screen.get_height() * 0.25)),
+        )
+
+    def refresh_troops(self):
+        self.troops_holds = sum(country.troops for country in self.countries)
+
+    def add_card(self, card):
+        self.cards.append(card)
 
     def add_avail_troops(self, num_of_troops):
         """
@@ -63,6 +77,7 @@ class Player:
         self.pos = (x, y)
         self.size = (width, height)
         self.profile = pygame.transform.scale(self.profile, self.size)
+        self.rect = self.profile.get_rect(topleft=self.pos)
 
     def draw_profile(self):
         """
@@ -88,6 +103,10 @@ class Player:
             int(self.pos[0] * 0.92),
             int(self.pos[1] + 30),
         )
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.3), self.pos[1]))
+            for i, card in enumerate(self.cards):
+                card.draw(int(self.screen.get_width() * (0.4 + i * 0.08)), self.pos[1] * 1.06)
 
     def get_color(self):
         """

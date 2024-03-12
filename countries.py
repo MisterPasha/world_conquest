@@ -5,7 +5,7 @@ pygame.init()
 
 
 class Country:
-    #...
+
     country_button_image = pygame.image.load("images\\country_button.png")
 
     def __init__(self, screen, image, name):

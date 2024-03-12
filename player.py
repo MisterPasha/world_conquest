@@ -37,14 +37,18 @@ class Player:
         self.pos = None
         self.size = None
         self.rect = None
-        self.info_window = pygame.image.load("images\\new_game_paper_resized.png")
+        self.info_window = pygame.image.load("images\\info_table.png")
         self.info_window = pygame.transform.scale(
             self.info_window,
-            (int(screen.get_width() * 0.6), int(screen.get_height() * 0.25)),
+            (int(screen.get_width() * 0.55), int(screen.get_height() * 0.25)),
         )
 
+    # Not sure if needed
     def refresh_troops(self):
         self.troops_holds = sum(country.troops for country in self.countries)
+
+    def remove_troops(self, num_of_troops):
+        self.troops_holds -= num_of_troops
 
     def add_card(self, card):
         self.cards.append(card)
@@ -85,28 +89,44 @@ class Player:
         :return:
         """
         self.screen.blit(self.profile, self.pos)
-        # Draw the text indicating the number of troops held by the player
-        draw_text(
-            self.screen,  # Pygame screen surface
-            f"troops: {self.troops_holds}",
-            int(self.size[0] * 0.45),  # Font size
-            (0, 0, 0),
-            int(self.pos[0] * 0.92),  # X position of the text (aligned to the right of the profile image)
-            int(self.pos[1] + 10),  # Y position of the text (slightly below the profile image)
-        )
+
         # Draw the text indicating the number of troops available for placement
         draw_text(
             self.screen,
-            f"available: {self.troops_available}",
+            f"PLACE: {self.troops_available}",
             int(self.size[0] * 0.45),
             (0, 0, 0),
             int(self.pos[0] * 0.92),
             int(self.pos[1] + 30),
         )
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.3), self.pos[1]))
+            self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1]))
+            # Draw the text indicating the number of troops held by the player
+            draw_text(
+                self.screen,  # Pygame screen surface
+                f"{self.troops_holds}",
+                int(self.size[0] * 0.7),  # Font size
+                (173, 28, 28),
+                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),  # X position of the text (aligned to the right of the profile image)
+                int(self.pos[1] + self.info_window.get_height() * 0.7),  # Y position of the text (slightly below the profile image)
+            )
+            draw_text(
+                self.screen,  # Pygame screen surface
+                f"{len(self.countries)}",
+                int(self.size[0] * 0.7),  # Font size
+                (173, 28, 28),
+                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
+                int(self.pos[1] + self.info_window.get_height() * 0.3),
+            )
             for i, card in enumerate(self.cards):
-                card.draw(int(self.screen.get_width() * (0.3 + i * 0.08)), self.pos[1] * 1.06)
+                card.draw(int(self.screen.get_width() * 0.37) + i * card.width,
+                          self.pos[1] + self.info_window.get_height() * 0.1)
+
+    def calculate_num_of_draft_troops(self):
+        num_of_avail_troops = len(self.countries) // 3
+        num_of_avail_troops = num_of_avail_troops if num_of_avail_troops > 3 else 3
+        # Calculate through cards as well
+        return num_of_avail_troops
 
     def get_color(self):
         """

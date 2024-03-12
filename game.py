@@ -49,6 +49,7 @@ class Game:
         self.players = None
         # Current player
         self.current_turn = 0
+        self.turn = 0
         # initialise MainMenu object
         self.main_menu = MainMenu(self.screen)
         # initialise Map object
@@ -72,6 +73,9 @@ class Game:
         self.next_phase_button = self.create_next_phase_button()
         # Initialise Deck object
         self.deck = Deck(self.screen)
+        # Attributes for Fortify phase
+        self.fortifying_country = None
+        self.fortify_counter = 0
 
     # Main running loop
     def run(self):
@@ -260,6 +264,56 @@ class Game:
             self.map.countries[country_index].add_troops(1)
         self.countries_divided = True
 
+    def handle_country_clicks(self, mouse_pos, event_button):
+        """
+        This function is specifically for country buttons.
+        It triggers different methods depending on gameplay stage
+        :param mouse_pos: Holds mouse position coordinates
+        :param event_button: Holds event button type. like left/right mouse click, wheel up/down
+        :return:
+        """
+        if self.map.countries is not None:
+            for country in self.map.countries:
+                if country.country_btn.rect.collidepoint(mouse_pos):
+                    if self.gameplay_stage == self.SETUP:
+                        self.occupy_country(country)
+                    elif self.gameplay_stage == self.ATTACK:
+                        if event_button == 1:
+                            if self.selected:
+                                self.attack_country(country)
+                            else:
+                                self.select_country(country)
+                        elif event_button == 4:
+                            if self.captured and country.highlighted:
+                                self.move_troop_to_captured()
+                        elif event_button == 5:
+                            if self.captured and country.highlighted:
+                                self.move_troop_from_captured()
+                    elif self.gameplay_stage == self.FORTIFY:
+                        if self.selected:
+                            if country == self.country_selected:
+                                self.highlight_connected_countries(country, False)
+                                self.selected = False
+                            elif country.highlighted:
+                                if self.fortify_counter == 0:
+                                    self.fortifying_country = country
+                                self.fortify_counter += 1
+                                if event_button == 4 and self.fortifying_country == country:
+                                    self.move_troop_to_fortified()
+                                elif event_button == 5 and self.fortifying_country == country:
+                                    self.move_troop_from_fortified()
+                        else:
+                            self.select_country(country)
+                    elif self.gameplay_stage == self.DRAFT:
+                        if event_button == 1:
+                            self.place_troop(country)
+
+    def place_troop(self, country):
+        current_player = self.players[self.current_turn]
+        if current_player.troops_available > 0 and current_player == country.owner:
+            country.add_troops(1)
+            current_player.remove_avail_troop()
+
     def occupy_country(self, country):
         """
         Gives certain amount of available troops to the players.
@@ -285,32 +339,6 @@ class Game:
                     current_player.remove_avail_troop()
                     self.pass_turn()
 
-    def handle_country_clicks(self, mouse_pos, event_button):
-        """
-        This function is specifically for country buttons.
-        It triggers different methods depending on gameplay stage
-        :param mouse_pos: Holds mouse position coordinates
-        :param event_button: Holds event button type. like left, right mouse click, wheel up or down
-        :return:
-        """
-        if self.map.countries is not None:
-            for country in self.map.countries:
-                if country.country_btn.rect.collidepoint(mouse_pos):
-                    if self.gameplay_stage == self.SETUP:
-                        self.occupy_country(country)
-                    elif self.gameplay_stage == self.ATTACK:
-                        if event_button == 1:
-                            if self.selected:
-                                self.attack_country(country)
-                            else:
-                                self.select_country(country)
-                        elif event_button == 4:
-                            if self.captured and country.highlighted:
-                                self.move_troop_to_captured()
-                        elif event_button == 5:
-                            if self.captured and country.highlighted:
-                                self.move_troop_from_captured()
-
     def move_troop_to_captured(self):
         if self.country_selected.troops > 1:
             self.country_selected.remove_troops(1)
@@ -320,6 +348,16 @@ class Game:
         if self.captured_country.troops > len(self.attack_dice):
             self.captured_country.remove_troops(1)
             self.country_selected.add_troops(1)
+
+    def move_troop_to_fortified(self):
+        if self.country_selected.troops > 1:
+            self.country_selected.remove_troops(1)
+            self.fortifying_country.add_troops(1)
+
+    def move_troop_from_fortified(self):
+        if self.fortifying_country.troops > 1:
+            self.country_selected.add_troops(1)
+            self.fortifying_country.remove_troops(1)
 
     def attack_country(self, country):
         """
@@ -347,10 +385,12 @@ class Game:
             self.defend_dice = d
             country.remove_troops(defender_lost_armies)
             self.country_selected.remove_troops(attacker_lost_armies)
+            current_player.remove_troops(attacker_lost_armies)
+            country.owner.remove_troops(defender_lost_armies)
             # If opponents country has 0 troops now, then overtake
             if country.troops <= 0:
                 self.captured_country = country
-                if self.gameplay_stage == self.GAMEPLAY_1:
+                if self.game_state == self.GAMEPLAY_1:
                     self.captured_country.owner.remove_country(country)
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
@@ -361,8 +401,8 @@ class Game:
                 self.captured_countries_in_turn += 1
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
-            current_player.refresh_troops()
-            country.owner.refresh_troops()
+            #current_player.refresh_troops()
+            #country.owner.refresh_troops()
         else:
             print("You can only attack neighbour countries")
 
@@ -382,7 +422,30 @@ class Game:
             self.selected = True
             self.captured = False
             self.country_selected = country
-            self.highlight_neighbour_countries(self.country_selected, True)
+            if self.gameplay_stage == self.ATTACK:
+                self.highlight_neighbour_countries(self.country_selected, True)
+            elif self.gameplay_stage == self.FORTIFY:
+                self.highlight_connected_countries(self.country_selected, True)
+
+    def highlight_connected_countries(self, country, highlight):
+        adjacent_countries = []
+        visited = set()
+
+        def dfs(selected_country):
+            visited.add(selected_country)
+            adjacent_countries.append(selected_country)
+            print("Hello")
+            neighbour_countries = self.map.get_neighbours_countries(selected_country)
+            for neighbour in neighbour_countries:
+                print("Here1")
+                if neighbour not in visited and neighbour.owner == selected_country.owner:
+                    print("HERE2")
+                    dfs(neighbour)
+
+        dfs(country)
+        for country in adjacent_countries:
+            country.highlighted = True if highlight else False
+            print(country.get_name())
 
     def highlight_captured(self, highlight):
         """
@@ -430,7 +493,6 @@ class Game:
     def switch_to_next_phase(self):
         if self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
             self.deck.create_cards(self.map)  # Creates a deck of cards, couldn't find a better place for it :)
-            print(len(self.deck.cards))
             self.gameplay_stage = self.ATTACK
             self.next_phase_button.change_text("To Fortify phase")
         elif self.gameplay_stage == self.ATTACK:
@@ -440,13 +502,24 @@ class Game:
             if self.captured_countries_in_turn > 0:
                 self.players[self.current_turn].add_card(self.deck.get_card())
             self.captured_countries_in_turn = 0
+            self.map.drop_highlights()
+            self.selected = False
         elif self.gameplay_stage == self.FORTIFY:
             self.gameplay_stage = self.DRAFT
             self.pass_turn()
+            self.turn += 1
+            if self.turn > len(self.players) - 1:
+                num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
+                self.players[self.current_turn].add_avail_troops(num_of_avail_troops)
+            self.country_selected = None
             self.next_phase_button.change_text("To Attack phase")
-        elif self.gameplay_stage == self.DRAFT:
+            self.map.drop_highlights()
+            self.fortify_counter = 0
+            self.selected = False
+        elif self.gameplay_stage == self.DRAFT and self.players[self.current_turn].troops_available < 1:
             self.gameplay_stage = self.ATTACK
             self.next_phase_button.change_text("To Fortify phase")
+            self.map.drop_highlights()
 
     def create_next_phase_button(self):
         button_image = pygame.image.load("images\\button_high.png")

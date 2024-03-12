@@ -41,8 +41,8 @@ class Card:
         self.country_name = country_name
         self.army_type = army_type
         self.army_type_image = img
-        self.width = int(self.screen.get_width() * 0.08)
-        self.height = int(self.screen.get_height() * 0.2)
+        self.width = int(self.screen.get_width() * 0.065)
+        self.height = int(self.screen.get_height() * 0.17)
         self.card = pygame.transform.scale(card_image, (self.width, self.height))
 
     def draw(self, x, y):

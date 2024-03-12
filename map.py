@@ -78,6 +78,10 @@ class Map:
         for button in self.buttons:
             button.check_click(event)
 
+    def drop_highlights(self):
+        for c in self.countries:
+            c.highlighted = False
+
     def get_state(self):
         """
 
@@ -235,6 +239,15 @@ class Map:
         :return: self.neighbours[country_name]
         """
         return self.neighbours[country_name]
+
+    def get_neighbours_countries(self, country):
+        country_name = country.get_name()
+        neighbour_country_names = self.get_neighbours(country_name)
+        countries = []
+        for c in self.countries:
+            if c.get_name() in neighbour_country_names:
+                countries.append(c)
+        return countries
 
     def create_neighbours(self):
         """

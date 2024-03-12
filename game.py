@@ -350,7 +350,8 @@ class Game:
             # If opponents country has 0 troops now, then overtake
             if country.troops <= 0:
                 self.captured_country = country
-                self.captured_country.owner.remove_country(country)
+                if self.gameplay_stage == self.GAMEPLAY_1:
+                    self.captured_country.owner.remove_country(country)
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
                 self.captured_country.add_troops(len(a))

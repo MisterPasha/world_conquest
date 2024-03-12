@@ -106,7 +106,7 @@ class Player:
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.3), self.pos[1]))
             for i, card in enumerate(self.cards):
-                card.draw(int(self.screen.get_width() * (0.4 + i * 0.08)), self.pos[1] * 1.06)
+                card.draw(int(self.screen.get_width() * (0.3 + i * 0.08)), self.pos[1] * 1.06)
 
     def get_color(self):
         """

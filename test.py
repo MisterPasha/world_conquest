@@ -237,6 +237,6 @@ class TestMap(unittest.TestCase):
         self.assertEqual(self.map.current_turn, 1)
 
 
-# ...
+# ....
 if __name__ == "__main__":
     unittest.main()

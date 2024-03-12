@@ -361,6 +361,8 @@ class Game:
                 self.captured_countries_in_turn += 1
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
+            current_player.refresh_troops()
+            country.owner.refresh_troops()
         else:
             print("You can only attack neighbour countries")
 

@@ -233,4 +233,3 @@ class AI(Player):
         :return: [NONE]
         """
         print("attack", country)
-#

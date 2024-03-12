@@ -7,18 +7,18 @@ pygame.mixer.init()
 
 class Button:
     def __init__(
-            # To be initialized
-            self,
-            original_image,
-            hover_image,
-            pos,
-            text,
-            font_size,
-            width,
-            height,
-            font=None,
-            action=None,
-            hover=True,
+        # To be initialized
+        self,
+        original_image,
+        hover_image,
+        pos,
+        text,
+        font_size,
+        width,
+        height,
+        font=None,
+        action=None,
+        hover=True,
     ):
         """
         Initialize a Button object
@@ -50,7 +50,7 @@ class Button:
         """
         Change image when cursor hovers button
         :param screen: Pygame screen surface
-        :return:
+        :return: [NONE]
         """
         if self.hover_enabled:
             if self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -71,7 +71,7 @@ class Button:
         """
         Check if the button is clicked and execute its action if assigned
         :param event: Pygame event
-        :return:
+        :return: [NONE]
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -84,7 +84,7 @@ class Button:
         """
         Change the button's current image to a new image
         :param new_image: New image surface
-        :return:
+        :return: [NONE]
         """
         new_image = pygame.transform.scale(
             new_image, (self.image.get_width(), self.image.get_height())
@@ -97,7 +97,7 @@ class Button:
         Toggle between clicked and unclicked states of the button
         :param unclicked_image: Image surface for unclicked state
         :param clicked_image: Image surface for clicked state
-        :return:
+        :return: [NONE]
         """
         if self.clicked:
             self.image = pygame.transform.scale(
@@ -114,6 +114,6 @@ class Button:
         """
         Change the text displayed on the button
         :param new_text: New text for the button
-        :return:
+        :return: [NONE]
         """
         self.text = new_text

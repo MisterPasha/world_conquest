@@ -1,6 +1,6 @@
 import pygame  # Import the pygame library for game development
-from main_menu import draw_text  # Import draw_text function from main_menu module
-from dice import Dice  # Import Dice class from dice module
+from main_menu import draw_text  # Import draw_text function from main_menu
+from dice import Dice  # Import Dice class from dice
 
 # Initialize pygame
 pygame.init()
@@ -45,26 +45,39 @@ class Player:
 
     # Not sure if needed
     def refresh_troops(self):
+        """
+        Refreshes the total number of troops held by the player.
+        'self.troops_holds'  Number of troops held
+        :return: [NONE]
+        """
+        # Iterates through the countries owned by the player and calculates the total number of troops held
         self.troops_holds = sum(country.troops for country in self.countries)
 
     def remove_troops(self, num_of_troops):
         self.troops_holds -= num_of_troops
 
     def add_card(self, card):
+        """
+        Adds a card to the player's collection
+        :param card: The card to be added
+        :return: [NONE]
+        """
         self.cards.append(card)
 
     def add_avail_troops(self, num_of_troops):
         """
-        Adds troops that need to be placed
+        Adds troops that need to be placed.
+        'self.troops_available' is updated
         :param num_of_troops: Number of troops to add
-        :return:
+        :return: [NONE]
         """
         self.troops_available += num_of_troops
 
     def remove_avail_troop(self):
         """
-        Removes one troop from available troops and adds it to held troops
-        :return:
+        Removes one troop from available troops and adds it to held troops.
+        'self.troops_available' & 'self.troops_holds' is updated
+        :return: [NONE]
         """
         self.troops_available -= 1
         self.troops_holds += 1
@@ -76,7 +89,7 @@ class Player:
         :param y: Y coordinate of the position
         :param width: Width of the image
         :param height: Height of the image
-        :return:
+        :return: [NONE]
         """
         self.pos = (x, y)
         self.size = (width, height)
@@ -85,10 +98,13 @@ class Player:
 
     def draw_profile(self):
         """
-        Draws profiles on the map
-        :return:
+        Draws the player's profile on the map along with additional information. This method draws the profile image
+        on the screen and displays the number of troops held by the player and the number of troops available for
+        placement it also displays any cards the player holds when the mouse is over the profile
+        :return: [NONE]
         """
         self.screen.blit(self.profile, self.pos)
+        # Draw the text indicating the number of troops held by the player
 
         # Draw the text indicating the number of troops available for placement
         draw_text(
@@ -99,6 +115,7 @@ class Player:
             int(self.pos[0] * 0.92),
             int(self.pos[1] + 30),
         )
+        # If the mouse is over the profile, display the information window and any cards the player holds
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1]))
             # Draw the text indicating the number of troops held by the player
@@ -130,15 +147,15 @@ class Player:
 
     def get_color(self):
         """
-        Get player's color as RGB tuple
-        :return:
+        Get player's colour as RGB tuple
+        :return: Player's colour
         """
         return self.color
 
     def get_color_name(self):
         """
-        Get player's color name
-        :return:
+        Get players colour's name
+        :return: Name of the player's colour
         """
         return self.color_str
 
@@ -146,7 +163,7 @@ class Player:
         """
         Add country to player's owned countries
         :param country: Country object to add
-        :return:
+        :return: [NONE]
         """
         self.countries.append(country)
 
@@ -154,7 +171,7 @@ class Player:
         """
         Remove country from player's owned countries
         :param country: Country object to remove
-        :return:
+        :return: [NONE]
         """
         self.countries.remove(country)
 
@@ -223,8 +240,9 @@ class AI(Player):
 
     def attack(self, country):
         """
-        Execute attack for AI player
+        Execute attack for AI player.
+        Prints the country with "attack"
         :param country: Country object to attack
-        :return:
+        :return: [NONE]
         """
         print("attack", country)

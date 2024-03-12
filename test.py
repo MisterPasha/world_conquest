@@ -1,12 +1,13 @@
 from game import Game
 import unittest
 from unittest.mock import Mock, patch, MagicMock
-import pygame
-from button import Button
+import pygame  # Import the pygame library for game development
+from button import Button  # Importing Button class from another module
 from main_menu import MainMenu
 from player import Player
 from countries import Country
 from map import Map
+
 
 # class TestButton(unittest.TestCase):
 #    def setUp(self):
@@ -189,7 +190,7 @@ class TestMap(unittest.TestCase):
         self.mock_map_img = pygame.Surface((50, 50))
         self.mock_plate_img = pygame.Surface((50, 50))
         with patch("map.map_img", self.mock_map_img), patch(
-            "map.plate_img", self.mock_plate_img
+                "map.plate_img", self.mock_plate_img
         ):
             self.map = Map(self.screen)
 
@@ -200,7 +201,7 @@ class TestMap(unittest.TestCase):
         :return:
         """
         with patch.object(self.map, "draw_dice_plate") as mock_draw_plate, patch.object(
-            self.map, "draw_turn_indicator"
+                self.map, "draw_turn_indicator"
         ) as mock_draw_turn_indicator:
             self.map.draw()
             mock_draw_plate.assert_called_once()
@@ -235,6 +236,7 @@ class TestMap(unittest.TestCase):
         self.map.change_turn(1)
         self.assertEqual(self.map.current_turn, 1)
 
-# ...
+
+# ....
 if __name__ == "__main__":
     unittest.main()

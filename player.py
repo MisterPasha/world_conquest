@@ -1,6 +1,7 @@
 import pygame  # Import the pygame library for game development
 from main_menu import draw_text  # Import draw_text function from main_menu
 from dice import Dice  # Import Dice class from dice
+from collections import Counter
 
 # Initialize pygame
 pygame.init()
@@ -42,16 +43,6 @@ class Player:
             self.info_window,
             (int(screen.get_width() * 0.55), int(screen.get_height() * 0.25)),
         )
-
-    # Not sure if needed
-    def refresh_troops(self):
-        """
-        Refreshes the total number of troops held by the player.
-        'self.troops_holds'  Number of troops held
-        :return: [NONE]
-        """
-        # Iterates through the countries owned by the player and calculates the total number of troops held
-        self.troops_holds = sum(country.troops for country in self.countries)
 
     def remove_troops(self, num_of_troops):
         self.troops_holds -= num_of_troops
@@ -125,8 +116,8 @@ class Player:
                 f"{self.troops_holds}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),  # X position of the text (aligned to the right of the profile image)
-                int(self.pos[1] + self.info_window.get_height() * 0.7),  # Y position of the text (slightly below the profile image)
+                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
+                int(self.pos[1] + self.info_window.get_height() * 0.7),
             )
             draw_text(
                 self.screen,  # Pygame screen surface
@@ -143,8 +134,68 @@ class Player:
     def calculate_num_of_draft_troops(self):
         num_of_avail_troops = len(self.countries) // 3
         num_of_avail_troops = num_of_avail_troops if num_of_avail_troops > 3 else 3
-        # Calculate through cards as well
         return num_of_avail_troops
+
+    def have_set_of_cards(self):
+        cards = [card.army_type for card in self.cards]
+        card_dict = Counter(cards)
+        print(card_dict)
+        for k, v in card_dict.items():
+            if v >= 3 or len(card_dict) >= 3:
+                return True
+        return False
+
+    def remove_set_cards(self, army_type, deck):
+        counter = 0
+        bonus_counter = 0
+        for card in self.cards:
+            if card.army_type == army_type or card.army_type == "Wild":
+                if counter <= 3:
+                    deck.cards.append(card)
+                    self.cards.remove(card)
+                    print("Card Has been removed")
+                    counter += 1
+                    if bonus_counter < 1:
+                        for country in self.countries:
+                            if country.country_name == card.country_name:
+                                country.add_troops(2)
+                                self.troops_holds += 2
+                                bonus_counter += 1
+
+    def remove_distinct_cards(self, deck):
+        distinct_cards = set()
+        bonus_counter = 0
+        for card in self.cards:
+            if card not in distinct_cards and len(distinct_cards) <= 3:
+                distinct_cards.add(card)
+                deck.cards.append(card)
+                self.cards.remove(card)
+                print("Card Has been removed")
+                print(f"Len of distinct cards {len(distinct_cards)}")
+                if bonus_counter < 1:
+                    for country in self.countries:
+                        if country.country_name == card.country_name:
+                            country.add_troops(2)
+                            self.troops_holds += 2
+                            bonus_counter += 1
+                            print("bonus has been used")
+
+    def sell_cards(self, nth_set, deck):
+        cards = [card.army_type for card in self.cards]
+        card_dict = Counter(cards)
+        if max(card_dict.values()) >= 3:
+            army_type = max(card_dict, key=card_dict.get)
+            self.remove_set_cards(army_type, deck)
+        elif len(card_dict) >= 3:
+            self.remove_distinct_cards(deck)
+
+        if 0 < nth_set < 6:
+            troops_to_add = nth_set * 2 + 2
+        elif nth_set == 6:
+            troops_to_add = 12
+        else:
+            troops_to_add = (nth_set - 6) * 5 + 15
+        self.add_avail_troops(troops_to_add)
 
     def get_color(self):
         """

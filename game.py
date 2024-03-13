@@ -73,6 +73,7 @@ class Game:
         self.next_phase_button = self.create_next_phase_button()
         # Initialise Deck object
         self.deck = Deck(self.screen)
+        self.nth_set = 0  # Counter for card sets that are sold
         # Attributes for Fortify phase
         self.fortifying_country = None
         self.fortify_counter = 0
@@ -105,6 +106,7 @@ class Game:
                 self.next_phase_button.check_click(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_country_clicks(event.pos, event.button)
+                    self.handle_profile_clicks(event.pos, event.button)
             elif self.game_state == self.EXIT:
                 self.running = False
 
@@ -335,7 +337,7 @@ class Game:
                             self.pass_turn()
                         elif country.owner is not current_player:
                             print("You are doing something naughty!")
-                    else:
+                    elif country.owner is current_player:
                         country.add_troops(1)
                         current_player.remove_avail_troop()
                         self.pass_turn()
@@ -394,7 +396,8 @@ class Game:
             country.remove_troops(defender_lost_armies)
             self.country_selected.remove_troops(attacker_lost_armies)
             current_player.remove_troops(attacker_lost_armies)
-            country.owner.remove_troops(defender_lost_armies)
+            if country.owner is not None:
+                country.owner.remove_troops(defender_lost_armies)
             # If opponents country has 0 troops now, then overtake
             if country.troops <= 0:
                 self.captured_country = country
@@ -440,12 +443,9 @@ class Game:
         def dfs(selected_country):
             visited.add(selected_country)
             adjacent_countries.append(selected_country)
-            print("Hello")
             neighbour_countries = self.map.get_neighbours_countries(selected_country)
             for neighbour in neighbour_countries:
-                print("Here1")
                 if neighbour not in visited and neighbour.owner == selected_country.owner:
-                    print("HERE2")
                     dfs(neighbour)
 
         dfs(country)
@@ -506,6 +506,9 @@ class Game:
             # If at least one country has been captured by current player he gets a card
             if self.captured_countries_in_turn > 0:
                 self.players[self.current_turn].add_card(self.deck.get_card())
+            if len(self.players[self.current_turn].cards) > 5:
+                self.players[self.current_turn].sell_cards(self.nth_set, self.deck)
+                self.nth_set += 1
             self.captured_countries_in_turn = 0
             self.map.drop_highlights()
             self.selected = False
@@ -544,3 +547,13 @@ class Game:
                         action=lambda: self.switch_to_next_phase()
                         )
         return button
+
+    def handle_profile_clicks(self, mouse_pos, event_button):
+        if self.gameplay_stage == self.DRAFT:
+            if self.players[self.current_turn].rect.collidepoint(mouse_pos) and event_button == 1:
+                if self.players[self.current_turn].have_set_of_cards():
+                    self.nth_set += 1
+                    self.players[self.current_turn].sell_cards(self.nth_set, self.deck)
+                    print(self.nth_set)
+
+

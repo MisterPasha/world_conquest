@@ -325,19 +325,27 @@ class Game:
         current_player = self.players[self.current_turn]
         if current_player.troops_available > 0:
             if len(self.map.countries) == 42:
-                # Occupying neutral countries during setup is only available in 3-6 player mode
-                if country.owner is None and self.game_state == self.GAMEPLAY_1:
-                    country.set_owner(current_player)
-                    country.add_troops(1)
-                    current_player.remove_avail_troop()
-                    current_player.add_country(country)
-                    self.pass_turn()
-                elif country.owner is not current_player:
-                    print("You are doing something naughty!")
-                else:
-                    country.add_troops(1)
-                    current_player.remove_avail_troop()
-                    self.pass_turn()
+                if self.game_state == self.GAMEPLAY_1:  # 3-6 player game
+                    if not self.map.all_countries_have_owner():
+                        if country.owner is None:
+                            country.set_owner(current_player)
+                            country.add_troops(1)
+                            current_player.remove_avail_troop()
+                            current_player.add_country(country)
+                            self.pass_turn()
+                        elif country.owner is not current_player:
+                            print("You are doing something naughty!")
+                    else:
+                        country.add_troops(1)
+                        current_player.remove_avail_troop()
+                        self.pass_turn()
+                if self.game_state == self.GAMEPLAY_2:  # 2 player game
+                    if country.owner is not current_player:
+                        print("You are doing something naughty!")
+                    else:
+                        country.add_troops(1)
+                        current_player.remove_avail_troop()
+                        self.pass_turn()
 
     def move_troop_to_captured(self):
         if self.country_selected.troops > 1:
@@ -401,8 +409,6 @@ class Game:
                 self.captured_countries_in_turn += 1
             self.highlight_neighbour_countries(self.country_selected, False)
             self.selected = False
-            #current_player.refresh_troops()
-            #country.owner.refresh_troops()
         else:
             print("You can only attack neighbour countries")
 
@@ -445,7 +451,6 @@ class Game:
         dfs(country)
         for country in adjacent_countries:
             country.highlighted = True if highlight else False
-            print(country.get_name())
 
     def highlight_captured(self, highlight):
         """

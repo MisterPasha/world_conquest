@@ -193,6 +193,12 @@ class Map:
             ),
         )
 
+    def all_countries_have_owner(self):
+        for country in self.countries:
+            if country.owner is None:
+                return False
+        return True
+
     def change_turn(self, turn):
         """
         Keeps track of player turn here to indicate their turn somehow, for now it's just green triangle

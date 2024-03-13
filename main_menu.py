@@ -25,7 +25,7 @@ def draw_text(
     :param x: X-coordinate of the text
     :param y: Y-coordinate of the text
     :param font: Font to use
-    :return:
+    :return: [NONE]
     """
     font = pygame.font.Font(font, size)
     text_surface = font.render(text, True, color)
@@ -104,7 +104,7 @@ class MainMenu:
     def draw(self):
         """
         Draw the main menu on the screen
-        :return:
+        :return: [NONE]
         """
         # Draw background, logo, buttons, etc
         self.screen.blit(self.background_image, (0, 0))
@@ -121,7 +121,7 @@ class MainMenu:
     def draw_opt_menu(self):
         """
         Draw the options (new game) menu on the screen
-        :return:
+        :return: [NONE]
         """
         # Draw background, buttons, player slots, etc.
         if self.opt_menu:
@@ -172,7 +172,7 @@ class MainMenu:
         """
         Check for mouse clicks on buttons in the menu
         :param event: Pygame event object
-        :return:
+        :return: [NONE]
         """
         # Check for clicks on buttons based on the menu state
         if not self.opt_menu:
@@ -191,7 +191,7 @@ class MainMenu:
         """
         Draw icons (Human and AI) beside a player slot
         :param slot: Player slot Button object
-        :return:
+        :return: [NONE]
         """
         self.screen.blit(
             self.human_image,
@@ -209,7 +209,7 @@ class MainMenu:
         """
         Set the state of the options (for new game) menu
         :param state: Boolean indicating whether the menu should be displayed or not
-        :return:
+        :return: [NONE]
         """
         self.opt_menu = state
         self.players = 0
@@ -221,7 +221,7 @@ class MainMenu:
         """
         Sets the state of the setting menu
         :param state: Boolean indicating whether the menu should be displayed or not
-        :return:
+        :return: [NONE]
         """
         self.setting_menu = state
 
@@ -229,7 +229,7 @@ class MainMenu:
         """
         Sets the state of the FAQ menu
         :param state: Boolean indicating whether the menu should be displayed or not
-        :return:
+        :return: [NONE]
         """
         self.faq_menu = state
 
@@ -237,7 +237,7 @@ class MainMenu:
         """
         Changes the state of the game
         :param new_state: The new state to be set
-        :return:
+        :return: [NONE]
         """
         if new_state == 1:
             if self.players + self.AI_agents == 2:
@@ -271,7 +271,7 @@ class MainMenu:
     def add_player(self):
         """
         Add a player to the game if the total number of players (human and AI) is less than 6
-        :return:
+        :return: [NONE]
         """
         if (self.players + self.AI_agents) < 6:
             self.players += 1
@@ -282,7 +282,7 @@ class MainMenu:
     def remove_player(self):
         """
         Remove a player from the game
-        :return:
+        :return: [NONE]
         """
         if (self.players + self.AI_agents) > 0:
 

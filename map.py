@@ -1,5 +1,5 @@
-import pygame
-from button import Button
+import pygame  # Import the pygame library for game development
+from button import Button  # Importing Button class
 from countries import Country
 from main_menu import MainMenu
 from player import Human

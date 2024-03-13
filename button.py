@@ -66,9 +66,9 @@ class Button:
         # Draw the text
         screen.blit(text_surf, text_rect)
 
-    # If click on self object is detected it triggers assigned function
     def check_click(self, event):
         """
+        If click on self object is detected it triggers assigned function.
         Check if the button is clicked and execute its action if assigned
         :param event: Pygame event
         :return: [NONE]
@@ -91,9 +91,9 @@ class Button:
         )
         self.image = new_image
 
-    # Specific feature for "Switch" type buttons
     def click(self, unclicked_image, clicked_image):
         """
+        Specific feature for "Switch" type buttons.
         Toggle between clicked and unclicked states of the button
         :param unclicked_image: Image surface for unclicked state
         :param clicked_image: Image surface for clicked state

@@ -11,6 +11,7 @@ pygame.init()
 
 class Game:
     paper_img = pygame.image.load("images\\gameplay_paper.png")
+    font1 = "fonts\\font1.ttf"
 
     # Game States
     EXIT = -1
@@ -538,10 +539,10 @@ class Game:
         if self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
             self.deck.create_cards(self.map)  # Creates a deck of cards, couldn't find a better place for it :)
             self.gameplay_stage = self.ATTACK
-            self.next_phase_button.change_text("To Fortify phase")
+            self.next_phase_button.change_text("Fortify")
         elif self.gameplay_stage == self.ATTACK:
             self.gameplay_stage = self.FORTIFY
-            self.next_phase_button.change_text("End Turn")
+            self.next_phase_button.change_text("End")
             # If at least one country has been captured by current player he gets a card
             if self.captured_countries_in_turn > 0:
                 self.players[self.current_turn].add_card(self.deck.get_card())
@@ -559,13 +560,13 @@ class Game:
                 num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
                 self.players[self.current_turn].add_avail_troops(num_of_avail_troops)
             self.country_selected = None
-            self.next_phase_button.change_text("To Attack phase")
+            self.next_phase_button.change_text("Attack")
             self.map.drop_highlights()
             self.fortify_counter = 0
             self.selected = False
         elif self.gameplay_stage == self.DRAFT and self.players[self.current_turn].troops_available < 1:
             self.gameplay_stage = self.ATTACK
-            self.next_phase_button.change_text("To Fortify phase")
+            self.next_phase_button.change_text("Fortify")
             self.map.drop_highlights()
 
     def create_next_phase_button(self):
@@ -575,18 +576,19 @@ class Game:
         """
         button_image = pygame.image.load("images\\button_high.png")
         button_hover_image = pygame.image.load("images\\button_hover.png")
-        width = int(self.screen.get_width() * 0.15)
+        width = int(self.screen.get_width() * 0.1)
         height = int(self.screen.get_height() * 0.07)
-        font_size = int(self.screen.get_height() * 0.04)
+        font_size = int(self.screen.get_height() * 0.05)
         x = int(self.screen.get_width() - width)
         y = int(self.screen.get_height() * 0.7)
         button = Button(button_image,
                         button_hover_image,
                         (x, y),
-                        "To Attack phase",
+                        "Attack",
                         font_size,
                         width,
                         height,
+                        font=self.font1,
                         action=lambda: self.switch_to_next_phase()
                         )
         return button

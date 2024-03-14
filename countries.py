@@ -28,7 +28,7 @@ class Country:
         self.image = self.plain_image
 
         # Default colour for the country
-        self.color = (192, 192, 192)
+        self.color = (250, 250, 250)
 
         # The country select button
         self.country_btn = self.set_button()
@@ -196,6 +196,7 @@ class Country:
             (84, 199, 153): (2, 247, 149),  # Green
             (168, 69, 67): (247, 5, 5),  # Red
             (57, 108, 196): (15, 4, 179),  # Blue
+            (250, 250, 250): (150, 150, 150)  # gray
         }
 
         # Retrieve the highlighted colour based on the current color

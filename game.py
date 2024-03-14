@@ -37,24 +37,32 @@ class Game:
         self.clock = clock
         self.window_size = window_size
         self.running = True
+
         # image paper in gameplay
         self.paper_img = pygame.transform.scale(
             self.paper_img, (screen.get_width(), screen.get_height())
         )
+
         # set initial state
         self.game_state = self.MAIN_MENU
+
         # set initial gameplay stage
         self.gameplay_stage = self.CHOOSE_FIRST_TURN
+
         # List of Player objects
         self.players = None
+
         # Current player
         self.current_turn = 0
         self.turn = 0
+
         # initialise MainMenu object
         self.main_menu = MainMenu(self.screen)
+
         # initialise Map object
         self.map = None
         self.countries_divided = False
+
         # All necessary dice attributes
         self.dice = Dice(self.screen)
         self.showing_dice_animation = False
@@ -63,17 +71,21 @@ class Game:
         self.dice_throw_index = 0
         self.attack_dice = []
         self.defend_dice = []
+
         # Attributes for attacking phase
         self.country_selected = None  # Holds country that is currently selected
         self.selected = False  # Boolean whether any country is selected
         # Boolean whether any country has been captured now, used when moving troops to captured country
+
         self.captured = False
         self.captured_country = None
         self.captured_countries_in_turn = 0
         self.next_phase_button = self.create_next_phase_button()
+
         # Initialise Deck object
         self.deck = Deck(self.screen)
         self.nth_set = 0  # Counter for card sets that are sold
+
         # Attributes for Fortify phase
         self.fortifying_country = None
         self.fortify_counter = 0
@@ -311,6 +323,11 @@ class Game:
                             self.place_troop(country)
 
     def place_troop(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         current_player = self.players[self.current_turn]
         if current_player.troops_available > 0 and current_player == country.owner:
             country.add_troops(1)
@@ -350,21 +367,37 @@ class Game:
                         self.pass_turn()
 
     def move_troop_to_captured(self):
+        """
+
+        :return:
+        """
         if self.country_selected.troops > 1:
             self.country_selected.remove_troops(1)
             self.captured_country.add_troops(1)
 
     def move_troop_from_captured(self):
+        """
+
+        :return:
+        """
         if self.captured_country.troops > len(self.attack_dice):
             self.captured_country.remove_troops(1)
             self.country_selected.add_troops(1)
 
     def move_troop_to_fortified(self):
+        """
+
+        :return:
+        """
         if self.country_selected.troops > 1:
             self.country_selected.remove_troops(1)
             self.fortifying_country.add_troops(1)
 
     def move_troop_from_fortified(self):
+        """
+
+        :return:
+        """
         if self.fortifying_country.troops > 1:
             self.country_selected.add_troops(1)
             self.fortifying_country.remove_troops(1)
@@ -437,6 +470,12 @@ class Game:
                 self.highlight_connected_countries(self.country_selected, True)
 
     def highlight_connected_countries(self, country, highlight):
+        """
+
+        :param country:
+        :param highlight:
+        :return:
+        """
         adjacent_countries = []
         visited = set()
 
@@ -530,6 +569,10 @@ class Game:
             self.map.drop_highlights()
 
     def create_next_phase_button(self):
+        """
+
+        :return:
+        """
         button_image = pygame.image.load("images\\button_high.png")
         button_hover_image = pygame.image.load("images\\button_hover.png")
         x = int(self.screen.get_width() * 0.25)
@@ -549,6 +592,12 @@ class Game:
         return button
 
     def handle_profile_clicks(self, mouse_pos, event_button):
+        """
+
+        :param mouse_pos:
+        :param event_button:
+        :return:
+        """
         if self.gameplay_stage == self.DRAFT:
             if self.players[self.current_turn].rect.collidepoint(mouse_pos) and event_button == 1:
                 if self.players[self.current_turn].have_set_of_cards():

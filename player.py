@@ -148,12 +148,12 @@ class Player:
     def remove_set_cards(self, army_type, deck):
         counter = 0
         bonus_counter = 0
+        cards_to_remove = []
         for card in self.cards:
             if card.army_type == army_type or card.army_type == "Wild":
-                if counter <= 3:
+                if counter < 3:
                     deck.cards.append(card)
-                    self.cards.remove(card)
-                    print("Card Has been removed")
+                    cards_to_remove.append(card)
                     counter += 1
                     if bonus_counter < 1:
                         for country in self.countries:
@@ -161,12 +161,15 @@ class Player:
                                 country.add_troops(2)
                                 self.troops_holds += 2
                                 bonus_counter += 1
+                                print("bonus has been used")
+        for card in cards_to_remove:
+            self.cards.remove(card)
 
     def remove_distinct_cards(self, deck):
         distinct_cards = set()
         bonus_counter = 0
         for card in self.cards:
-            if card not in distinct_cards and len(distinct_cards) <= 3:
+            if card not in distinct_cards and len(distinct_cards) < 3:
                 distinct_cards.add(card)
                 deck.cards.append(card)
                 self.cards.remove(card)
@@ -179,6 +182,8 @@ class Player:
                             self.troops_holds += 2
                             bonus_counter += 1
                             print("bonus has been used")
+        for card in distinct_cards:
+            self.cards.remove(card)
 
     def sell_cards(self, nth_set, deck):
         cards = [card.army_type for card in self.cards]

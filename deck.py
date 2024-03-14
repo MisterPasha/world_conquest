@@ -33,7 +33,7 @@ class Deck:
         cavalry = pygame.transform.scale(cavalry_image, (width, width))
         artillery = pygame.transform.scale(artillery_image, (width, width))
         units = ["Infantry"] * 14 + ["Cavalry"] * 14 + ["Artillery"] * 14 + ["Wild"] * 14
-        for country, unit in zip(map_.countries, units):
+        for country, unit in zip_longest(map_.countries, units):
             if unit == "Infantry":
                 self.cards.append(Card(self.screen, country.get_name(), unit, infantry))
             elif unit == "Cavalry":
@@ -43,7 +43,7 @@ class Deck:
                     Card(self.screen, country.get_name(), unit, artillery)
                 )
             elif unit == "Wild":
-                self.cards.append(Card(self.screen, None, None, None))
+                self.cards.append(Card(self.screen, None, unit, None))
 
     def get_card(self):
         """

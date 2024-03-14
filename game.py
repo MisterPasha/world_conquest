@@ -575,11 +575,11 @@ class Game:
         """
         button_image = pygame.image.load("images\\button_high.png")
         button_hover_image = pygame.image.load("images\\button_hover.png")
-        x = int(self.screen.get_width() * 0.25)
-        y = int(self.screen.get_height() * 0.93)
         width = int(self.screen.get_width() * 0.15)
         height = int(self.screen.get_height() * 0.07)
         font_size = int(self.screen.get_height() * 0.04)
+        x = int(self.screen.get_width() - width)
+        y = int(self.screen.get_height() * 0.7)
         button = Button(button_image,
                         button_hover_image,
                         (x, y),

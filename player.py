@@ -26,14 +26,19 @@ class Player:
         self.profile = profile_img
         self.color = color
         self.color_str = color_str
+
         # Troops that player has in the game
         self.troops_holds = 0
+
         # Troops that need to be placed yet
         self.troops_available = 0
+
         # list of Card objects that player holds
         self.cards = []
+
         # list of Country objects that player holds
         self.countries = []
+
         # Position and size of the profile image
         self.pos = None
         self.size = None
@@ -45,6 +50,11 @@ class Player:
         )
 
     def remove_troops(self, num_of_troops):
+        """
+
+        :param num_of_troops:
+        :return:
+        """
         self.troops_holds -= num_of_troops
 
     def add_card(self, card):
@@ -132,11 +142,19 @@ class Player:
                           self.pos[1] + self.info_window.get_height() * 0.1)
 
     def calculate_num_of_draft_troops(self):
+        """
+
+        :return:
+        """
         num_of_avail_troops = len(self.countries) // 3
         num_of_avail_troops = num_of_avail_troops if num_of_avail_troops > 3 else 3
         return num_of_avail_troops
 
     def have_set_of_cards(self):
+        """
+
+        :return:
+        """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
         print(card_dict)
@@ -146,6 +164,12 @@ class Player:
         return False
 
     def remove_set_cards(self, army_type, deck):
+        """
+
+        :param army_type:
+        :param deck:
+        :return:
+        """
         counter = 0
         bonus_counter = 0
         for card in self.cards:
@@ -163,6 +187,11 @@ class Player:
                                 bonus_counter += 1
 
     def remove_distinct_cards(self, deck):
+        """
+
+        :param deck:
+        :return:
+        """
         distinct_cards = set()
         bonus_counter = 0
         for card in self.cards:
@@ -181,6 +210,12 @@ class Player:
                             print("bonus has been used")
 
     def sell_cards(self, nth_set, deck):
+        """
+
+        :param nth_set:
+        :param deck:
+        :return:
+        """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
         if max(card_dict.values()) >= 3:

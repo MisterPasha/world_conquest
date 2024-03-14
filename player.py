@@ -117,6 +117,7 @@ class Player:
             int(self.pos[0] * 0.92),
             int(self.pos[1] + 30),
         )
+
         # If the mouse is over the profile, display the information window and any cards the player holds
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1]))
@@ -157,9 +158,10 @@ class Player:
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
+        wild_cards = card_dict["Wild"]
         print(card_dict)
         for k, v in card_dict.items():
-            if v >= 3 or len(card_dict) >= 3:
+            if v >= 3 or len(card_dict) >= 3 or v + wild_cards >= 3:
                 return True
         return False
 
@@ -195,15 +197,14 @@ class Player:
         :param deck:
         :return:
         """
-        distinct_cards = set()
+        distinct_types = set()
+        distinct_cards = []
         bonus_counter = 0
         for card in self.cards:
-            if card not in distinct_cards and len(distinct_cards) < 3:
-                distinct_cards.add(card)
+            if card.army_type not in distinct_types and len(distinct_cards) < 3:
+                distinct_cards.append(card)
+                distinct_types.add(card.army_type)
                 deck.cards.append(card)
-                self.cards.remove(card)
-                print("Card Has been removed")
-                print(f"Len of distinct cards {len(distinct_cards)}")
                 if bonus_counter < 1:
                     for country in self.countries:
                         if country.country_name == card.country_name:
@@ -211,6 +212,8 @@ class Player:
                             self.troops_holds += 2
                             bonus_counter += 1
                             print("bonus has been used")
+            elif card.army_type == "Wild":
+                distinct_cards.append(card)
         for card in distinct_cards:
             self.cards.remove(card)
 
@@ -223,19 +226,23 @@ class Player:
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
+        wild_cards = card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
         if max(card_dict.values()) >= 3:
             army_type = max(card_dict, key=card_dict.get)
             self.remove_set_cards(army_type, deck)
-        elif len(card_dict) >= 3:
+        elif len(card_dict) + wild_cards >= 3:
             self.remove_distinct_cards(deck)
 
+        self.add_avail_troops(self.get_card_bonus(nth_set))
+
+    def get_card_bonus(self, nth_set):
         if 0 < nth_set < 6:
             troops_to_add = nth_set * 2 + 2
         elif nth_set == 6:
             troops_to_add = 12
         else:
             troops_to_add = (nth_set - 6) * 5 + 15
-        self.add_avail_troops(troops_to_add)
+        return troops_to_add
 
     def get_color(self):
         """

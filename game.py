@@ -434,7 +434,7 @@ class Game:
             # If opponents country has 0 troops now, then overtake
             if country.troops <= 0:
                 self.captured_country = country
-                if self.game_state == self.GAMEPLAY_1:
+                if country.owner is not None:
                     self.captured_country.owner.remove_country(country)
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
@@ -603,6 +603,3 @@ class Game:
                 if self.players[self.current_turn].have_set_of_cards():
                     self.nth_set += 1
                     self.players[self.current_turn].sell_cards(self.nth_set, self.deck)
-                    print(self.nth_set)
-
-

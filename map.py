@@ -10,7 +10,10 @@ pygame.init()
 
 # ...
 plate_img = pygame.image.load("images\\dice_table.png")
-map_img = pygame.image.load("images\\map.jpg")
+map_img = pygame.image.load("images\\map.png")
+ports_img = pygame.image.load("images\\ports.png")
+sea_paths_img = pygame.image.load("images\\sea_paths.png")
+
 button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
 font1 = "fonts\\font1.ttf"
@@ -41,7 +44,12 @@ class Map:
         self.plate_img = pygame.transform.scale(
             plate_img, (int(screen.get_height() / 4.5), int(screen.get_height() / 4.5))
         )
-
+        self.ports_img = pygame.transform.scale(
+            ports_img, (screen.get_width(), screen.get_height())
+        )
+        self.sea_paths_img = pygame.transform.scale(
+            sea_paths_img, (screen.get_width(), screen.get_height())
+        )
         self.state = None
         self.buttons = self.create_buttons()
         self.countries = []
@@ -59,11 +67,13 @@ class Map:
         :return:
         """
         self.screen.blit(self.map_img, (0, 0))
+        self.screen.blit(self.sea_paths_img, (0, 0))
         for button in self.buttons:
             button.draw(self.screen)
         if self.countries:
             for country in self.countries:
                 country.draw()
+        self.screen.blit(self.ports_img, (0, 0))
         for player in self.player_profiles:
             player.draw_profile()
         self.draw_dice_plate()
@@ -165,8 +175,8 @@ class Map:
         Were going to think about something better than green triangle
         :return: turn_indicator
         """
-        size = self.center_y * 0.1
-        turn_indicator = pygame.image.load("images\\green_tri.png")
+        size = self.center_y * 0.05
+        turn_indicator = pygame.image.load("images\\green_dot.png")
         turn_indicator = pygame.transform.scale(turn_indicator, (size, size))
         return turn_indicator
 

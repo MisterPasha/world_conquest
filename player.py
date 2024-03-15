@@ -111,11 +111,11 @@ class Player:
         # Draw the text indicating the number of troops available for placement
         draw_text(
             self.screen,
-            f"PLACE: {self.troops_available}",
+            f"{self.troops_available}",
             int(self.size[0] * 0.45),
             (0, 0, 0),
-            int(self.pos[0] * 0.92),
-            int(self.pos[1] + 30),
+            int(self.pos[0] * 0.98),
+            int(self.pos[1] + 35),
         )
 
         # If the mouse is over the profile, display the information window and any cards the player holds

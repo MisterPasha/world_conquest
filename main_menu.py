@@ -46,12 +46,12 @@ class MainMenu:
     player_slot_image = pygame.image.load("images\\player_slot.png")
     player_images = [
         # Player images
-        pygame.image.load("images\\player1.png"),
-        pygame.image.load("images\\player2.png"),
-        pygame.image.load("images\\player3.png"),
-        pygame.image.load("images\\player4.png"),
-        pygame.image.load("images\\player5.png"),
-        pygame.image.load("images\\player6.png"),
+        pygame.image.load("images\\player_1.png"),
+        pygame.image.load("images\\player_2.png"),
+        pygame.image.load("images\\player_3.png"),
+        pygame.image.load("images\\player_4.png"),
+        pygame.image.load("images\\player_5.png"),
+        pygame.image.load("images\\player_6.png"),
     ]
     robot_image = pygame.image.load("images\\robot.png")
     human_image = pygame.image.load("images\\human.png")

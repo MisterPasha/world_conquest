@@ -151,7 +151,7 @@ class Game:
             elif self.gameplay_stage == self.ATTACK:
                 self.dice.draw_dice_w(self.defend_dice)
                 self.dice.draw_dice_r(self.attack_dice)
-            if self.secret_mission_mode:
+            if self.secret_mission_mode and self.players[self.current_turn].mission_id:
                 if self.mission_card.mission_completed(self.players[self.current_turn].mission_id,
                                                        self.players[self.current_turn]):
                     self.draw_win_window()

@@ -28,6 +28,9 @@ class Player:
         self.color = color
         self.color_str = color_str
 
+        # Keeps track whether player still in the game
+        self.playing = True
+
         # Troops that player has in the game
         self.troops_holds = 0
 
@@ -52,6 +55,10 @@ class Player:
             self.info_window,
             (int(screen.get_width() * 0.55), int(screen.get_height() * 0.25)),
         )
+
+        # For game with mission cards
+        self.mission_id = None
+        self.player_to_destroy = None  # Needed for one of the mission cards
 
     def remove_troops(self, num_of_troops):
         """

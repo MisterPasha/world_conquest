@@ -93,3 +93,78 @@ class Card:
             self.screen.blit(self.card, (x, y))
             draw_text(self.screen, self.country_name, 16, (0, 0, 0), x + int(self.width * 0.2), y + int(self.width * 0.2))
             self.screen.blit(self.army_type_image, (x + int(self.width * 0.2), y + int(self.height * 0.5)))
+
+
+class MissionCards:
+    def __init__(self, screen):
+        self.screen = screen
+        self.mission_cards = []
+
+    def mission_completed(self, mission_id, player):
+
+        player_continents = [continent.continent_name for continent in player.continents]
+
+        # Capture Europe, Australia and one other continent
+        def mission1(player_):
+            if "Europe" in player_continents and "Australia" in player_continents and len(player_continents) >= 3:
+                return True
+            return False
+
+        # Capture Europe, South America and one other continent
+        def mission2(player_):
+            if "Europe" in player_continents and "South America" in player_continents and len(player_continents) >= 3:
+                return True
+            return False
+
+        # Capture North America and Africa
+        def mission3(player_):
+            if "North America" in player_continents and "Africa" in player_continents:
+                return True
+            return False
+
+        # Capture Asia and South America
+        def mission4(player_):
+            if "Asia" in player_continents and "South America" in player_continents:
+                return True
+            return False
+
+        # Capture North America and Australia
+        def mission5(player_):
+            if "North America" in player_continents and "Australia" in player_continents:
+                return True
+            return False
+
+        # Capture 24 territories
+        def mission6(player_):
+            if len(player_.countries) >= 24:
+                return True
+            return False
+
+        # Destroy all armies of a named opponent or, in case being the named player oneself -
+        # Capture 24 countries
+        def mission7(player_):
+            if player_.player_to_destroy == player_:
+                if len(player_.countries) >= 24:
+                    return True
+            else:
+                if not player_.player_to_destroy.playing:
+                    return True
+            return False
+
+        # Capture 18 territories and occupy each with 2 troops
+        def mission8(player_):
+            counter = 0
+            for country in player_.countries:
+                if country.troops >= 2:
+                    counter += 1
+            if counter >= 18:
+                return True
+            return False
+
+        mission_dict = {1: mission1, 2: mission2,
+                        3: mission3, 4: mission4,
+                        5: mission5, 6: mission6,
+                        7: mission7, 8: mission8}
+
+        return mission_dict[mission_id](player)
+

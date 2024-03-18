@@ -101,6 +101,8 @@ class MainMenu:
         self.new_menu_buttons = self.create_new_game_menu_buttons()
         self.faq_menu_buttons = self.create_faq_menu_buttons()
 
+        self.secret_mission_mode = False
+
     def draw(self):
         """
         Draw the main menu on the screen
@@ -132,10 +134,19 @@ class MainMenu:
             draw_text(
                 self.screen,
                 "Players",
-                int(self.center_y * 0.17),
+                int(self.center_y * 0.14),
                 (0, 0, 0),
                 int(self.center_x * 0.14),
                 int(self.center_y * 0.18),
+                font=self.font1,
+            )
+            draw_text(
+                self.screen,
+                "Mission Cards",
+                int(self.center_y * 0.08),
+                (0, 0, 0),
+                int(self.center_x * 0.48),
+                int(self.center_y * 0.42),
                 font=self.font1,
             )
             for slot in self.player_slots:
@@ -402,7 +413,25 @@ class MainMenu:
             font=self.font1,
             action=lambda: self.remove_player(),
         )
-        return [play, back, add, remove]
+        secret_mission = Button(
+            self.P_or_AI_button,
+            self.P_or_AI_button,
+            (int(self.center_x * 0.73), int(self.center_y * 0.435)),
+            "",
+            1,
+            int(self.center_x * 0.035),
+            int(self.center_x * 0.035),
+            action=lambda: self.change_secret_mission_mode(),
+            hover=False
+        )
+        return [play, back, add, remove, secret_mission]
+
+    def change_secret_mission_mode(self):
+        self.secret_mission_mode = not self.secret_mission_mode
+        if self.secret_mission_mode:
+            self.new_menu_buttons[4].change_image(self.P_or_AI_button_clicked)
+        else:
+            self.new_menu_buttons[4].change_image(self.P_or_AI_button)
 
     def create_faq_menu_buttons(self):
         """

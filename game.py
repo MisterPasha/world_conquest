@@ -91,6 +91,9 @@ class Game:
         self.fortifying_country = None
         self.fortify_counter = 0
 
+        # Defines whether secret mission mode is enabled
+        self.secret_mission_mode = False
+
     # Main running loop
     def run(self):
         """
@@ -154,6 +157,7 @@ class Game:
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
             self.map = Map(self.screen)
             self.map.create_countries()
+            self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
             self.map.set_players_and_ai(
@@ -167,6 +171,7 @@ class Game:
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
             self.map = Map(self.screen)
             self.map.create_countries()
+            self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_2)
             self.map.set_players_and_ai(
                 self.main_menu.get_num_players(), self.main_menu.get_num_ai_players()
@@ -437,6 +442,11 @@ class Game:
                 self.captured_country = country
                 if country.owner is not None:
                     self.captured_country.owner.remove_country(country)
+                    if self.captured_country.owner.troops_holds <= 0 or len(self.captured_country.owner.countries) <= 0:
+                        self.captured_country.owner.playing = False
+                        self.players.remove(country.owner)
+                        print("removed a player")
+                        print(f"{self.captured_country.owner.color_str} has {self.captured_country.owner.troops_holds}")
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
                 self.captured_country.add_troops(len(a))
@@ -548,6 +558,9 @@ class Game:
             if current_player_continents:
                 for continent in current_player_continents:
                     self.players[self.current_turn].add_avail_troops(continent.get_bonus())
+            if self.secret_mission_mode:
+                self.deal_mission_cards()
+                print("Mission cards dealt")
             self.next_phase_button.change_text("Attack")
         elif self.gameplay_stage == self.ATTACK:
             self.gameplay_stage = self.FORTIFY
@@ -583,6 +596,15 @@ class Game:
             self.gameplay_stage = self.ATTACK
             self.next_phase_button.change_text("Fortify")
             self.map.drop_highlights()
+
+    def deal_mission_cards(self):
+        random_indexes = random.sample(range(1, 9), len(self.players))
+        for id_, player in zip(random_indexes, self.players):
+            if id_ == 7:
+                player.mission_id = id_
+                player.player_to_destroy = random.choice(self.players)
+            else:
+                player.mission_id = id_
 
     def create_next_phase_button(self):
         """

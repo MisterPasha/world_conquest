@@ -3,6 +3,7 @@ from main_menu import draw_text  # Import draw_text function from main_menu
 from dice import Dice  # Import Dice class from dice
 from collections import Counter
 from map import create_continents
+from deck import MissionCards
 
 # Initialize pygame
 pygame.init()
@@ -57,6 +58,7 @@ class Player:
         )
 
         # For game with mission cards
+        self.mission_card = MissionCards(self.screen)
         self.mission_id = None
         self.player_to_destroy = None  # Needed for one of the mission cards
 
@@ -152,6 +154,14 @@ class Player:
             for i, card in enumerate(self.cards):
                 card.draw(int(self.screen.get_width() * 0.37) + i * card.width,
                           self.pos[1] + self.info_window.get_height() * 0.1)
+            if self.mission_id:
+                if self.mission_id == 7:
+                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
+                                           int(self.pos[1] + self.info_window.get_height() * 0.1),
+                                           self.player_to_destroy.color_str)
+                else:
+                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
+                                           int(self.pos[1] + self.info_window.get_height() * 0.1))
 
     def calculate_num_of_draft_troops(self):
         """

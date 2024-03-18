@@ -5,11 +5,13 @@ from map import Map
 from dice import Dice
 from button import Button
 from deck import Deck
+from deck import MissionCards
 
 pygame.init()
 
 
 class Game:
+    win_window = pygame.image.load("images\\win_window.png")
     paper_img = pygame.image.load("images\\gameplay_paper.png")
     font1 = "fonts\\font1.ttf"
 
@@ -42,6 +44,9 @@ class Game:
         # image paper in gameplay
         self.paper_img = pygame.transform.scale(
             self.paper_img, (screen.get_width(), screen.get_height())
+        )
+        self.win_window = pygame.transform.scale(
+            self.win_window, (screen.get_width(), screen.get_height())
         )
 
         # set initial state
@@ -93,6 +98,7 @@ class Game:
 
         # Defines whether secret mission mode is enabled
         self.secret_mission_mode = False
+        self.mission_card = MissionCards(self.screen)
 
     # Main running loop
     def run(self):
@@ -145,6 +151,10 @@ class Game:
             elif self.gameplay_stage == self.ATTACK:
                 self.dice.draw_dice_w(self.defend_dice)
                 self.dice.draw_dice_r(self.attack_dice)
+            if self.secret_mission_mode:
+                if self.mission_card.mission_completed(self.players[self.current_turn].mission_id,
+                                                       self.players[self.current_turn]):
+                    self.draw_win_window()
 
     def check_state_main_menu(self):
         """
@@ -445,8 +455,6 @@ class Game:
                     if self.captured_country.owner.troops_holds <= 0 or len(self.captured_country.owner.countries) <= 0:
                         self.captured_country.owner.playing = False
                         self.players.remove(country.owner)
-                        print("removed a player")
-                        print(f"{self.captured_country.owner.color_str} has {self.captured_country.owner.troops_holds}")
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
                 self.captured_country.add_troops(len(a))
@@ -558,9 +566,9 @@ class Game:
             if current_player_continents:
                 for continent in current_player_continents:
                     self.players[self.current_turn].add_avail_troops(continent.get_bonus())
+            # Deal mission cards to players
             if self.secret_mission_mode:
                 self.deal_mission_cards()
-                print("Mission cards dealt")
             self.next_phase_button.change_text("Attack")
         elif self.gameplay_stage == self.ATTACK:
             self.gameplay_stage = self.FORTIFY
@@ -642,3 +650,6 @@ class Game:
                 if self.players[self.current_turn].have_set_of_cards():
                     self.nth_set += 1
                     self.players[self.current_turn].sell_cards(self.nth_set, self.deck)
+
+    def draw_win_window(self):
+        self.screen.blit(self.win_window, (0, 0))

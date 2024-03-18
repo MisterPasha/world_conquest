@@ -12,6 +12,15 @@ cavalry_image = pygame.image.load("images\\cavalry.png")
 artillery_image = pygame.image.load("images\\artillery.jpg")
 card_image = pygame.image.load("images\\card.png")
 
+mission_cards_ = [pygame.image.load("mission_cards\\task1.png"),
+                  pygame.image.load("mission_cards\\task2.png"),
+                  pygame.image.load("mission_cards\\task3.png"),
+                  pygame.image.load("mission_cards\\task4.png"),
+                  pygame.image.load("mission_cards\\task5.png"),
+                  pygame.image.load("mission_cards\\task6.png"),
+                  pygame.image.load("mission_cards\\task7.png"),
+                  pygame.image.load("mission_cards\\task8.png")]
+
 
 class Deck:
     def __init__(self, screen):
@@ -98,7 +107,15 @@ class Card:
 class MissionCards:
     def __init__(self, screen):
         self.screen = screen
-        self.mission_cards = []
+        self.width = int(self.screen.get_width() * 0.08)
+        self.height = int(self.screen.get_height() * 0.22)
+        self.mission_cards = [pygame.transform.scale(card, (self.width, self.height)) for card in mission_cards_]
+
+    def draw(self, id_, x, y, player_to_destroy=None):
+        self.screen.blit(self.mission_cards[id_ - 1], (x, y))
+        if id_ == 7:
+            draw_text(self.screen, player_to_destroy, 18, (0, 0, 0), x + int(self.width * 0.2),
+                      y + int(self.height * 0.8))
 
     def mission_completed(self, mission_id, player):
 

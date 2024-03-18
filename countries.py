@@ -216,19 +216,132 @@ class Country:
         self.country_btn.check_click(event)
 
 
+def create_neighbours():
+    """
+    A dictionary of a country and its neighbours
+    :return: 'dictionary' Neighbours
+    """
+    dictionary = {
+            "Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
+
+            "Alberta": ["Alaska", "Northwest Territory", "Ontario", "Western US"],
+
+            "Central America": ["Venezuela", "Eastern US", "Western US"],
+
+            "Eastern US": ["Central America", "Western US", "Ontario", "Quebec"],
+
+            "Greenland": ["Iceland", "Quebec", "Ontario", "Northwest Territory"],
+
+            "Northwest Territory": ["Alaska", "Alberta", "Ontario", "Greenland"],
+
+            "Ontario": ["Northwest Territory", "Alberta", "Western US", "Eastern US", "Quebec", "Greenland"],
+
+            "Quebec": ["Ontario", "Eastern US", "Greenland"],
+
+            "Western US": ["Central America", "Eastern US", "Ontario", "Alberta"],
+
+            "Argentina": ["Peru", "Brazil"],
+
+            "Brazil": ["Argentina", "Peru", "Venezuela", "North Africa"],
+
+            "Venezuela": ["Central America", "Peru", "Brazil"],
+
+            "Peru": ["Venezuela", "Brazil", "Argentina"],
+
+            "Congo": ["East Africa", "North Africa", "South Africa"],
+
+            "East Africa": ["Madagascar", "South Africa", "Congo", "North Africa", "Egypt", "Middle East"],
+
+            "Egypt": ["North Africa", "East Africa", "Middle East", "Southern Europe"],
+
+            "Madagascar": ["South Africa", "East Africa"],
+
+            "North Africa": ["Brazil", "Western Europe", "Southern Europe", "Egypt", "East Africa", "Congo"],
+
+            "South Africa": ["Congo", "East Africa", "Madagascar"],
+
+            "Eastern Australia": ["Western Australia", "New Guinea"],
+
+            "New Guinea": ["Eastern Australia", "Western Australia", "Indonesia"],
+
+            "Indonesia": ["Siam", "New Guinea", "Western Australia"],
+
+            "Western Australia": ["Eastern Australia", "New Guinea", "Indonesia"],
+
+            "Afghanistan": ["Ukraine", "Ural", "China", "India", "Middle East"],
+
+            "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia", "Siberia"],
+
+            "India": ["Middle East", "Afghanistan", "China", "Siam"],
+
+            "Irkutsk": ["Mongolia", "Kamchatka", "Yakutsk", "Siberia"],
+
+            "Japan": ["Mongolia", "Kamchatka"], "Kamchatka": ["Japan", "Mongolia", "Irkutsk", "Yakutsk", "Alaska"],
+
+            "Middle East": ["East Africa", "Egypt", "Southern Europe", "Ukraine", "Afghanistan", "India"],
+
+            "Mongolia": ["China", "Siberia", "Irkutsk", "Kamchatka", "Japan"],
+
+            "Siam": ["India", "China", "Indonesia"],
+
+            "Siberia": ["Ural", "China", "Mongolia", "Irkutsk", "Yakutsk"],
+
+            "Ural": ["Ukraine", "Afghanistan", "China", "Siberia"],
+
+            "Yakutsk": ["Siberia", "Irkutsk", "Kamchatka"],
+
+            "Great Britain": ["Iceland", "Scandinavia", "Northern Europe", "Western Europe"],
+
+            "Iceland": ["Greenland", "Great Britain", "Scandinavia"],
+
+            "Northern Europe": ["Southern Europe", "Western Europe", "Great Britain", "Scandinavia", "Ukraine"],
+
+            "Scandinavia": ["Ukraine", "Northern Europe", "Iceland", "Great Britain"],
+
+            "Southern Europe": ["North Africa", "Egypt", "Middle East", "Ukraine", "Northern Europe", "Western Europe"],
+
+            "Ukraine": ["Ural", "Afghanistan", "Middle East", "Southern Europe", "Northern Europe", "Scandinavia"],
+
+            "Western Europe": ["North Africa", "Southern Europe", "Northern Europe", "Great Britain"]
+        }
+    return dictionary
+
+
 class Continent:
     def __init__(self, name):
         """
         Initializes a Continent object with a given name
         :param name: The name of the continent
         """
-        self.name = name
-        self.list_of_countries = []
+        self.continent_name = name
+        self.countries_in_continent = []
 
-    def add_countries(self, countries):
-        """
-        Add a list of countries to the continent
-        :param countries: The list of countries to add to the continent
-        :return: [NONE]
-        """
-        self.list_of_countries = countries
+    def add_country(self, country):
+        self.countries_in_continent.append(country)
+
+    def get_bonus(self):
+        bonuses = {"North America": 6, "South America": 2, "Africa": 3, "Australia": 2, "Asia": 7, "Europe": 5}
+        return bonuses[self.continent_name]
+
+
+def create_continents():
+    continents = [Continent("North America"), Continent("South America"), Continent("Africa"),
+                  Continent("Australia"), Continent("Asia"), Continent("Europe")]
+    index = 0
+    neighbour_dict = create_neighbours()
+    for k, v in neighbour_dict.items():
+        if index < 9:
+            continents[0].add_country(k)
+        elif index < 13:
+            continents[1].add_country(k)
+        elif index < 19:
+            continents[2].add_country(k)
+        elif index < 23:
+            continents[3].add_country(k)
+        elif index < 35:
+            continents[4].add_country(k)
+        else:
+            continents[5].add_country(k)
+        index += 1
+    return continents
+

@@ -2,6 +2,7 @@ import pygame  # Import the pygame library for game development
 from main_menu import draw_text  # Import draw_text function from main_menu
 from dice import Dice  # Import Dice class from dice
 from collections import Counter
+from map import create_continents
 
 # Initialize pygame
 pygame.init()
@@ -38,6 +39,9 @@ class Player:
 
         # list of Country objects that player holds
         self.countries = []
+
+        # list of Continents that player holds
+        self.continents = []
 
         # Position and size of the profile image
         self.pos = None
@@ -150,6 +154,16 @@ class Player:
         num_of_avail_troops = len(self.countries) // 3
         num_of_avail_troops = num_of_avail_troops if num_of_avail_troops > 3 else 3
         return num_of_avail_troops
+
+    def find_continents(self):
+        continents = create_continents()
+        continents_held = []
+        countries_held = [country.country_name for country in self.countries]
+        for continent in continents:
+            # Check if the player holds all countries in the continent
+            if all(country in countries_held for country in continent.countries_in_continent):
+                continents_held.append(continent)
+        self.continents = continents_held
 
     def have_set_of_cards(self):
         """
@@ -265,6 +279,7 @@ class Player:
         :return: [NONE]
         """
         self.countries.append(country)
+        self.find_continents()
 
     def remove_country(self, country):
         """
@@ -273,6 +288,7 @@ class Player:
         :return: [NONE]
         """
         self.countries.remove(country)
+        self.find_continents()
 
 
 class Human(Player):

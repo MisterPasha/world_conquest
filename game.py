@@ -538,8 +538,17 @@ class Game:
     def switch_to_next_phase(self):
         if self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
             self.deck.create_cards(self.map)  # Creates a deck of cards, couldn't find a better place for it :)
-            self.gameplay_stage = self.ATTACK
-            self.next_phase_button.change_text("Fortify")
+            # self.gameplay_stage = self.ATTACK
+            self.gameplay_stage = self.DRAFT
+            # Give bonus troops for number of countries
+            num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
+            self.players[self.current_turn].add_avail_troops(num_of_avail_troops)
+            # Give bonus armies for captured continent
+            current_player_continents = self.players[self.current_turn].continents
+            if current_player_continents:
+                for continent in current_player_continents:
+                    self.players[self.current_turn].add_avail_troops(continent.get_bonus())
+            self.next_phase_button.change_text("Attack")
         elif self.gameplay_stage == self.ATTACK:
             self.gameplay_stage = self.FORTIFY
             self.next_phase_button.change_text("End")
@@ -556,9 +565,15 @@ class Game:
             self.gameplay_stage = self.DRAFT
             self.pass_turn()
             self.turn += 1
-            if self.turn > len(self.players) - 1:
-                num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
-                self.players[self.current_turn].add_avail_troops(num_of_avail_troops)
+            # Give bonus troops for number of countries
+            # if self.turn > len(self.players) - 1:
+            num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
+            self.players[self.current_turn].add_avail_troops(num_of_avail_troops)
+            # Give bonus armies for captured continent
+            current_player_continents = self.players[self.current_turn].continents
+            if current_player_continents:
+                for continent in current_player_continents:
+                    self.players[self.current_turn].add_avail_troops(continent.get_bonus())
             self.country_selected = None
             self.next_phase_button.change_text("Attack")
             self.map.drop_highlights()
@@ -584,7 +599,7 @@ class Game:
         button = Button(button_image,
                         button_hover_image,
                         (x, y),
-                        "Attack",
+                        "Draft",
                         font_size,
                         width,
                         height,

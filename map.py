@@ -1,6 +1,7 @@
 import pygame  # Import the pygame library for game development
 from button import Button  # Importing Button class
 from countries import Country
+from countries import create_continents, create_neighbours
 from main_menu import MainMenu
 from player import Human
 import threading
@@ -53,7 +54,8 @@ class Map:
         self.state = None
         self.buttons = self.create_buttons()
         self.countries = []
-        self.neighbours = self.create_neighbours()
+        self.neighbours = create_neighbours()
+        self.continents = create_continents()
         self.player_profiles = []
         self.COLORS = [YELLOW, PINK, BROWN, GREEN, RED, BLUE]
         self.COLORS_STR = ["Yellow", "Pink", "Brown", "Green", "Red", "Blue"]
@@ -248,6 +250,9 @@ class Map:
         """
         threading.Thread(target=self.load_all_images).start()
 
+    def get_continents(self):
+        return self.continents
+
     def get_neighbours(self, country_name):
         """
 
@@ -264,93 +269,3 @@ class Map:
             if c.get_name() in neighbour_country_names:
                 countries.append(c)
         return countries
-
-    def create_neighbours(self):
-        """
-        A dictionary of a country and its neighbours
-        :return: 'dictionary' Neighbours
-        """
-        dictionary = {
-            "Alaska": ["Northwest Territory", "Alberta", "Kamchatka"],
-
-            "Alberta": ["Alaska", "Northwest Territory", "Ontario", "Western US"],
-
-            "Central America": ["Venezuela", "Eastern US", "Western US"],
-
-            "Eastern US": ["Central America", "Western US", "Ontario", "Quebec"],
-
-            "Greenland": ["Iceland", "Quebec", "Ontario", "Northwest Territory"],
-
-            "Northwest Territory": ["Alaska", "Alberta", "Ontario", "Greenland"],
-
-            "Ontario": ["Northwest Territory", "Alberta", "Western US", "Eastern US", "Quebec", "Greenland"],
-
-            "Quebec": ["Ontario", "Eastern US", "Greenland"],
-
-            "Western US": ["Central America", "Eastern US", "Ontario", "Alberta"],
-
-            "Argentina": ["Peru", "Brazil"],
-
-            "Brazil": ["Argentina", "Peru", "Venezuela", "North Africa"],
-
-            "Venezuela": ["Central America", "Peru", "Brazil"],
-
-            "Peru": ["Venezuela", "Brazil", "Argentina"],
-
-            "Congo": ["East Africa", "North Africa", "South Africa"],
-
-            "East Africa": ["Madagascar", "South Africa", "Congo", "North Africa", "Egypt", "Middle East"],
-
-            "Egypt": ["North Africa", "East Africa", "Middle East", "Southern Europe"],
-
-            "Madagascar": ["South Africa", "East Africa"],
-
-            "North Africa": ["Brazil", "Western Europe", "Southern Europe", "Egypt", "East Africa", "Congo"],
-
-            "South Africa": ["Congo", "East Africa", "Madagascar"],
-
-            "Eastern Australia": ["Western Australia", "New Guinea"],
-
-            "New Guinea": ["Eastern Australia", "Western Australia", "Indonesia"],
-
-            "Indonesia": ["Siam", "New Guinea", "Western Australia"],
-
-            "Western Australia": ["Eastern Australia", "New Guinea", "Indonesia"],
-
-            "Afghanistan": ["Ukraine", "Ural", "China", "India", "Middle East"],
-
-            "China": ["Siam", "India", "Afghanistan", "Ural", "Mongolia", "Siberia"],
-
-            "India": ["Middle East", "Afghanistan", "China", "Siam"],
-
-            "Irkutsk": ["Mongolia", "Kamchatka", "Yakutsk", "Siberia"],
-
-            "Japan": ["Mongolia", "Kamchatka"], "Kamchatka": ["Japan", "Mongolia", "Irkutsk", "Yakutsk", "Alaska"],
-
-            "Middle East": ["East Africa", "Egypt", "Southern Europe", "Ukraine", "Afghanistan", "India"],
-
-            "Mongolia": ["China", "Siberia", "Irkutsk", "Kamchatka", "Japan"],
-
-            "Siam": ["India", "China", "Indonesia"],
-
-            "Siberia": ["Ural", "China", "Mongolia", "Irkutsk", "Yakutsk"],
-
-            "Ural": ["Ukraine", "Afghanistan", "China", "Siberia"],
-
-            "Yakutsk": ["Siberia", "Irkutsk", "Kamchatka"],
-
-            "Great Britain": ["Iceland", "Scandinavia", "Northern Europe", "Western Europe"],
-
-            "Iceland": ["Greenland", "Great Britain", "Scandinavia"],
-
-            "Northern Europe": ["Southern Europe", "Western Europe", "Great Britain", "Scandinavia", "Ukraine"],
-
-            "Scandinavia": ["Ukraine", "Northern Europe", "Iceland", "Great Britain"],
-
-            "Southern Europe": ["North Africa", "Egypt", "Middle East", "Ukraine", "Northern Europe", "Western Europe"],
-
-            "Ukraine": ["Ural", "Afghanistan", "Middle East", "Southern Europe", "Northern Europe", "Scandinavia"],
-
-            "Western Europe": ["North Africa", "Southern Europe", "Northern Europe", "Great Britain"]
-        }
-        return dictionary

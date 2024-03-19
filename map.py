@@ -219,16 +219,17 @@ class Map:
         """
         self.current_turn = turn
 
-    def load_country_image(self, image_path):
+    def load_country_image(self, image_path, name):
         """
 
+        :param name:
         :param image_path:
         :return:
         """
         # Load the image and create a Country object
         cleaned_name = image_path.replace("country_imgs\\", "").replace(".png", "")
         country = Country(
-            self.screen, pygame.image.load(image_path).convert_alpha(), cleaned_name
+            self.screen, pygame.image.load(image_path).convert_alpha(), name
         )
         with self.lock:  # Ensure thread-safe append
             self.countries.append(country)
@@ -240,8 +241,9 @@ class Map:
         """
         folder_path = "country_imgs"
         images = os.listdir(folder_path)
-        for file in images:
-            self.load_country_image(os.path.join(folder_path, file))
+        countries = sorted(k for k, v in create_neighbours().items())
+        for file, country_name in zip(images, countries):
+            self.load_country_image(os.path.join(folder_path, file), country_name)
 
     def create_countries(self):
         """

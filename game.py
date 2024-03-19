@@ -165,8 +165,9 @@ class Game:
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
-            self.map = Map(self.screen)
-            self.map.create_countries()
+            if not self.map:
+                self.map = Map(self.screen)
+                self.map.create_countries()
             self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
@@ -179,8 +180,9 @@ class Game:
             self.deal_initial_troops_to_players()
             self.game_state = self.GAMEPLAY_1
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
-            self.map = Map(self.screen)
-            self.map.create_countries()
+            if not self.map:
+                self.map = Map(self.screen)
+                self.map.create_countries()
             self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_2)
             self.map.set_players_and_ai(
@@ -653,3 +655,6 @@ class Game:
 
     def draw_win_window(self):
         self.screen.blit(self.win_window, (0, 0))
+        if self.players:
+            for player in self.players:
+                self.players.remove(player)

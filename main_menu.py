@@ -1,6 +1,7 @@
 import pygame  # Import the pygame library for game development
 from button import Button  # Importing Button class from another module
 import numpy as np  # Importing numpy for array manipulation
+from map import Map
 
 # Initialize pygame
 pygame.init()

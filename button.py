@@ -117,3 +117,7 @@ class Button:
         :return: [NONE]
         """
         self.text = new_text
+
+    def change_pos(self, new_x, new_y):
+        self.position = (new_x, new_y)
+        self.rect = self.image.get_rect(topleft=(new_x, new_y))

@@ -1,7 +1,6 @@
 import pygame  # Import the pygame library for game development
 from button import Button  # Importing Button class from another module
 import numpy as np  # Importing numpy for array manipulation
-from map import Map
 
 # Initialize pygame
 pygame.init()
@@ -428,11 +427,12 @@ class MainMenu:
         return [play, back, add, remove, secret_mission]
 
     def change_secret_mission_mode(self):
-        self.secret_mission_mode = not self.secret_mission_mode
-        if self.secret_mission_mode:
-            self.new_menu_buttons[4].change_image(self.P_or_AI_button_clicked)
-        else:
-            self.new_menu_buttons[4].change_image(self.P_or_AI_button)
+        if self.players + self.AI_agents > 2:
+            self.secret_mission_mode = not self.secret_mission_mode
+            if self.secret_mission_mode:
+                self.new_menu_buttons[4].change_image(self.P_or_AI_button_clicked)
+            else:
+                self.new_menu_buttons[4].change_image(self.P_or_AI_button)
 
     def create_faq_menu_buttons(self):
         """

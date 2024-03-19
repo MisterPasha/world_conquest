@@ -1,6 +1,7 @@
 import pygame
 import random
 from main_menu import MainMenu
+from main_menu import draw_text
 from map import Map
 from dice import Dice
 from button import Button
@@ -13,6 +14,9 @@ pygame.init()
 class Game:
     win_window = pygame.image.load("images\\win_window.png")
     paper_img = pygame.image.load("images\\gameplay_paper.png")
+    button_image = pygame.image.load("images\\button_high.png")
+    button_hover_image = pygame.image.load("images\\button_hover.png")
+    opt_window_paper_image = pygame.image.load("images\\new_game_paper_resized.png")
     font1 = "fonts\\font1.ttf"
 
     # Game States
@@ -28,6 +32,8 @@ class Game:
     DRAFT = 2
     ATTACK = 3
     FORTIFY = 4
+    EDIT = 5
+    HOLD = 6
 
     def __init__(self, screen, clock, window_size):
         """
@@ -48,6 +54,10 @@ class Game:
         self.win_window = pygame.transform.scale(
             self.win_window, (screen.get_width(), screen.get_height())
         )
+        self.opt_window_paper_image = pygame.transform.scale(
+            self.opt_window_paper_image, (int(screen.get_width()*0.07), int(screen.get_height()*0.2)))
+        self.change_name_window = pygame.transform.scale(
+            self.opt_window_paper_image, (int(screen.get_width()*0.18), int(screen.get_height()*0.2)))
 
         # set initial state
         self.game_state = self.MAIN_MENU
@@ -68,6 +78,7 @@ class Game:
         # initialise Map object
         self.map = None
         self.countries_divided = False
+        self.opt_window = False
 
         # All necessary dice attributes
         self.dice = Dice(self.screen)
@@ -87,6 +98,7 @@ class Game:
         self.captured_country = None
         self.captured_countries_in_turn = 0
         self.next_phase_button = self.create_next_phase_button()
+        self.option_button, self.custom_button, self.ok_button, self.cancel_button = self.create_buttons()
 
         # Initialise Deck object
         self.deck = Deck(self.screen)
@@ -99,6 +111,12 @@ class Game:
         # Defines whether secret mission mode is enabled
         self.secret_mission_mode = False
         self.mission_card = MissionCards(self.screen)
+
+        # input box to change name of the country
+        self.input_box = None
+        self.text_box_open = False
+        self.user_text = ""
+        self.input_font = pygame.font.Font(None, 25)
 
     # Main running loop
     def run(self):
@@ -126,9 +144,18 @@ class Game:
             elif self.game_state == self.GAMEPLAY_1 or self.game_state == self.GAMEPLAY_2:
                 self.map.check_clicks(event)
                 self.next_phase_button.check_click(event)
+                self.option_button.check_click(event)
+                self.custom_button.check_click(event)
+                self.ok_button.check_click(event)
+                self.cancel_button.check_click(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_country_clicks(event.pos, event.button)
                     self.handle_profile_clicks(event.pos, event.button)
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.user_text = self.user_text[:-1]
+                    else:
+                        self.user_text += event.unicode
             elif self.game_state == self.EXIT:
                 self.running = False
 
@@ -144,7 +171,10 @@ class Game:
         if self.game_state == self.GAMEPLAY_1 or self.game_state == self.GAMEPLAY_2:
             self.check_state_gameplay()
             self.map.draw()
+            self.draw_buttons()
             self.next_phase_button.draw(self.screen)
+            if self.text_box_open and self.gameplay_stage == self.EDIT:
+                self.draw_change_name_window()
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
                 self.screen.blit(self.paper_img, (0, 0))
                 self.dice_animate()
@@ -165,9 +195,8 @@ class Game:
         if self.main_menu.get_state() == self.MAIN_MENU:
             self.game_state = self.MAIN_MENU
         elif self.main_menu.get_state() == self.GAMEPLAY_1:
-            if not self.map:
-                self.map = Map(self.screen)
-                self.map.create_countries()
+            self.map = Map(self.screen)
+            self.map.create_countries()
             self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
@@ -180,9 +209,8 @@ class Game:
             self.deal_initial_troops_to_players()
             self.game_state = self.GAMEPLAY_1
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
-            if not self.map:
-                self.map = Map(self.screen)
-                self.map.create_countries()
+            self.map = Map(self.screen)
+            self.map.create_countries()
             self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_2)
             self.map.set_players_and_ai(
@@ -214,6 +242,9 @@ class Game:
                 if not self.countries_divided and len(self.map.countries) == 42:
                     self.divide_countries()
                     self.countries_divided = True
+        if len(self.map.countries) == 42 and not self.deck.cards:
+            self.deck.create_cards(self.map)
+            print("cards created")
 
     # pass turn to the next player
     def pass_turn(self):
@@ -252,7 +283,7 @@ class Game:
                     self.map.change_turn(self.current_turn)
                     self.dice_thrown = []
                     self.dice_throw_index = 0
-                    self.gameplay_stage = self.SETUP
+                    self.gameplay_stage = self.HOLD
 
     def dice_animate(self):
         """
@@ -339,6 +370,73 @@ class Game:
                     elif self.gameplay_stage == self.DRAFT:
                         if event_button == 1:
                             self.place_troop(country)
+                    elif self.gameplay_stage == self.EDIT:
+                        if event_button == 1:
+                            if not self.text_box_open:
+                                if self.selected:
+                                    if country == self.country_selected:
+                                        self.highlight_neighbour_countries(country, False)
+                                        self.selected = False
+                                    elif country.highlighted:
+                                        self.remove_from_neighbours(country)
+                                    elif not country.highlighted:
+                                        self.add_to_neighbours(country)
+                                else:
+                                    self.select_country(country)
+                        elif event_button == 3:
+                            if self.text_box_open:
+                                if self.country_selected == country:
+                                    self.user_text = ""
+                                    self.text_box_open = False
+                                    self.selected = False
+                            else:
+                                self.text_box_open = True
+                                self.country_selected = country
+                                self.selected = True
+                                self.input_box = pygame.Rect(country.country_btn.x + 60, country.country_btn.y - 30,
+                                                             200, 34)
+                                self.ok_button.change_pos(self.input_box.x, self.input_box.y + 50)
+                                self.cancel_button.change_pos(self.input_box.x + self.ok_button.rect.width + 10,
+                                                              self.input_box.y + 50)
+
+    def change_name(self, new_name):
+        if self.country_selected and new_name and new_name not in self.map.neighbours.keys():
+            old_name = self.country_selected.get_name()
+            for k, v in self.map.neighbours.items():
+                for c in v:
+                    if c == self.country_selected.get_name():
+                        v.remove(c)
+                        v.append(new_name)
+            value = self.map.neighbours[self.country_selected.get_name()]
+            # Remove the old key-value pair
+            del self.map.neighbours[self.country_selected.get_name()]
+            # Insert the value with the new key
+            self.map.neighbours[new_name] = value
+            for country in self.map.countries:
+                if country.get_name() == self.country_selected.get_name():
+                    country.country_name = new_name
+                    break
+            for card in self.deck.cards:
+                if card.country_name == old_name:
+                    card.country_name = new_name
+            self.country_selected = None
+            self.selected = False
+            self.text_box_open = False
+            self.user_text = ""
+
+    def cancel(self):
+        self.text_box_open = False
+        self.user_text = ""
+
+    def add_to_neighbours(self, country):
+        self.map.neighbours[self.country_selected.get_name()].append(country.get_name())
+        self.map.neighbours[country.get_name()].append(self.country_selected.get_name())
+        country.highlighted = True
+
+    def remove_from_neighbours(self, country):
+        self.map.neighbours[self.country_selected.get_name()].remove(country.get_name())
+        self.map.neighbours[country.get_name()].remove(self.country_selected.get_name())
+        country.highlighted = False
 
     def place_troop(self, country):
         """
@@ -477,18 +575,23 @@ class Game:
         """
         current_player = self.players[self.current_turn]
         self.highlight_captured(False)
-        if country.owner is not current_player:
-            print("Can select only owned country!")
-        elif country.troops < 2:
-            print("Not enough troops")
+        if self.gameplay_stage != self.EDIT:
+            if country.owner is not current_player:
+                print("Can select only owned country!")
+            elif country.troops < 2:
+                print("Not enough troops")
+            else:
+                self.selected = True
+                self.captured = False
+                self.country_selected = country
+                if self.gameplay_stage == self.ATTACK:
+                    self.highlight_neighbour_countries(self.country_selected, True)
+                elif self.gameplay_stage == self.FORTIFY:
+                    self.highlight_connected_countries(self.country_selected, True)
         else:
             self.selected = True
-            self.captured = False
             self.country_selected = country
-            if self.gameplay_stage == self.ATTACK:
-                self.highlight_neighbour_countries(self.country_selected, True)
-            elif self.gameplay_stage == self.FORTIFY:
-                self.highlight_connected_countries(self.country_selected, True)
+            self.highlight_neighbour_countries(self.country_selected, True)
 
     def highlight_connected_countries(self, country, highlight):
         """
@@ -556,8 +659,11 @@ class Game:
             player.add_avail_troops(troops)
 
     def switch_to_next_phase(self):
-        if self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
-            self.deck.create_cards(self.map)  # Creates a deck of cards, couldn't find a better place for it :)
+        if self.gameplay_stage == self.EDIT or self.gameplay_stage == self.HOLD:
+            self.gameplay_stage = self.SETUP
+            self.map.drop_highlights()
+            self.next_phase_button.change_text("Draft")
+        elif self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
             # self.gameplay_stage = self.ATTACK
             self.gameplay_stage = self.DRAFT
             # Give bonus troops for number of countries
@@ -608,6 +714,10 @@ class Game:
             self.map.drop_highlights()
 
     def deal_mission_cards(self):
+        """
+
+        :return:
+        """
         random_indexes = random.sample(range(1, 9), len(self.players))
         for id_, player in zip(random_indexes, self.players):
             if id_ == 7:
@@ -631,7 +741,7 @@ class Game:
         button = Button(button_image,
                         button_hover_image,
                         (x, y),
-                        "Draft",
+                        "PLAY",
                         font_size,
                         width,
                         height,
@@ -654,7 +764,96 @@ class Game:
                     self.players[self.current_turn].sell_cards(self.nth_set, self.deck)
 
     def draw_win_window(self):
+        """
+
+        :return:
+        """
         self.screen.blit(self.win_window, (0, 0))
         if self.players:
             for player in self.players:
                 self.players.remove(player)
+
+    def set_option_window(self):
+        self.opt_window = not self.opt_window
+
+    def edit_map(self):
+        if self.gameplay_stage == self.HOLD:
+            self.gameplay_stage = self.EDIT
+            self.opt_window = False
+
+    def create_buttons(self):
+        """
+        Creates all necessary buttons for gameplay.
+        So far just back button
+        :return: buttons
+        """
+        opt = Button(
+            self.button_image,
+            self.button_hover_image,
+            (10, 10),
+            "| | |",
+            int(self.screen.get_height() * 0.05),
+            int(self.screen.get_width() * 0.05),
+            int(self.screen.get_height() * 0.05),
+            font=self.font1,
+            action=lambda: self.set_option_window()
+        )
+        customise = Button(
+            self.button_image,
+            self.button_hover_image,
+            (20, int(self.screen.get_height() * 0.1)),
+            "Edit",
+            int(self.screen.get_height() * 0.04),
+            int(self.screen.get_width() * 0.05),
+            int(self.screen.get_height() * 0.05),
+            font=self.font1,
+            action=lambda: self.edit_map()
+        )
+        ok = Button(
+            self.button_image,
+            self.button_hover_image,
+            (0, 0),
+            "Ok",
+            int(self.screen.get_height() * 0.03),
+            int(self.screen.get_width() * 0.05),
+            int(self.screen.get_height() * 0.05),
+            font=self.font1,
+            action=lambda: self.change_name(self.user_text)
+        )
+        cancel = Button(
+            self.button_image,
+            self.button_hover_image,
+            (0, 0),
+            "Cancel",
+            int(self.screen.get_height() * 0.03),
+            int(self.screen.get_width() * 0.05),
+            int(self.screen.get_height() * 0.05),
+            font=self.font1,
+            action=lambda: self.cancel()
+        )
+        return opt, customise, ok, cancel
+
+    def draw_buttons(self):
+        self.option_button.draw(self.screen)
+        if self.opt_window:
+            self.screen.blit(self.opt_window_paper_image, (10, int(self.screen.get_height() * 0.07)))
+            self.custom_button.draw(self.screen)
+            self.map.draw_button()
+        if self.gameplay_stage == self.EDIT:
+            draw_text(
+                self.screen,
+                "Map Editor Mode",
+                int(self.screen.get_height() * 0.08),
+                (0, 0, 0),
+                int(self.screen.get_width() * 0.35),
+                int(self.screen.get_height() * 0.01)
+            )
+
+    def draw_change_name_window(self):
+        txt_surface = self.input_font.render(self.user_text, True, (0, 0, 0))
+        self.screen.blit(self.change_name_window, (self.country_selected.country_btn.x + 50,
+                                                   self.country_selected.country_btn.y - 40))
+        pygame.draw.rect(self.screen, (0, 0, 0), self.input_box, 2)
+        self.screen.blit(txt_surface, (self.input_box.x + 5, self.input_box.y + 5))
+        self.ok_button.draw(self.screen)
+        self.cancel_button.draw(self.screen)

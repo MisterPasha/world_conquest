@@ -1,5 +1,6 @@
 import pygame  # Import the pygame library for game development
 from button import Button  # Importing Button class
+from main_menu import draw_text
 
 # Initialize pygame
 pygame.init()
@@ -35,6 +36,7 @@ class Country:
 
         # Separate image of when country needs to be highlighted
         self.image_highlighted = self.image
+        self.set_highlight_color()
 
         # When True country is Highlighted
         self.highlighted = False

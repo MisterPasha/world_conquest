@@ -3,6 +3,7 @@ from button import Button  # Importing Button class
 from countries import Country
 from countries import create_continents, create_neighbours
 from main_menu import MainMenu
+from main_menu import draw_text
 from player import Human
 import threading
 import os
@@ -14,6 +15,7 @@ plate_img = pygame.image.load("images\\dice_table.png")
 map_img = pygame.image.load("images\\map.png")
 ports_img = pygame.image.load("images\\ports.png")
 sea_paths_img = pygame.image.load("images\\sea_paths.png")
+load_window_img = pygame.image.load("images\\load_window.png")
 
 button_image = pygame.image.load("images\\button_high.png")
 button_hover_image = pygame.image.load("images\\button_hover.png")
@@ -51,8 +53,11 @@ class Map:
         self.sea_paths_img = pygame.transform.scale(
             sea_paths_img, (screen.get_width(), screen.get_height())
         )
+        self.load_window_img = pygame.transform.scale(
+            load_window_img, (screen.get_width(), screen.get_height())
+        )
         self.state = None
-        self.buttons = self.create_buttons()
+        self.button = self.create_buttons()
         self.countries = []
         self.neighbours = create_neighbours()
         self.continents = create_continents()
@@ -70,16 +75,29 @@ class Map:
         """
         self.screen.blit(self.map_img, (0, 0))
         self.screen.blit(self.sea_paths_img, (0, 0))
-        for button in self.buttons:
-            button.draw(self.screen)
         if self.countries:
             for country in self.countries:
                 country.draw()
+            for country in self.countries:
+                if country.country_btn.rect.collidepoint(pygame.mouse.get_pos()):
+                    draw_text(
+                        self.screen,
+                        f"{country.country_name}",
+                        int(self.screen.get_height() * 0.04),
+                        (0, 0, 0),
+                        int(country.country_btn.x),
+                        int(country.country_btn.y - 30)
+                    )
         self.screen.blit(self.ports_img, (0, 0))
         for player in self.player_profiles:
             player.draw_profile()
         self.draw_dice_plate()
         self.draw_turn_indicator()
+        if len(self.countries) < 42:
+            self.screen.blit(self.load_window_img, (0, 0))
+
+    def draw_button(self):
+        self.button.draw(self.screen)
 
     def check_clicks(self, event):
         """
@@ -87,8 +105,7 @@ class Map:
         :param event:
         :return:
         """
-        for button in self.buttons:
-            button.check_click(event)
+        self.button.check_click(event)
 
     def drop_highlights(self):
         for c in self.countries:
@@ -126,20 +143,18 @@ class Map:
         So far just back button
         :return: buttons
         """
-        buttons = []
         back = Button(
             button_image,
             button_hover_image,
-            (0, 0),
+            (20, int(self.screen.get_height() * 0.2)),
             "Back",
-            int(self.center_y * 0.08),
-            int(self.center_x * 0.1),
-            int(self.center_y * 0.1),
+            int(self.screen.get_height() * 0.04),
+            int(self.screen.get_width() * 0.05),
+            int(self.screen.get_height() * 0.05),
             font=font1,
             action=lambda: self.set_state(0)
         )
-        buttons.append(back)
-        return buttons
+        return back
 
     def create_players(self):
         """
@@ -227,7 +242,6 @@ class Map:
         :return:
         """
         # Load the image and create a Country object
-        cleaned_name = image_path.replace("country_imgs\\", "").replace(".png", "")
         country = Country(
             self.screen, pygame.image.load(image_path).convert_alpha(), name
         )

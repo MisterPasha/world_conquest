@@ -55,7 +55,7 @@ class Dice:
             f"{name} rolled a total of {sum(nums)}",
             int(self.screen.get_height() * 0.07),
             (133, 14, 12),
-            int(self.screen.get_width() * 0.3),
+            int(self.screen.get_width() * 0.35),
             int(self.screen.get_height() * 0.7),
         )
         self.draw_dice_w(nums)

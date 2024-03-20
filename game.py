@@ -57,7 +57,7 @@ class Game:
         self.opt_window_paper_image = pygame.transform.scale(
             self.opt_window_paper_image, (int(screen.get_width()*0.07), int(screen.get_height()*0.2)))
         self.change_name_window = pygame.transform.scale(
-            self.opt_window_paper_image, (int(screen.get_width()*0.18), int(screen.get_height()*0.2)))
+            self.opt_window_paper_image, (int(screen.get_width()*0.18), int(screen.get_height()*0.17)))
 
         # set initial state
         self.game_state = self.MAIN_MENU
@@ -238,13 +238,8 @@ class Game:
         elif self.game_state == self.GAMEPLAY_2:
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
                 self.choose_first_turn()
-            elif self.gameplay_stage == self.SETUP:
-                if not self.countries_divided and len(self.map.countries) == 42:
-                    self.divide_countries()
-                    self.countries_divided = True
         if len(self.map.countries) == 42 and not self.deck.cards:
             self.deck.create_cards(self.map)
-            print("cards created")
 
     # pass turn to the next player
     def pass_turn(self):
@@ -425,6 +420,8 @@ class Game:
             self.user_text = ""
 
     def cancel(self):
+        self.selected = False
+        self.country_selected = None
         self.text_box_open = False
         self.user_text = ""
 
@@ -662,6 +659,9 @@ class Game:
         if self.gameplay_stage == self.EDIT or self.gameplay_stage == self.HOLD:
             self.gameplay_stage = self.SETUP
             self.map.drop_highlights()
+            if not self.countries_divided and len(self.map.countries) == 42 and self.game_state == self.GAMEPLAY_2:
+                self.divide_countries()
+                self.countries_divided = True
             self.next_phase_button.change_text("Draft")
         elif self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
             # self.gameplay_stage = self.ATTACK

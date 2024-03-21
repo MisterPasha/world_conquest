@@ -78,7 +78,7 @@ class MainMenu:
         )
         self.logo_image = pygame.transform.scale(
             self.logo_image,
-            (int(screen.get_width() * 0.3), int(screen.get_height() * 0.12)),
+            (int(screen.get_width() * 0.25), int(screen.get_width() * 0.2)),
         )
         self.new_game_paper = pygame.transform.scale(
             self.new_game_paper,
@@ -111,7 +111,7 @@ class MainMenu:
         # Draw background, logo, buttons, etc
         self.screen.blit(self.background_image, (0, 0))
         self.screen.blit(
-            self.logo_image, (int(self.center_x * 1.3), int(self.center_y * 0.1))
+            self.logo_image, (int(self.center_x * 1.5), int(self.center_y * 0.08))
         )
         if not self.opt_menu:
             for button in self.main_menu_buttons:

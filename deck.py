@@ -106,18 +106,36 @@ class Card:
 
 class MissionCards:
     def __init__(self, screen):
+        """
+
+        :param screen:
+        """
         self.screen = screen
         self.width = int(self.screen.get_width() * 0.08)
         self.height = int(self.screen.get_height() * 0.22)
         self.mission_cards = [pygame.transform.scale(card, (self.width, self.height)) for card in mission_cards_]
 
     def draw(self, id_, x, y, player_to_destroy=None):
+        """
+        Displays a card
+        :param id_:
+        :param x:
+        :param y:
+        :param player_to_destroy:
+        :return:
+        """
         self.screen.blit(self.mission_cards[id_ - 1], (x, y))
         if id_ == 7:
             draw_text(self.screen, player_to_destroy, 18, (0, 0, 0), x + int(self.width * 0.2),
                       y + int(self.height * 0.8))
 
     def mission_completed(self, mission_id, player):
+        """
+        Checks if mission of this card has been completed
+        :param mission_id: int
+        :param player: Player
+        :return: boolean
+        """
 
         player_continents = [continent.continent_name for continent in player.continents]
 

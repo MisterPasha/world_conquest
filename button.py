@@ -119,5 +119,11 @@ class Button:
         self.text = new_text
 
     def change_pos(self, new_x, new_y):
+        """
+        Changes Button position with new x and y
+        :param new_x:
+        :param new_y:
+        :return:
+        """
         self.position = (new_x, new_y)
         self.rect = self.image.get_rect(topleft=(new_x, new_y))

@@ -1,6 +1,5 @@
 import pygame  # Import the pygame library for game development
 from button import Button  # Importing Button class
-from main_menu import draw_text
 
 # Initialize pygame
 pygame.init()
@@ -319,14 +318,27 @@ class Continent:
         self.countries_in_continent = []
 
     def add_country(self, country):
+        """
+        Adds country to the continent
+        :param country:
+        :return:
+        """
         self.countries_in_continent.append(country)
 
     def get_bonus(self):
+        """
+        Returns number of bonus troops
+        :return: int
+        """
         bonuses = {"North America": 6, "South America": 2, "Africa": 3, "Australia": 2, "Asia": 7, "Europe": 5}
         return bonuses[self.continent_name]
 
 
 def create_continents():
+    """
+    Creates a dictionary of continents and their countries
+    :return: dict of continents
+    """
     continents = [Continent("North America"), Continent("South America"), Continent("Africa"),
                   Continent("Australia"), Continent("Asia"), Continent("Europe")]
     index = 0

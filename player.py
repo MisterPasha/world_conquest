@@ -64,7 +64,7 @@ class Player:
 
     def remove_troops(self, num_of_troops):
         """
-
+        Removes a troop
         :param num_of_troops:
         :return:
         """
@@ -165,14 +165,18 @@ class Player:
 
     def calculate_num_of_draft_troops(self):
         """
-
-        :return:
+        Calculates a number of troops to get during Draft phase
+        :return: num_of_avail_troops
         """
         num_of_avail_troops = len(self.countries) // 3
         num_of_avail_troops = num_of_avail_troops if num_of_avail_troops > 3 else 3
         return num_of_avail_troops
 
     def find_continents(self):
+        """
+        Checks which continents player holds and adds/removes them to the list
+        :return:
+        """
         continents = create_continents()
         continents_held = []
         countries_held = [country.country_name for country in self.countries]
@@ -184,8 +188,8 @@ class Player:
 
     def have_set_of_cards(self):
         """
-
-        :return:
+        Checks if player has a set of cards
+        :return: boolean
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
@@ -198,7 +202,7 @@ class Player:
 
     def remove_set_cards(self, army_type, deck):
         """
-
+        Removes set of same cards from the hand
         :param army_type:
         :param deck:
         :return:
@@ -218,13 +222,12 @@ class Player:
                                 country.add_troops(2)
                                 self.troops_holds += 2
                                 bonus_counter += 1
-                                print("bonus has been used")
         for card in cards_to_remove:
             self.cards.remove(card)
 
     def remove_distinct_cards(self, deck):
         """
-
+        removes a set of distinct cards from the hand
         :param deck:
         :return:
         """
@@ -250,7 +253,7 @@ class Player:
 
     def sell_cards(self, nth_set, deck):
         """
-
+        Exchanges set of cards for the troops
         :param nth_set:
         :param deck:
         :return:
@@ -267,6 +270,11 @@ class Player:
         self.add_avail_troops(self.get_card_bonus(nth_set))
 
     def get_card_bonus(self, nth_set):
+        """
+        Gives number of troops from selling cards
+        :param nth_set:
+        :return: troops_to_add
+        """
         if 0 < nth_set < 6:
             troops_to_add = nth_set * 2 + 2
         elif nth_set == 6:

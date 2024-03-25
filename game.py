@@ -82,21 +82,26 @@ class Game:
 
         # All necessary dice attributes
         self.dice = Dice(self.screen)
+        # Dice attributes for first turn selection
         self.showing_dice_animation = False
         self.animation_start_time = None
         self.dice_thrown = []
         self.dice_throw_index = 0
+        # Lists of dice during attacking phase
         self.attack_dice = []
         self.defend_dice = []
 
         # Attributes for attacking phase
         self.country_selected = None  # Holds country that is currently selected
         self.selected = False  # Boolean whether any country is selected
-        # Boolean whether any country has been captured now, used when moving troops to captured country
 
+        # Boolean whether any country has been captured now, used when moving troops to captured country
         self.captured = False
+        # Holds captured country
         self.captured_country = None
+        # Counts how many countries the player captured during his turn
         self.captured_countries_in_turn = 0
+        # Buttons
         self.next_phase_button = self.create_next_phase_button()
         self.option_button, self.custom_button, self.ok_button, self.cancel_button = self.create_buttons()
 
@@ -121,7 +126,7 @@ class Game:
     # Main running loop
     def run(self):
         """
-
+        Runs The whole logic of the game
         :return:
         """
         while self.running:
@@ -133,7 +138,7 @@ class Game:
     # Controls all event types
     def events(self):
         """
-
+        Detects events during running and handles them
         :return:
         """
         for event in pygame.event.get():
@@ -162,7 +167,7 @@ class Game:
     # Draws all elements on the screen
     def draw(self):
         """
-
+        Draws all elements on the screen during different stages of the game
         :return:
         """
         if self.game_state == self.MAIN_MENU:
@@ -244,7 +249,7 @@ class Game:
     # pass turn to the next player
     def pass_turn(self):
         """
-
+        Passes turn to the next player
         :return:
         """
         if self.current_turn == len(self.players) - 1:
@@ -282,7 +287,7 @@ class Game:
 
     def dice_animate(self):
         """
-
+        Specific function for "Choose who goes first" gameplay phase
         :return:
         """
         if self.showing_dice_animation:
@@ -395,6 +400,11 @@ class Game:
                                                               self.input_box.y + 50)
 
     def change_name(self, new_name):
+        """
+        Changes name of the country and adapts new name in relevant data structures
+        :param new_name: String
+        :return: None
+        """
         if self.country_selected and new_name and new_name not in self.map.neighbours.keys():
             old_name = self.country_selected.get_name()
             for k, v in self.map.neighbours.items():
@@ -420,24 +430,41 @@ class Game:
             self.user_text = ""
 
     def cancel(self):
+        """
+        Function for "Cancel" button in "Change country name" window.
+        It cancels the input and closes window
+        :return:
+        """
         self.selected = False
         self.country_selected = None
         self.text_box_open = False
         self.user_text = ""
 
     def add_to_neighbours(self, country):
+        """
+        Adds country to the selected country's "Neighbours"
+        This country will be considered as neighbour country and will now be able to interact with
+        :param country:
+        :return:
+        """
         self.map.neighbours[self.country_selected.get_name()].append(country.get_name())
         self.map.neighbours[country.get_name()].append(self.country_selected.get_name())
         country.highlighted = True
 
     def remove_from_neighbours(self, country):
+        """
+        removes country from the selected country's "Neighbours"
+        This country will not be now considered as neighbour country
+        :param country:
+        :return:
+        """
         self.map.neighbours[self.country_selected.get_name()].remove(country.get_name())
         self.map.neighbours[country.get_name()].remove(self.country_selected.get_name())
         country.highlighted = False
 
     def place_troop(self, country):
         """
-
+        Places troop to the country
         :param country:
         :return:
         """
@@ -481,7 +508,7 @@ class Game:
 
     def move_troop_to_captured(self):
         """
-
+        Moves troop to the captured territory during Attack
         :return:
         """
         if self.country_selected.troops > 1:
@@ -490,7 +517,7 @@ class Game:
 
     def move_troop_from_captured(self):
         """
-
+        Moves troop back from captured to selected territory during Attack
         :return:
         """
         if self.captured_country.troops > len(self.attack_dice):
@@ -499,7 +526,7 @@ class Game:
 
     def move_troop_to_fortified(self):
         """
-
+        Moves troop to the captured territory during Fortify
         :return:
         """
         if self.country_selected.troops > 1:
@@ -508,7 +535,7 @@ class Game:
 
     def move_troop_from_fortified(self):
         """
-
+        Moves troop back from captured to selected territory during Fortify
         :return:
         """
         if self.fortifying_country.troops > 1:
@@ -517,7 +544,7 @@ class Game:
 
     def attack_country(self, country):
         """
-
+        Simulates Attacking the country
         :param country:
         :return:
         """
@@ -566,7 +593,8 @@ class Game:
 
     def select_country(self, country):
         """
-
+        When clicked on the country This function assigns it as Selected country,
+        that later will be used.
         :param country:
         :return:
         """
@@ -592,7 +620,7 @@ class Game:
 
     def highlight_connected_countries(self, country, highlight):
         """
-
+        Highlights connected countries during Fortify stage
         :param country:
         :param highlight:
         :return:
@@ -656,6 +684,12 @@ class Game:
             player.add_avail_troops(troops)
 
     def switch_to_next_phase(self):
+        """
+        This function is triggered when "Next Phase" button is clicked
+        Switches gameplay phase to the next phase and calls relevant functions needed for
+        specific phases
+        :return:
+        """
         if self.gameplay_stage == self.EDIT or self.gameplay_stage == self.HOLD:
             self.gameplay_stage = self.SETUP
             self.map.drop_highlights()
@@ -715,7 +749,7 @@ class Game:
 
     def deal_mission_cards(self):
         """
-
+        Randomly deals mission cards to the players
         :return:
         """
         random_indexes = random.sample(range(1, 9), len(self.players))
@@ -728,7 +762,7 @@ class Game:
 
     def create_next_phase_button(self):
         """
-
+        Creates a button to switch between phases
         :return:
         """
         button_image = pygame.image.load("images\\button_high.png")
@@ -752,7 +786,8 @@ class Game:
 
     def handle_profile_clicks(self, mouse_pos, event_button):
         """
-
+        Handles player profile clicks
+        Sells set of cards if have any
         :param mouse_pos:
         :param event_button:
         :return:
@@ -765,7 +800,7 @@ class Game:
 
     def draw_win_window(self):
         """
-
+        Draws Win Window when someone has won
         :return:
         """
         self.screen.blit(self.win_window, (0, 0))
@@ -774,9 +809,17 @@ class Game:
                 self.players.remove(player)
 
     def set_option_window(self):
+        """
+        Sets Boolean for option window
+        :return:
+        """
         self.opt_window = not self.opt_window
 
     def edit_map(self):
+        """
+        Enables Map editing
+        :return:
+        """
         if self.gameplay_stage == self.HOLD:
             self.gameplay_stage = self.EDIT
             self.opt_window = False
@@ -834,6 +877,10 @@ class Game:
         return opt, customise, ok, cancel
 
     def draw_buttons(self):
+        """
+        Draws buttons
+        :return:
+        """
         self.option_button.draw(self.screen)
         if self.opt_window:
             self.screen.blit(self.opt_window_paper_image, (10, int(self.screen.get_height() * 0.07)))
@@ -850,6 +897,10 @@ class Game:
             )
 
     def draw_change_name_window(self):
+        """
+        Draws window to change a country name
+        :return:
+        """
         txt_surface = self.input_font.render(self.user_text, True, (0, 0, 0))
         self.screen.blit(self.change_name_window, (self.country_selected.country_btn.x + 50,
                                                    self.country_selected.country_btn.y - 40))

@@ -112,6 +112,10 @@ class Map:
         self.button.check_click(event)
 
     def drop_highlights(self):
+        """
+        Drops highlights from each country
+        :return:
+        """
         for c in self.countries:
             c.highlighted = False
 
@@ -226,8 +230,8 @@ class Map:
 
     def all_countries_have_owner(self):
         """
-
-        :return:
+        Checks if all countries have an owner
+        :return: boolean
         """
         for country in self.countries:
             if country.owner is None:
@@ -279,7 +283,7 @@ class Map:
 
     def get_neighbours(self, country_name):
         """
-
+        Returns neighbour country names
         :param country_name:
         :return: self.neighbours[country_name]
         """
@@ -287,7 +291,7 @@ class Map:
 
     def get_neighbours_countries(self, country):
         """
-
+        Returns neighbour country objects
         :param country:
         :return:
         """

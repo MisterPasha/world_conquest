@@ -110,7 +110,7 @@ class Game:
         self.nth_set = 0  # Counter for card sets that are sold
 
         # Attributes for Fortify phase
-        self.fortifying_country = None
+        self.fortifying_country = None  # holds fortifying country
         self.fortify_counter = 0
 
         # Defines whether secret mission mode is enabled

@@ -11,7 +11,6 @@ pygame.init()
 
 # Super Class for Human and AI agent
 # Only holds methods and attributes that both Human and AI players will have in common
-
 new_game_paper = pygame.image.load("images\\new_game_paper_resized.png")
 
 
@@ -133,14 +132,19 @@ class Player:
 
         # If the mouse is over the profile, display the information window and any cards the player holds
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1]))
+            self.screen.blit(
+                self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1])
+            )
             # Draw the text indicating the number of troops held by the player
             draw_text(
                 self.screen,  # Pygame screen surface
                 f"{self.troops_holds}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
+                int(
+                    int(self.screen.get_width() * 0.35)
+                    + self.info_window.get_width() * 0.87
+                ),
                 int(self.pos[1] + self.info_window.get_height() * 0.7),
             )
             draw_text(
@@ -148,20 +152,31 @@ class Player:
                 f"{len(self.countries)}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
+                int(
+                    int(self.screen.get_width() * 0.35)
+                    + self.info_window.get_width() * 0.87
+                ),
                 int(self.pos[1] + self.info_window.get_height() * 0.3),
             )
             for i, card in enumerate(self.cards):
-                card.draw(int(self.screen.get_width() * 0.37) + i * card.width,
-                          self.pos[1] + self.info_window.get_height() * 0.1)
+                card.draw(
+                    int(self.screen.get_width() * 0.37) + i * card.width,
+                    self.pos[1] + self.info_window.get_height() * 0.1,
+                )
             if self.mission_id:
                 if self.mission_id == 7:
-                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
-                                           int(self.pos[1] + self.info_window.get_height() * 0.1),
-                                           self.player_to_destroy.color_str)
+                    self.mission_card.draw(
+                        self.mission_id,
+                        int(self.screen.get_width() * 0.27),
+                        int(self.pos[1] + self.info_window.get_height() * 0.1),
+                        self.player_to_destroy.color_str,
+                    )
                 else:
-                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
-                                           int(self.pos[1] + self.info_window.get_height() * 0.1))
+                    self.mission_card.draw(
+                        self.mission_id,
+                        int(self.screen.get_width() * 0.27),
+                        int(self.pos[1] + self.info_window.get_height() * 0.1),
+                    )
 
     def calculate_num_of_draft_troops(self):
         """
@@ -178,7 +193,10 @@ class Player:
         countries_held = [country.country_name for country in self.countries]
         for continent in continents:
             # Check if the player holds all countries in the continent
-            if all(country in countries_held for country in continent.countries_in_continent):
+            if all(
+                country in countries_held
+                for country in continent.countries_in_continent
+            ):
                 continents_held.append(continent)
         self.continents = continents_held
 
@@ -257,7 +275,9 @@ class Player:
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
-        wild_cards = card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
+        wild_cards = (
+            card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
+        )
         if max(card_dict.values()) >= 3:
             army_type = max(card_dict, key=card_dict.get)
             self.remove_set_cards(army_type, deck)
@@ -267,6 +287,11 @@ class Player:
         self.add_avail_troops(self.get_card_bonus(nth_set))
 
     def get_card_bonus(self, nth_set):
+        """
+
+        :param nth_set:
+        :return:
+        """
         if 0 < nth_set < 6:
             troops_to_add = nth_set * 2 + 2
         elif nth_set == 6:

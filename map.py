@@ -86,7 +86,7 @@ class Map:
                         int(self.screen.get_height() * 0.04),
                         (0, 0, 0),
                         int(country.country_btn.x),
-                        int(country.country_btn.y - 30)
+                        int(country.country_btn.y - 30),
                     )
         self.screen.blit(self.ports_img, (0, 0))
         for player in self.player_profiles:
@@ -97,6 +97,10 @@ class Map:
             self.screen.blit(self.load_window_img, (0, 0))
 
     def draw_button(self):
+        """
+
+        :return:
+        """
         self.button.draw(self.screen)
 
     def check_clicks(self, event):
@@ -152,7 +156,7 @@ class Map:
             int(self.screen.get_width() * 0.05),
             int(self.screen.get_height() * 0.05),
             font=font1,
-            action=lambda: self.set_state(0)
+            action=lambda: self.set_state(0),
         )
         return back
 
@@ -221,6 +225,10 @@ class Map:
         )
 
     def all_countries_have_owner(self):
+        """
+
+        :return:
+        """
         for country in self.countries:
             if country.owner is None:
                 return False
@@ -278,6 +286,11 @@ class Map:
         return self.neighbours[country_name]
 
     def get_neighbours_countries(self, country):
+        """
+
+        :param country:
+        :return:
+        """
         country_name = country.get_name()
         neighbour_country_names = self.get_neighbours(country_name)
         countries = []

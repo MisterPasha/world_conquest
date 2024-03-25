@@ -427,6 +427,10 @@ class MainMenu:
         return [play, back, add, remove, secret_mission]
 
     def change_secret_mission_mode(self):
+        """
+
+        :return:
+        """
         if self.players + self.AI_agents > 2:
             self.secret_mission_mode = not self.secret_mission_mode
             if self.secret_mission_mode:

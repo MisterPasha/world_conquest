@@ -66,7 +66,6 @@ class Map:
         self.COLORS_STR = ["Yellow", "Pink", "Brown", "Green", "Red", "Blue"]
         self.current_turn = 0
         self.turn_indicator = self.create_turn_indicator()
-        # Attribute for threading
         self.lock = threading.Lock()
 
     def draw(self):
@@ -87,7 +86,7 @@ class Map:
                         int(self.screen.get_height() * 0.04),
                         (0, 0, 0),
                         int(country.country_btn.x),
-                        int(country.country_btn.y - 30)
+                        int(country.country_btn.y - 30),
                     )
         self.screen.blit(self.ports_img, (0, 0))
         for player in self.player_profiles:
@@ -99,7 +98,7 @@ class Map:
 
     def draw_button(self):
         """
-        Draws a button
+
         :return:
         """
         self.button.draw(self.screen)
@@ -113,23 +112,19 @@ class Map:
         self.button.check_click(event)
 
     def drop_highlights(self):
-        """
-        Drops all highlight for each country
-        :return:
-        """
         for c in self.countries:
             c.highlighted = False
 
     def get_state(self):
         """
-        Returns current state
+
         :return: self.state
         """
         return self.state
 
     def set_state(self, new_state):
         """
-        Sets current state
+
         :param new_state:
         :return:
         """
@@ -138,7 +133,7 @@ class Map:
     # Sets number of human and AI players
     def set_players_and_ai(self, players, ai):
         """
-        Sets number of human and ai players
+
         :param players:
         :param ai:
         :return:
@@ -161,7 +156,7 @@ class Map:
             int(self.screen.get_width() * 0.05),
             int(self.screen.get_height() * 0.05),
             font=font1,
-            action=lambda: self.set_state(0)
+            action=lambda: self.set_state(0),
         )
         return back
 
@@ -231,8 +226,8 @@ class Map:
 
     def all_countries_have_owner(self):
         """
-        Checks if all countries on the map have owner
-        :return: boolean
+
+        :return:
         """
         for country in self.countries:
             if country.owner is None:
@@ -249,7 +244,7 @@ class Map:
 
     def load_country_image(self, image_path, name):
         """
-        Loads country image
+
         :param name:
         :param image_path:
         :return:
@@ -263,7 +258,7 @@ class Map:
 
     def load_all_images(self):
         """
-        Loads all country images
+
         :return:
         """
         folder_path = "country_imgs"
@@ -280,15 +275,11 @@ class Map:
         threading.Thread(target=self.load_all_images).start()
 
     def get_continents(self):
-        """
-        Returns list of Continent objects
-        :return: list
-        """
         return self.continents
 
     def get_neighbours(self, country_name):
         """
-        returns neighbour country names
+
         :param country_name:
         :return: self.neighbours[country_name]
         """
@@ -296,9 +287,9 @@ class Map:
 
     def get_neighbours_countries(self, country):
         """
-        returns neighbour country objects
+
         :param country:
-        :return: countries
+        :return:
         """
         country_name = country.get_name()
         neighbour_country_names = self.get_neighbours(country_name)

@@ -7,14 +7,14 @@ pygame.init()
 
 
 def draw_text(
-        # Parameters for the function
-        screen,
-        text,
-        size,
-        color,
-        x,
-        y,
-        font=None,
+    # Parameters for the function
+    screen,
+    text,
+    size,
+    color,
+    x,
+    y,
+    font=None,
 ):
     """
     Draw text on the screen
@@ -349,7 +349,7 @@ class MainMenu:
             int(self.center_x * 0.35),
             int(self.center_y * 0.2),
             font=self.font1,
-            action=lambda: self.set_faq_menu(True)  # Use lambda to defer execution
+            action=lambda: self.set_faq_menu(True),  # Use lambda to defer execution
         )
         quit_b = Button(
             self.button_image,
@@ -422,11 +422,15 @@ class MainMenu:
             int(self.center_x * 0.035),
             int(self.center_x * 0.035),
             action=lambda: self.change_secret_mission_mode(),
-            hover=False
+            hover=False,
         )
         return [play, back, add, remove, secret_mission]
 
     def change_secret_mission_mode(self):
+        """
+
+        :return:
+        """
         if self.players + self.AI_agents > 2:
             self.secret_mission_mode = not self.secret_mission_mode
             if self.secret_mission_mode:

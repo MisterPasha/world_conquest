@@ -7,6 +7,7 @@ from dice import Dice
 from button import Button
 from deck import Deck
 from deck import MissionCards
+from player import AI
 
 pygame.init()
 
@@ -206,7 +207,7 @@ class Game:
             self.map.set_state(self.GAMEPLAY_1)
             # When decision on number of players has been done it passes it to Map
             self.map.set_players_and_ai(
-                self.main_menu.get_num_players(), self.main_menu.get_num_ai_players()
+                self.main_menu.get_num_players(), self.main_menu.get_num_ai_players(), self.main_menu.get_player_types()
             )
             self.map.create_players()
             # Define players
@@ -219,7 +220,7 @@ class Game:
             self.secret_mission_mode = self.main_menu.secret_mission_mode
             self.map.set_state(self.GAMEPLAY_2)
             self.map.set_players_and_ai(
-                self.main_menu.get_num_players(), self.main_menu.get_num_ai_players()
+                self.main_menu.get_num_players(), self.main_menu.get_num_ai_players(), self.main_menu.get_player_types()
             )
             self.map.create_players()
             self.players = self.map.get_players()
@@ -257,6 +258,9 @@ class Game:
         else:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
+
+        if isinstance(self.players[self.current_turn], AI):
+            self.handle_ai_actions()
 
     def choose_first_turn(self):
         """
@@ -697,6 +701,8 @@ class Game:
                 self.divide_countries()
                 self.countries_divided = True
             self.next_phase_button.change_text("Draft")
+            if isinstance(self.players[self.current_turn], AI):
+                self.handle_ai_actions()
         elif self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
             # self.gameplay_stage = self.ATTACK
             self.gameplay_stage = self.DRAFT
@@ -908,3 +914,13 @@ class Game:
         self.screen.blit(txt_surface, (self.input_box.x + 5, self.input_box.y + 5))
         self.ok_button.draw(self.screen)
         self.cancel_button.draw(self.screen)
+
+    def handle_ai_actions(self):
+        """
+        Handles AI bot actions during different gameplay phases
+        :return:
+        """
+        ai = self.players[self.current_turn]
+        if self.gameplay_stage == self.SETUP:
+            ai.occupy_country(self.map, self.game_state == self.GAMEPLAY_1)
+            self.pass_turn()

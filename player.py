@@ -4,6 +4,7 @@ from dice import Dice  # Import Dice class from dice
 from collections import Counter
 from map import create_continents
 from deck import MissionCards
+import random
 
 # Initialize pygame
 pygame.init()
@@ -377,6 +378,50 @@ class AI(Player):
         :param color_str: String representing player's color name
         """
         super().__init__(screen, profile_img, color, color_str)
+
+    def occupy_country(self, map_, gameplay1: bool):
+        """
+        Occupy country during setup.
+        If all countries have owner then place troop in owned country. with probability 0.5 it places troops either
+        randomly, or on the country that is bordering other continent to bring more attacking or defending power
+        :param map_: Map
+        :param gameplay1: bool
+        :return: [NONE]
+        """
+        if self.troops_available > 0:
+            # Choose country that hasn't owner
+            if not map_.all_countries_have_owner() and gameplay1:
+                no_owner_countries = set()
+                for country in map_.countries:
+                    if not country.owner:
+                        no_owner_countries.add(country)
+                selected_country = random.choice(list(no_owner_countries))
+                self.countries.append(selected_country)
+                selected_country.set_owner(self)
+                selected_country.add_troops(1)
+                self.remove_avail_troop()
+            # If all countries have owner then place troop in owned country
+            else:
+                prob = 0.5
+                if random.random() > prob:
+                    selected_country = random.choice(self.countries)
+                    selected_country.add_troops(1)
+                    self.remove_avail_troop()
+                else:
+                    border_countries = []
+                    for country in self.countries:
+                        neighbours = map_.get_neighbours(country.get_name())
+                        in_continent = ""
+                        for continent in map_.continents:
+                            for c in continent.countries_in_continent:
+                                if c == country.get_name():
+                                    in_continent = continent
+                        if not all(neighbour in in_continent.countries_in_continent for neighbour in neighbours):
+                            border_countries.append(country)
+                    selected_country = random.choice(border_countries)
+                    selected_country.add_troops(1)
+                    self.remove_avail_troop()
+
 
     def attack(self, country):
         """

@@ -71,6 +71,7 @@ class MainMenu:
         self.state = 0
         self.players = 0
         self.AI_agents = 0
+        self.player_types = []
 
         # Load images and scale them accordingly
         self.background_image = pygame.transform.scale(
@@ -216,6 +217,9 @@ class MainMenu:
             ),
         )
 
+    def add_player_type(self, type_):
+        self.player_types.append(type_)
+
     def set_opt_menu(self, state):
         """
         Set the state of the options (for new game) menu
@@ -225,6 +229,7 @@ class MainMenu:
         self.opt_menu = state
         self.players = 0
         self.AI_agents = 0
+        self.player_types = []
         for slot in self.player_slots:
             slot.change_image(self.player_slot_image)
 
@@ -279,6 +284,13 @@ class MainMenu:
         """
         return self.AI_agents
 
+    def get_player_types(self):
+        """
+
+        :return: self.player_types: list
+        """
+        return self.player_types
+
     def add_player(self):
         """
         Add a player to the game if the total number of players (human and AI) is less than 6
@@ -286,6 +298,7 @@ class MainMenu:
         """
         if (self.players + self.AI_agents) < 6:
             self.players += 1
+            self.add_player_type("human")
             self.player_slots[(self.players + self.AI_agents) - 1].change_image(
                 self.player_images[(self.players + self.AI_agents) - 1]
             )
@@ -300,7 +313,7 @@ class MainMenu:
             self.player_slots[(self.players + self.AI_agents) - 1].change_image(
                 self.player_slot_image
             )
-
+            self.player_types.pop()
             if self.small_buttons[self.players + self.AI_agents - 1].clicked:
                 self.players -= 1
             elif self.small_buttons[self.players + self.AI_agents + 5].clicked:
@@ -506,6 +519,7 @@ class MainMenu:
                 )
                 self.players += 1
                 self.AI_agents -= 1
+                self.player_types[index] = "human"
             if player == "ai" and button.clicked is False:
                 button.click(self.P_or_AI_button, self.P_or_AI_button_clicked)
                 self.small_buttons[index - 6].click(
@@ -513,6 +527,7 @@ class MainMenu:
                 )
                 self.players -= 1
                 self.AI_agents += 1
+                self.player_types[index - 6] = "ai"
 
         return action
 

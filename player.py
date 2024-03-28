@@ -4,6 +4,7 @@ from dice import Dice  # Import Dice class from dice
 from collections import Counter
 from map import create_continents
 from deck import MissionCards
+import random
 
 # Initialize pygame
 pygame.init()
@@ -11,6 +12,7 @@ pygame.init()
 
 # Super Class for Human and AI agent
 # Only holds methods and attributes that both Human and AI players will have in common
+
 new_game_paper = pygame.image.load("images\\new_game_paper_resized.png")
 
 
@@ -63,7 +65,7 @@ class Player:
 
     def remove_troops(self, num_of_troops):
         """
-
+        Removes a troop
         :param num_of_troops:
         :return:
         """
@@ -132,19 +134,14 @@ class Player:
 
         # If the mouse is over the profile, display the information window and any cards the player holds
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.screen.blit(
-                self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1])
-            )
+            self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1]))
             # Draw the text indicating the number of troops held by the player
             draw_text(
                 self.screen,  # Pygame screen surface
                 f"{self.troops_holds}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(
-                    int(self.screen.get_width() * 0.35)
-                    + self.info_window.get_width() * 0.87
-                ),
+                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
                 int(self.pos[1] + self.info_window.get_height() * 0.7),
             )
             draw_text(
@@ -152,58 +149,48 @@ class Player:
                 f"{len(self.countries)}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(
-                    int(self.screen.get_width() * 0.35)
-                    + self.info_window.get_width() * 0.87
-                ),
+                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
                 int(self.pos[1] + self.info_window.get_height() * 0.3),
             )
             for i, card in enumerate(self.cards):
-                card.draw(
-                    int(self.screen.get_width() * 0.37) + i * card.width,
-                    self.pos[1] + self.info_window.get_height() * 0.1,
-                )
+                card.draw(int(self.screen.get_width() * 0.37) + i * card.width,
+                          self.pos[1] + self.info_window.get_height() * 0.1)
             if self.mission_id:
                 if self.mission_id == 7:
-                    self.mission_card.draw(
-                        self.mission_id,
-                        int(self.screen.get_width() * 0.27),
-                        int(self.pos[1] + self.info_window.get_height() * 0.1),
-                        self.player_to_destroy.color_str,
-                    )
+                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
+                                           int(self.pos[1] + self.info_window.get_height() * 0.1),
+                                           self.player_to_destroy.color_str)
                 else:
-                    self.mission_card.draw(
-                        self.mission_id,
-                        int(self.screen.get_width() * 0.27),
-                        int(self.pos[1] + self.info_window.get_height() * 0.1),
-                    )
+                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
+                                           int(self.pos[1] + self.info_window.get_height() * 0.1))
 
     def calculate_num_of_draft_troops(self):
         """
-
-        :return:
+        Calculates a number of troops to get during Draft phase
+        :return: num_of_avail_troops
         """
         num_of_avail_troops = len(self.countries) // 3
         num_of_avail_troops = num_of_avail_troops if num_of_avail_troops > 3 else 3
         return num_of_avail_troops
 
     def find_continents(self):
+        """
+        Checks which continents player holds and adds/removes them to the list
+        :return:
+        """
         continents = create_continents()
         continents_held = []
         countries_held = [country.country_name for country in self.countries]
         for continent in continents:
             # Check if the player holds all countries in the continent
-            if all(
-                country in countries_held
-                for country in continent.countries_in_continent
-            ):
+            if all(country in countries_held for country in continent.countries_in_continent):
                 continents_held.append(continent)
         self.continents = continents_held
 
     def have_set_of_cards(self):
         """
-
-        :return:
+        Checks if player has a set of cards
+        :return: boolean
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
@@ -216,7 +203,7 @@ class Player:
 
     def remove_set_cards(self, army_type, deck):
         """
-
+        Removes set of same cards from the hand
         :param army_type:
         :param deck:
         :return:
@@ -236,13 +223,12 @@ class Player:
                                 country.add_troops(2)
                                 self.troops_holds += 2
                                 bonus_counter += 1
-                                print("bonus has been used")
         for card in cards_to_remove:
             self.cards.remove(card)
 
     def remove_distinct_cards(self, deck):
         """
-
+        removes a set of distinct cards from the hand
         :param deck:
         :return:
         """
@@ -268,16 +254,14 @@ class Player:
 
     def sell_cards(self, nth_set, deck):
         """
-
+        Exchanges set of cards for the troops
         :param nth_set:
         :param deck:
         :return:
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
-        wild_cards = (
-            card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
-        )
+        wild_cards = card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
         if max(card_dict.values()) >= 3:
             army_type = max(card_dict, key=card_dict.get)
             self.remove_set_cards(army_type, deck)
@@ -288,9 +272,9 @@ class Player:
 
     def get_card_bonus(self, nth_set):
         """
-
+        Gives number of troops from selling cards
         :param nth_set:
-        :return:
+        :return: troops_to_add
         """
         if 0 < nth_set < 6:
             troops_to_add = nth_set * 2 + 2
@@ -394,6 +378,50 @@ class AI(Player):
         :param color_str: String representing player's color name
         """
         super().__init__(screen, profile_img, color, color_str)
+
+    def occupy_country(self, map_, gameplay1: bool):
+        """
+        Occupy country during setup.
+        If all countries have owner then place troop in owned country. with probability 0.5 it places troops either
+        randomly, or on the country that is bordering other continent to bring more attacking or defending power
+        :param map_: Map
+        :param gameplay1: bool
+        :return: [NONE]
+        """
+        if self.troops_available > 0:
+            # Choose country that hasn't owner
+            if not map_.all_countries_have_owner() and gameplay1:
+                no_owner_countries = set()
+                for country in map_.countries:
+                    if not country.owner:
+                        no_owner_countries.add(country)
+                selected_country = random.choice(list(no_owner_countries))
+                self.countries.append(selected_country)
+                selected_country.set_owner(self)
+                selected_country.add_troops(1)
+                self.remove_avail_troop()
+            # If all countries have owner then place troop in owned country
+            else:
+                prob = 0.5
+                if random.random() > prob:
+                    selected_country = random.choice(self.countries)
+                    selected_country.add_troops(1)
+                    self.remove_avail_troop()
+                else:
+                    border_countries = []
+                    for country in self.countries:
+                        neighbours = map_.get_neighbours(country.get_name())
+                        in_continent = ""
+                        for continent in map_.continents:
+                            for c in continent.countries_in_continent:
+                                if c == country.get_name():
+                                    in_continent = continent
+                        if not all(neighbour in in_continent.countries_in_continent for neighbour in neighbours):
+                            border_countries.append(country)
+                    selected_country = random.choice(border_countries)
+                    selected_country.add_troops(1)
+                    self.remove_avail_troop()
+
 
     def attack(self, country):
         """

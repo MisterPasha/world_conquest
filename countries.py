@@ -1,6 +1,5 @@
 import pygame  # Import the pygame library for game development
 from button import Button  # Importing Button class
-from main_menu import draw_text
 
 # Initialize pygame
 pygame.init()

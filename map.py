@@ -4,7 +4,7 @@ from countries import Country
 from countries import create_continents, create_neighbours
 from main_menu import MainMenu
 from main_menu import draw_text
-from player import Human
+from player import Human, AI
 import threading
 import os
 
@@ -39,6 +39,7 @@ class Map:
         self.screen = screen
         self.players = 0
         self.AI_players = 0
+        self.player_types = []
         self.center_x, self.center_y = screen.get_width() / 2, screen.get_height() / 2
 
         self.map_img = pygame.transform.scale(
@@ -112,6 +113,10 @@ class Map:
         self.button.check_click(event)
 
     def drop_highlights(self):
+        """
+        Drops highlights from each country
+        :return:
+        """
         for c in self.countries:
             c.highlighted = False
 
@@ -131,15 +136,17 @@ class Map:
         self.state = new_state
 
     # Sets number of human and AI players
-    def set_players_and_ai(self, players, ai):
+    def set_players_and_ai(self, players, ai, player_types):
         """
 
+        :param player_types:
         :param players:
         :param ai:
         :return:
         """
         self.players = players
         self.AI_players = ai
+        self.player_types = player_types
 
     def create_buttons(self):
         """
@@ -168,10 +175,16 @@ class Map:
         """
         all_profiles = MainMenu.player_images
         players_in_game = []
-        for i in range(self.players + self.AI_players):
-            players_in_game.append(
-                Human(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i])
-            )
+
+        for i, player in enumerate(self.player_types):
+            if player == "human":
+                players_in_game.append(
+                    Human(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i])
+                )
+            elif player == "ai":
+                players_in_game.append(
+                    AI(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i])
+                )
         for i, player in enumerate(players_in_game):
             width = int(self.center_x * 0.08)
             height = width
@@ -182,6 +195,7 @@ class Map:
                 height,
             )
         self.player_profiles = players_in_game
+        print(self.player_profiles)
 
     def get_players(self):
         """
@@ -226,8 +240,8 @@ class Map:
 
     def all_countries_have_owner(self):
         """
-
-        :return:
+        Checks if all countries have an owner
+        :return: boolean
         """
         for country in self.countries:
             if country.owner is None:
@@ -279,7 +293,7 @@ class Map:
 
     def get_neighbours(self, country_name):
         """
-
+        Returns neighbour country names
         :param country_name:
         :return: self.neighbours[country_name]
         """
@@ -287,7 +301,7 @@ class Map:
 
     def get_neighbours_countries(self, country):
         """
-
+        Returns neighbour country objects
         :param country:
         :return:
         """

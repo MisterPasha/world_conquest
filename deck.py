@@ -163,6 +163,7 @@ class MissionCards:
     def mission_completed(self, mission_id, player):
         """
         Checks if a player has completed a mission
+        :param mission_id:
         :param player: The player object whose completion status is to be checked.
         :return: 'True' if the player has completed the mission, 'False' otherwise.
         """

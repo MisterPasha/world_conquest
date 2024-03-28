@@ -8,6 +8,7 @@ from button import Button
 from deck import Deck
 from deck import MissionCards
 from player import AI
+import time
 
 pygame.init()
 
@@ -258,7 +259,7 @@ class Game:
         else:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
-
+        print(len(self.players))
         if isinstance(self.players[self.current_turn], AI):
             self.handle_ai_actions()
 
@@ -510,14 +511,14 @@ class Game:
                         current_player.remove_avail_troop()
                         self.pass_turn()
 
-    def move_troop_to_captured(self):
+    def move_troop_to_captured(self, troops=1):
         """
         Moves troop to the captured territory during Attack
         :return:
         """
         if self.country_selected.troops > 1:
-            self.country_selected.remove_troops(1)
-            self.captured_country.add_troops(1)
+            self.country_selected.remove_troops(troops)
+            self.captured_country.add_troops(troops)
 
     def move_troop_from_captured(self):
         """
@@ -661,12 +662,13 @@ class Game:
         :return:
         """
         neighbour_country_names = self.map.get_neighbours(country.get_name())
-        for c in self.map.countries:
-            if (
-                    c.get_name() in neighbour_country_names
-                    and c not in self.players[self.current_turn].countries
-            ):
-                c.highlighted = True if highlight else False
+        if self.players[self.current_turn].countries:
+            for c in self.map.countries:
+                if (
+                        c.get_name() in neighbour_country_names
+                        and c not in self.players[self.current_turn].countries
+                ):
+                    c.highlighted = True if highlight else False
 
     def deal_initial_troops_to_players(self):
         """
@@ -718,6 +720,8 @@ class Game:
             if self.secret_mission_mode:
                 self.deal_mission_cards()
             self.next_phase_button.change_text("Attack")
+            if isinstance(self.players[self.current_turn], AI):
+                self.handle_ai_actions()
         elif self.gameplay_stage == self.ATTACK:
             self.gameplay_stage = self.FORTIFY
             self.next_phase_button.change_text("End")
@@ -748,10 +752,14 @@ class Game:
             self.map.drop_highlights()
             self.fortify_counter = 0
             self.selected = False
+            if isinstance(self.players[self.current_turn], AI):
+                self.handle_ai_actions()
         elif self.gameplay_stage == self.DRAFT and self.players[self.current_turn].troops_available < 1:
             self.gameplay_stage = self.ATTACK
             self.next_phase_button.change_text("Fortify")
             self.map.drop_highlights()
+            if isinstance(self.players[self.current_turn], AI):
+                self.handle_ai_actions()
 
     def deal_mission_cards(self):
         """
@@ -923,4 +931,29 @@ class Game:
         ai = self.players[self.current_turn]
         if self.gameplay_stage == self.SETUP:
             ai.occupy_country(self.map, self.game_state == self.GAMEPLAY_1)
-            self.pass_turn()
+            for player in self.players:
+                if player.troops_available > 0:
+                    self.pass_turn()
+        elif self.gameplay_stage == self.DRAFT:
+            while ai.troops_available > 0:
+                ai.occupy_country(self.map, self.game_state == self.GAMEPLAY_1)
+        elif self.gameplay_stage == self.ATTACK:
+            attacking = True
+            prob = 0.7
+            while attacking:
+                attacking_country, defending_country = ai.choose_country_to_attack(self.map)
+                self.country_selected = attacking_country
+                if self.country_selected:
+                    while attacking_country.troops > 1 and not self.captured:
+                        self.attack_country(defending_country)
+                    if self.captured:
+                        print(f"{self.captured_country.country_name} is Captured")
+                        num_of_troops = random.randint(0, attacking_country.troops - 1)
+                        self.move_troop_to_captured(troops=num_of_troops)
+                        print(f"Moved {num_of_troops} troops from {self.country_selected.get_name()} to {self.captured_country.country_name}")
+                        self.captured = False
+                    if random.random() > prob:
+                        attacking = False
+                else:
+                    attacking = False
+

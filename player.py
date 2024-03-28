@@ -5,6 +5,7 @@ from collections import Counter
 from map import create_continents
 from deck import MissionCards
 import random
+import math
 
 # Initialize pygame
 pygame.init()
@@ -316,18 +317,6 @@ class Player:
         self.countries.remove(country)
         self.find_continents()
 
-
-class Human(Player):
-    def __init__(self, screen, profile_img, color, color_str):
-        """
-        Initialize Human player object
-        :param screen: Pygame screen surface
-        :param profile_img: Image representing player's profile
-        :param color: RGB color tuple representing player's color
-        :param color_str: String representing player's color name
-        """
-        super().__init__(screen, profile_img, color, color_str)
-
     def attack(self, my_country, defending_country):
         """
         Execute attack between human player's country and defending country
@@ -368,6 +357,18 @@ class Human(Player):
         )
 
 
+class Human(Player):
+    def __init__(self, screen, profile_img, color, color_str):
+        """
+        Initialize Human player object
+        :param screen: Pygame screen surface
+        :param profile_img: Image representing player's profile
+        :param color: RGB color tuple representing player's color
+        :param color_str: String representing player's color name
+        """
+        super().__init__(screen, profile_img, color, color_str)
+
+
 class AI(Player):
     def __init__(self, screen, profile_img, color, color_str):
         """
@@ -402,7 +403,7 @@ class AI(Player):
                 self.remove_avail_troop()
             # If all countries have owner then place troop in owned country
             else:
-                prob = 0.5
+                prob = 0.6
                 if random.random() > prob:
                     selected_country = random.choice(self.countries)
                     selected_country.add_troops(1)
@@ -418,16 +419,59 @@ class AI(Player):
                                     in_continent = continent
                         if not all(neighbour in in_continent.countries_in_continent for neighbour in neighbours):
                             border_countries.append(country)
-                    selected_country = random.choice(border_countries)
-                    selected_country.add_troops(1)
-                    self.remove_avail_troop()
+                    if border_countries:
+                        selected_country = random.choice(border_countries)
+                        selected_country.add_troops(1)
+                        self.remove_avail_troop()
+                    else:
+                        selected_country = random.choice(self.countries)
+                        selected_country.add_troops(1)
+                        self.remove_avail_troop()
 
+    def choose_country_to_attack(self, map_):
+        """
+        This function is choosing attacking country and defending country.
+        First it finds all countries that bordering enemy territories and filters out potential countries to attack
+        by checking their number of troops, it will not consider enemy countries that have higher number of troops
+        or have more than 80% of attacking country troops, as it can lead to loosing the battle.
+        If it cannot find any suitable countries to attack it won't attack at all.
+        In 70% chance it will attack the country with least number of troops. And 30% chance it will choose randomly.
 
-    def attack(self, country):
+        :param map_: Map
+        :return: Attacking Country, Defending Country
         """
-        Execute attack for AI player.
-        Prints the country with "attack"
-        :param country: Country object to attack
-        :return: [NONE]
-        """
-        print("attack", country)
+        attack_defend_countries = {}
+        found = False
+        i = 0
+        attacking_country = None
+        for country in self.countries:
+            if country.troops > 1:
+                neighbour_countries = map_.get_neighbours_countries(country)
+                for c in neighbour_countries:
+                    if c.owner is not self or not c.owner:
+                        attack_defend_countries.setdefault(country, []).append(c)
+        for k, v in attack_defend_countries.items():
+            for country in v:
+                if math.ceil(country.troops * 0.2) >= k.troops:
+                    attack_defend_countries[k].remove(country)
+        while not found and i < 100 and attack_defend_countries.keys():
+            attacking_country = random.choice(list(attack_defend_countries.keys()))
+            if len(attack_defend_countries[attacking_country]) > 0:
+                found = True
+            else:
+                i += 1
+        if not found:
+            return None, None
+        else:
+            prob = 0.7
+            if random.random() > prob:
+                defending_country = random.choice(attack_defend_countries[attacking_country])
+            else:
+                defending_country = attack_defend_countries[attacking_country][0]
+                least_troops = attack_defend_countries[attacking_country][0].troops
+                for country in attack_defend_countries[attacking_country]:
+                    if country.troops <= least_troops:
+                        least_troops = country.troops
+                        defending_country = country
+            return attacking_country, defending_country
+

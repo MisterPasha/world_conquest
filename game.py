@@ -8,7 +8,6 @@ from button import Button
 from deck import Deck
 from deck import MissionCards
 from player import AI
-import time
 
 pygame.init()
 
@@ -57,9 +56,9 @@ class Game:
             self.win_window, (screen.get_width(), screen.get_height())
         )
         self.opt_window_paper_image = pygame.transform.scale(
-            self.opt_window_paper_image, (int(screen.get_width()*0.07), int(screen.get_height()*0.2)))
+            self.opt_window_paper_image, (int(screen.get_width() * 0.07), int(screen.get_height() * 0.2)))
         self.change_name_window = pygame.transform.scale(
-            self.opt_window_paper_image, (int(screen.get_width()*0.18), int(screen.get_height()*0.17)))
+            self.opt_window_paper_image, (int(screen.get_width() * 0.18), int(screen.get_height() * 0.17)))
 
         # set initial state
         self.game_state = self.MAIN_MENU
@@ -135,6 +134,13 @@ class Game:
             self.events()
             self.draw()
             self.clock.tick(60)
+            if self.players and len(self.players) == 1:
+                self.draw_win_window()
+            elif (self.gameplay_stage == self.DRAFT or
+                  self.gameplay_stage == self.ATTACK or
+                  self.gameplay_stage == self.FORTIFY) and \
+                    isinstance(self.players[self.current_turn], AI):
+                self.switch_to_next_phase()
             pygame.display.update()  # pygame.display.flip() ?
 
     # Controls all event types
@@ -215,6 +221,7 @@ class Game:
             self.players = self.map.get_players()
             self.deal_initial_troops_to_players()
             self.game_state = self.GAMEPLAY_1
+            self.next_phase_button.change_text("Play")
         elif self.main_menu.get_state() == self.GAMEPLAY_2:
             self.map = Map(self.screen)
             self.map.create_countries()
@@ -259,8 +266,8 @@ class Game:
         else:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
-        print(len(self.players))
-        if isinstance(self.players[self.current_turn], AI):
+        print(f"Current turn: {self.current_turn}, Players in game: {len(self.players)}")
+        if isinstance(self.players[self.current_turn], AI) and self.gameplay_stage == self.SETUP:
             self.handle_ai_actions()
 
     def choose_first_turn(self):
@@ -280,7 +287,7 @@ class Game:
             self.showing_dice_animation = True
             self.animation_start_time = pygame.time.get_ticks()
         elif self.showing_dice_animation:
-            if pygame.time.get_ticks() - self.animation_start_time >= 2500:  # 1 seconds
+            if pygame.time.get_ticks() - self.animation_start_time >= 2500:
                 self.showing_dice_animation = False
                 self.dice_throw_index += 1
                 if self.dice_throw_index >= len(self.players):
@@ -562,10 +569,9 @@ class Game:
         elif (
                 country in current_player.countries
         ):  # Error message when trying to attack own country
-            print("It is dumb to attack yourself")
+            print("Can't attack yourself ", country.get_name())
         elif country.get_name() in self.map.get_neighbours(
-                self.country_selected.get_name()
-        ):  # Attack!
+                self.country_selected.get_name()):  # Attack!
             attacker_lost_armies, defender_lost_armies, a, d = current_player.attack(
                 self.country_selected, country
             )
@@ -591,7 +597,8 @@ class Game:
                 self.highlight_captured(True)
                 self.captured = True
                 self.captured_countries_in_turn += 1
-            self.highlight_neighbour_countries(self.country_selected, False)
+            #self.highlight_neighbour_countries(self.country_selected, False)
+            self.map.drop_highlights()
             self.selected = False
         else:
             print("You can only attack neighbour countries")
@@ -607,9 +614,9 @@ class Game:
         self.highlight_captured(False)
         if self.gameplay_stage != self.EDIT:
             if country.owner is not current_player:
-                print("Can select only owned country!")
+                pass
             elif country.troops < 2:
-                print("Not enough troops")
+                pass
             else:
                 self.selected = True
                 self.captured = False
@@ -662,6 +669,7 @@ class Game:
         :return:
         """
         neighbour_country_names = self.map.get_neighbours(country.get_name())
+        print(f"Current turn is: {self.current_turn}")
         if self.players[self.current_turn].countries:
             for c in self.map.countries:
                 if (
@@ -734,12 +742,12 @@ class Game:
             self.captured_countries_in_turn = 0
             self.map.drop_highlights()
             self.selected = False
+            if isinstance(self.players[self.current_turn], AI):
+                self.handle_ai_actions()
         elif self.gameplay_stage == self.FORTIFY:
             self.gameplay_stage = self.DRAFT
             self.pass_turn()
             self.turn += 1
-            # Give bonus troops for number of countries
-            # if self.turn > len(self.players) - 1:
             num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
             self.players[self.current_turn].add_avail_troops(num_of_avail_troops)
             # Give bonus armies for captured continent
@@ -935,6 +943,10 @@ class Game:
                 if player.troops_available > 0:
                     self.pass_turn()
         elif self.gameplay_stage == self.DRAFT:
+            print("Draft")
+            if ai.have_set_of_cards():
+                self.nth_set += 1
+                ai.sell_cards(self.nth_set, self.deck)
             while ai.troops_available > 0:
                 ai.occupy_country(self.map, self.game_state == self.GAMEPLAY_1)
         elif self.gameplay_stage == self.ATTACK:
@@ -947,13 +959,12 @@ class Game:
                     while attacking_country.troops > 1 and not self.captured:
                         self.attack_country(defending_country)
                     if self.captured:
-                        print(f"{self.captured_country.country_name} is Captured")
                         num_of_troops = random.randint(0, attacking_country.troops - 1)
                         self.move_troop_to_captured(troops=num_of_troops)
-                        print(f"Moved {num_of_troops} troops from {self.country_selected.get_name()} to {self.captured_country.country_name}")
                         self.captured = False
                     if random.random() > prob:
                         attacking = False
                 else:
                     attacking = False
-
+        elif self.gameplay_stage == self.FORTIFY:
+            ai.fortify(self.map)

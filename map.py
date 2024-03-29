@@ -312,3 +312,18 @@ class Map:
             if c.get_name() in neighbour_country_names:
                 countries.append(c)
         return countries
+
+    def get_connected_countries(self, country):
+        adjacent_countries = []
+        visited = set()
+
+        def dfs(selected_country):
+            visited.add(selected_country)
+            adjacent_countries.append(selected_country)
+            neighbour_countries = self.get_neighbours_countries(selected_country)
+            for neighbour in neighbour_countries:
+                if neighbour not in visited and neighbour.owner == selected_country.owner:
+                    dfs(neighbour)
+
+        dfs(country)
+        return adjacent_countries

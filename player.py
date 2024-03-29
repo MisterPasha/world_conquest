@@ -196,7 +196,6 @@ class Player:
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
         wild_cards = card_dict["Wild"]
-        print(card_dict)
         for k, v in card_dict.items():
             if v >= 3 or len(card_dict) >= 3 or v + wild_cards >= 3:
                 return True
@@ -247,7 +246,6 @@ class Player:
                             country.add_troops(2)
                             self.troops_holds += 2
                             bonus_counter += 1
-                            print("bonus has been used")
             elif card.army_type == "Wild":
                 distinct_cards.append(card)
         for card in distinct_cards:
@@ -454,7 +452,7 @@ class AI(Player):
             for country in v:
                 if math.ceil(country.troops * 0.2) >= k.troops:
                     attack_defend_countries[k].remove(country)
-        while not found and i < 100 and attack_defend_countries.keys():
+        while not found and i < 100 and attack_defend_countries:
             attacking_country = random.choice(list(attack_defend_countries.keys()))
             if len(attack_defend_countries[attacking_country]) > 0:
                 found = True
@@ -475,3 +473,50 @@ class AI(Player):
                         defending_country = country
             return attacking_country, defending_country
 
+    def fortify(self, map_):
+        fortify_to_country = None
+        fortify_from_country = None
+        potential_countries = {}
+        for country in self.countries:
+            if country.troops > 1:
+                potential_countries[country] = country.troops
+        potential_countries = sorted(potential_countries.items(), key=lambda item: item[1], reverse=True)
+        potential_countries = dict(potential_countries)
+
+        for country, value in potential_countries.items():
+            neighbour_countries = map_.get_neighbours_countries(country)
+            have_enemy_in_neighbour = False
+            for n_country in neighbour_countries:
+                if n_country.owner != self:
+                    have_enemy_in_neighbour = True
+                    break
+            if not have_enemy_in_neighbour:
+                fortify_from_country = country
+                break
+        if fortify_from_country:
+            connected_dict = {}
+            connected_countries = map_.get_connected_countries(fortify_from_country)
+            for country in connected_countries:
+                connected_dict[country] = country.troops
+            connected_dict = sorted(potential_countries.items(), key=lambda item: item[1])
+            connected_dict = dict(connected_dict)
+            for country in connected_dict.keys():
+                neighbour_countries = map_.get_neighbours_countries(country)
+                have_enemy_in_neighbour = False
+                for n_country in neighbour_countries:
+                    if n_country.owner != self:
+                        have_enemy_in_neighbour = True
+                if have_enemy_in_neighbour:
+                    fortify_to_country = country
+                    break
+        if fortify_to_country and fortify_from_country:
+            prob = 0.8
+            fortify_to_country.highlighted = True
+            fortify_from_country.highlighted = True
+            if random.random() < prob:
+                fortify_to_country.add_troops(fortify_from_country.troops - 1)
+                fortify_from_country.remove_troops(fortify_from_country.troops - 1)
+            else:
+                num_of_troops = random.randint(1, fortify_from_country.troops - 1)
+                fortify_to_country.add_troops(num_of_troops)
+                fortify_from_country.remove_troops(num_of_troops)

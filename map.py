@@ -195,7 +195,6 @@ class Map:
                 height,
             )
         self.player_profiles = players_in_game
-        print(self.player_profiles)
 
     def get_players(self):
         """
@@ -221,9 +220,10 @@ class Map:
 
         :return:
         """
-        x = self.player_profiles[0].pos[0] - self.turn_indicator.get_width()
-        y = self.player_profiles[self.current_turn].pos[1]
-        self.screen.blit(self.turn_indicator, (x, y))
+        if len(self.player_profiles) > 1:
+            x = self.player_profiles[self.current_turn].pos[0] - self.turn_indicator.get_width()
+            y = self.player_profiles[self.current_turn].pos[1]
+            self.screen.blit(self.turn_indicator, (x, y))
 
     def draw_dice_plate(self):
         """

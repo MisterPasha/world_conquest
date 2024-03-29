@@ -138,7 +138,7 @@ class Game:
                 self.draw_win_window()
             elif (self.gameplay_stage == self.DRAFT or
                   self.gameplay_stage == self.ATTACK or
-                  self.gameplay_stage == self.FORTIFY) and \
+                  self.gameplay_stage == self.FORTIFY) and len(self.players) > 1 and \
                     isinstance(self.players[self.current_turn], AI):
                 self.switch_to_next_phase()
                 #pygame.time.delay(1000)
@@ -595,6 +595,7 @@ class Game:
                             self.current_turn -= 1
                             self.map.current_turn -= 1
                         self.players.remove(self.captured_country.owner)
+                        #self.map.player_profiles.remove(self.captured_country.owner)
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
                 self.captured_country.add_troops(len(a))
@@ -602,7 +603,6 @@ class Game:
                 self.highlight_captured(True)
                 self.captured = True
                 self.captured_countries_in_turn += 1
-            #self.highlight_neighbour_countries(self.country_selected, False)
             self.map.drop_highlights()
             self.selected = False
         else:

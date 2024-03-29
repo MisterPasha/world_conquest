@@ -381,8 +381,9 @@ class AI(Player):
     def occupy_country(self, map_, gameplay1: bool):
         """
         Occupy country during setup.
-        If all countries have owner then place troop in owned country. with probability 0.5 it places troops either
-        randomly, or on the country that is bordering other continent to bring more attacking or defending power
+        If all countries have owner then place troop in owned country. with probability 10% it places troops
+        randomly, or 90% chance on the country that is bordering enemy territory
+        to bring more attacking or defending power
         :param map_: Map
         :param gameplay1: bool
         :return: [NONE]
@@ -401,30 +402,22 @@ class AI(Player):
                 self.remove_avail_troop()
             # If all countries have owner then place troop in owned country
             else:
-                prob = 0.6
+                prob = 0.9
                 if random.random() > prob:
                     selected_country = random.choice(self.countries)
                     selected_country.add_troops(1)
                     self.remove_avail_troop()
                 else:
-                    border_countries = []
+                    potential_countries = []
                     for country in self.countries:
-                        neighbours = map_.get_neighbours(country.get_name())
-                        in_continent = ""
-                        for continent in map_.continents:
-                            for c in continent.countries_in_continent:
-                                if c == country.get_name():
-                                    in_continent = continent
-                        if not all(neighbour in in_continent.countries_in_continent for neighbour in neighbours):
-                            border_countries.append(country)
-                    if border_countries:
-                        selected_country = random.choice(border_countries)
-                        selected_country.add_troops(1)
-                        self.remove_avail_troop()
-                    else:
-                        selected_country = random.choice(self.countries)
-                        selected_country.add_troops(1)
-                        self.remove_avail_troop()
+                        neighbour_countries = map_.get_neighbours_countries(country)
+                        for n_country in neighbour_countries:
+                            if n_country.owner != self:
+                                potential_countries.append(country)
+                                break
+                    selected_country = random.choice(potential_countries)
+                    selected_country.add_troops(1)
+                    self.remove_avail_troop()
 
     def choose_country_to_attack(self, map_):
         """

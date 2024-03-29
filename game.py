@@ -134,8 +134,10 @@ class Game:
             self.events()
             self.draw()
             self.clock.tick(60)
-            if self.players and len(self.players) == 1:
+            if self.players and len(self.players) <= 1:
+                self.gameplay_stage = self.HOLD
                 self.draw_win_window()
+                print("Win Window")
             elif (self.gameplay_stage == self.DRAFT or
                   self.gameplay_stage == self.ATTACK or
                   self.gameplay_stage == self.FORTIFY) and len(self.players) > 1 and \

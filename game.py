@@ -141,6 +141,7 @@ class Game:
                   self.gameplay_stage == self.FORTIFY) and \
                     isinstance(self.players[self.current_turn], AI):
                 self.switch_to_next_phase()
+                #pygame.time.delay(1000)
             pygame.display.update()  # pygame.display.flip() ?
 
     # Controls all event types
@@ -589,7 +590,11 @@ class Game:
                     self.captured_country.owner.remove_country(country)
                     if self.captured_country.owner.troops_holds <= 0 or len(self.captured_country.owner.countries) <= 0:
                         self.captured_country.owner.playing = False
-                        self.players.remove(country.owner)
+                        index = self.players.index(self.captured_country.owner)
+                        if index < self.current_turn:
+                            self.current_turn -= 1
+                            self.map.current_turn -= 1
+                        self.players.remove(self.captured_country.owner)
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
                 self.captured_country.add_troops(len(a))

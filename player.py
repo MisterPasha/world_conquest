@@ -449,8 +449,8 @@ class AI(Player):
                     if c.owner is not self or not c.owner:
                         attack_defend_countries.setdefault(country, []).append(c)
         for k, v in attack_defend_countries.items():
-            for country in v:
-                if math.ceil(country.troops * 0.2) >= k.troops:
+            for country in v[:]:
+                if country.troops >= k.troops or country.troops > math.ceil(k.troops * 0.8):
                     attack_defend_countries[k].remove(country)
         while not found and i < 100 and attack_defend_countries:
             attacking_country = random.choice(list(attack_defend_countries.keys()))

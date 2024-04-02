@@ -226,6 +226,13 @@ class Player:
         for card in cards_to_remove:
             self.cards.remove(card)
 
+    def all_neighbours_owned(self, country, map_):
+        neighbour_countries = map_.get_neighbours_countries(country)
+        for c in neighbour_countries:
+            if c not in self.countries:
+                return False
+        return True
+
     def remove_distinct_cards(self, deck):
         """
         removes a set of distinct cards from the hand

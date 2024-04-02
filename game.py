@@ -18,6 +18,8 @@ class Game:
     button_image = pygame.image.load("images\\button_high.png")
     button_hover_image = pygame.image.load("images\\button_hover.png")
     opt_window_paper_image = pygame.image.load("images\\new_game_paper_resized.png")
+    notif_edit_img = pygame.image.load("images\\notification_edit_map.png")
+    notif_click_img = pygame.image.load("images\\notification_clicks.png")
     font1 = "fonts\\font1.ttf"
 
     # Game States
@@ -25,7 +27,6 @@ class Game:
     MAIN_MENU = 0
     GAMEPLAY_1 = 1  # 3-6 players game
     GAMEPLAY_2 = 2  # 2 players game
-    GAME_OVER = 3
 
     # Gameplay stages
     CHOOSE_FIRST_TURN = 0
@@ -35,6 +36,7 @@ class Game:
     FORTIFY = 4
     EDIT = 5
     HOLD = 6
+    GAME_OVER = 7
 
     def __init__(self, screen, clock, window_size):
         """
@@ -59,6 +61,10 @@ class Game:
             self.opt_window_paper_image, (int(screen.get_width() * 0.07), int(screen.get_height() * 0.2)))
         self.change_name_window = pygame.transform.scale(
             self.opt_window_paper_image, (int(screen.get_width() * 0.18), int(screen.get_height() * 0.17)))
+        self.notif_edit_img = pygame.transform.scale(
+            self.notif_edit_img, (int(screen.get_width() * 0.2), int(screen.get_height() * 0.2)))
+        self.notif_click_img = pygame.transform.scale(
+            self.notif_click_img, (int(screen.get_width() * 0.2), int(screen.get_height() * 0.2)))
 
         # set initial state
         self.game_state = self.MAIN_MENU
@@ -68,6 +74,9 @@ class Game:
 
         # List of Player objects
         self.players = None
+
+        # Winner Player object
+        self.winner = None
 
         # Current player
         self.current_turn = 0
@@ -134,10 +143,11 @@ class Game:
             self.events()
             self.draw()
             self.clock.tick(60)
-            if self.players and len(self.players) <= 1:
-                self.gameplay_stage = self.HOLD
+            if self.players and len(self.players) <= 1\
+                    and self.game_state != self.MAIN_MENU:
+                self.gameplay_stage = self.GAME_OVER
+                self.winner = self.players[0]
                 self.draw_win_window()
-                print("Win Window")
             elif (self.gameplay_stage == self.DRAFT or
                   self.gameplay_stage == self.ATTACK or
                   self.gameplay_stage == self.FORTIFY) and len(self.players) > 1 and \
@@ -189,6 +199,7 @@ class Game:
             self.map.draw()
             self.draw_buttons()
             self.next_phase_button.draw(self.screen)
+            self.draw_card_bonus_info()
             if self.text_box_open and self.gameplay_stage == self.EDIT:
                 self.draw_change_name_window()
             if self.gameplay_stage == self.CHOOSE_FIRST_TURN:
@@ -197,10 +208,17 @@ class Game:
             elif self.gameplay_stage == self.ATTACK:
                 self.dice.draw_dice_w(self.defend_dice)
                 self.dice.draw_dice_r(self.attack_dice)
-            if self.secret_mission_mode and self.players[self.current_turn].mission_id:
+            if self.secret_mission_mode and self.players[self.current_turn].mission_id \
+                    and self.game_state != self.MAIN_MENU:
                 if self.mission_card.mission_completed(self.players[self.current_turn].mission_id,
                                                        self.players[self.current_turn]):
+                    self.winner = self.players[self.current_turn]
                     self.draw_win_window()
+                    self.gameplay_stage = self.GAME_OVER
+            if self.gameplay_stage == self.HOLD:
+                self.draw_edit_map_notification()
+            elif self.gameplay_stage == self.EDIT:
+                self.draw_clicks_notification()
 
     def check_state_main_menu(self):
         """
@@ -269,7 +287,6 @@ class Game:
         else:
             self.current_turn += 1
         self.map.change_turn(self.current_turn)
-        print(f"Current turn: {self.current_turn}, Players in game: {len(self.players)}")
         if isinstance(self.players[self.current_turn], AI) and self.gameplay_stage == self.SETUP:
             self.handle_ai_actions()
 
@@ -488,6 +505,34 @@ class Game:
             country.add_troops(1)
             current_player.remove_avail_troop()
 
+    def get_card_bonus(self):
+        """
+        Get next card trade bonus number
+        :return: troops_to_add: int
+        """
+        nth_set = self.nth_set + 1
+        if 0 < nth_set < 6:
+            troops_to_add = nth_set * 2 + 2
+        elif nth_set == 6:
+            troops_to_add = 12
+        else:
+            troops_to_add = (nth_set - 6) * 5 + 15
+        return troops_to_add
+
+    def draw_card_bonus_info(self):
+        """
+        Draw next card trade bonus info
+        :return:
+        """
+        draw_text(
+            self.screen,
+            f"Next Trade: {self.get_card_bonus()}",
+            30,
+            (0, 0, 0),
+            int(self.screen.get_width() * 0.88),
+            int(self.screen.get_height() * 0.05)
+        )
+
     def occupy_country(self, country):
         """
         Gives certain amount of available troops to the players.
@@ -597,7 +642,6 @@ class Game:
                             self.current_turn -= 1
                             self.map.current_turn -= 1
                         self.players.remove(self.captured_country.owner)
-                        #self.map.player_profiles.remove(self.captured_country.owner)
                 self.captured_country.set_owner(current_player)
                 current_player.add_country(self.captured_country)
                 self.captured_country.add_troops(len(a))
@@ -605,7 +649,8 @@ class Game:
                 self.highlight_captured(True)
                 self.captured = True
                 self.captured_countries_in_turn += 1
-            self.map.drop_highlights()
+            if not self.captured:
+                self.map.drop_highlights()
             self.selected = False
         else:
             print("You can only attack neighbour countries")
@@ -624,14 +669,24 @@ class Game:
                 pass
             elif country.troops < 2:
                 pass
-            else:
+            elif self.gameplay_stage == self.ATTACK and not current_player.all_neighbours_owned(country, self.map):
                 self.selected = True
                 self.captured = False
                 self.country_selected = country
-                if self.gameplay_stage == self.ATTACK:
-                    self.highlight_neighbour_countries(self.country_selected, True)
-                elif self.gameplay_stage == self.FORTIFY:
-                    self.highlight_connected_countries(self.country_selected, True)
+                self.highlight_neighbour_countries(self.country_selected, True)
+            elif self.gameplay_stage == self.FORTIFY:
+                self.selected = True
+                self.captured = False
+                self.country_selected = country
+                self.highlight_connected_countries(self.country_selected, True)
+            # else:
+            #     self.selected = True
+            #     self.captured = False
+            #     self.country_selected = country
+            #     if self.gameplay_stage == self.ATTACK:
+            #         self.highlight_neighbour_countries(self.country_selected, True)
+            #     elif self.gameplay_stage == self.FORTIFY:
+            #         self.highlight_connected_countries(self.country_selected, True)
         else:
             self.selected = True
             self.country_selected = country
@@ -676,14 +731,12 @@ class Game:
         :return:
         """
         neighbour_country_names = self.map.get_neighbours(country.get_name())
-        print(f"Current turn is: {self.current_turn}")
-        if self.players[self.current_turn].countries:
-            for c in self.map.countries:
-                if (
-                        c.get_name() in neighbour_country_names
-                        and c not in self.players[self.current_turn].countries
-                ):
-                    c.highlighted = True if highlight else False
+        for c in self.map.countries:
+            if (
+                    c.get_name() in neighbour_country_names
+                    and c not in self.players[self.current_turn].countries
+            ):
+                c.highlighted = True if highlight else False
 
     def deal_initial_troops_to_players(self):
         """
@@ -721,7 +774,6 @@ class Game:
             if isinstance(self.players[self.current_turn], AI):
                 self.handle_ai_actions()
         elif self.gameplay_stage == self.SETUP and self.players[self.current_turn].troops_available == 0:
-            # self.gameplay_stage = self.ATTACK
             self.gameplay_stage = self.DRAFT
             # Give bonus troops for number of countries
             num_of_avail_troops = self.players[self.current_turn].calculate_num_of_draft_troops()
@@ -833,9 +885,19 @@ class Game:
         :return:
         """
         self.screen.blit(self.win_window, (0, 0))
-        if self.players:
-            for player in self.players:
-                self.players.remove(player)
+        draw_text(self.screen,
+                  f"{self.winner.color_str} Won!",
+                  int(self.screen.get_height() * 0.08),
+                  (128, 25, 25),
+                  int(self.screen.get_width() * 0.5 - 60),
+                  int(self.screen.get_height() * 0.5),
+                  font=self.font1)
+
+    def draw_edit_map_notification(self):
+        self.screen.blit(self.notif_edit_img, (10, self.screen.get_height() - self.notif_edit_img.get_height() - 10))
+
+    def draw_clicks_notification(self):
+        self.screen.blit(self.notif_click_img, (10, self.screen.get_height() - self.notif_click_img.get_height() - 10))
 
     def set_option_window(self):
         """
@@ -949,8 +1011,8 @@ class Game:
             for player in self.players:
                 if player.troops_available > 0:
                     self.pass_turn()
+                    break
         elif self.gameplay_stage == self.DRAFT:
-            print("Draft")
             if ai.have_set_of_cards():
                 self.nth_set += 1
                 ai.sell_cards(self.nth_set, self.deck)

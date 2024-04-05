@@ -36,29 +36,6 @@ class Deck:
         self.screen = screen
         self.cards = []
 
-    def create_c(self, map_):
-        """
-        Create cards for the deck based on the provided map
-        :param map_: The map object containing countries
-        :return: [NONE]
-        """
-        width = int(self.screen.get_height() * 0.07)
-        infantry = pygame.transform.scale(infantry_image, (width, width))
-        cavalry = pygame.transform.scale(cavalry_image, (width, width))
-        artillery = pygame.transform.scale(artillery_image, (width, width))
-        units = ["Infantry"] * 14 + ["Cavalry"] * 14 + ["Artillery"] * 14 + ["Wild"] * 2
-        for country, unit in zip_longest(map_.countries, units):
-            if unit == "Infantry":
-                self.cards.append(Card(self.screen, country.get_name(), unit, infantry))
-            elif unit == "Cavalry":
-                self.cards.append(Card(self.screen, country.get_name(), unit, cavalry))
-            elif unit == "Artillery":
-                self.cards.append(
-                    Card(self.screen, country.get_name(), unit, artillery)
-                )
-            elif unit == "Wild":
-                self.cards.append(Card(self.screen, None, unit, None))
-
     def create_cards(self, map_):
         card_images = self.load_card_images()
         width = int(self.screen.get_height() * 0.05)

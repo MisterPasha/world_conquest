@@ -1,18 +1,19 @@
 import pygame  # Import the pygame library for game development
 import random  # RNG
-from main_menu import draw_text  # Import draw_text class from main_menu
+from main_menu import draw_text, draw_text2  # Import draw_text class from main_menu
 from itertools import (
     zip_longest,
 )  # Import zip_longest for handling iterators of unequal length
+import os
 
 # Initialize pygame
 pygame.init()
 
 # Load images
-infantry_image = pygame.image.load("images\\infantry.jpg")
+infantry_image = pygame.image.load("images\\infantry.png")
 cavalry_image = pygame.image.load("images\\cavalry.png")
-artillery_image = pygame.image.load("images\\artillery.jpg")
-card_image = pygame.image.load("images\\card.png")
+artillery_image = pygame.image.load("images\\artillery.png")
+card_image = pygame.image.load("images\\empty_card.png")
 
 mission_cards_ = [
     pygame.image.load("mission_cards\\task1.png"),
@@ -35,7 +36,7 @@ class Deck:
         self.screen = screen
         self.cards = []
 
-    def create_cards(self, map_):
+    def create_c(self, map_):
         """
         Create cards for the deck based on the provided map
         :param map_: The map object containing countries
@@ -58,6 +59,34 @@ class Deck:
             elif unit == "Wild":
                 self.cards.append(Card(self.screen, None, unit, None))
 
+    def create_cards(self, map_):
+        card_images = self.load_card_images()
+        width = int(self.screen.get_height() * 0.05)
+        infantry = pygame.transform.scale(infantry_image, (width, width))
+        cavalry = pygame.transform.scale(cavalry_image, (width, width))
+        artillery = pygame.transform.scale(artillery_image, (width, width))
+        units = ["Infantry"] * 14 + ["Cavalry"] * 14 + ["Artillery"] * 14 + ["Wild"] * 2
+        for country, unit, card_img in zip_longest(map_.countries, units, card_images):
+            if unit == "Infantry":
+                self.cards.append(Card(self.screen, card_img, country.get_name(), unit, infantry))
+            elif unit == "Cavalry":
+                self.cards.append(Card(self.screen, card_img, country.get_name(), unit, cavalry))
+            elif unit == "Artillery":
+                self.cards.append(
+                    Card(self.screen, card_img, country.get_name(), unit, artillery)
+                )
+            elif unit == "Wild":
+                self.cards.append(Card(self.screen, card_image, None, unit, None))
+
+    def load_card_images(self):
+        folder = "card_images"
+        images = []
+        for filename in os.listdir(folder):
+            img = pygame.image.load(os.path.join(folder, filename))
+            if img is not None:
+                images.append(img)
+        return images
+
     def get_card(self):
         """
         Get a random card from the deck
@@ -69,7 +98,7 @@ class Deck:
 
 
 class Card:
-    def __init__(self, screen, country_name, army_type, img):
+    def __init__(self, screen, card_img, country_name, army_type, img):
         """
         Initialize a Card object
 
@@ -82,10 +111,10 @@ class Card:
         self.country_name = country_name
         self.army_type = army_type
         self.army_type_image = img
-        self.width = int(self.screen.get_width() * 0.065)
-        self.height = int(self.screen.get_height() * 0.17)
-        self.card = pygame.transform.scale(card_image, (self.width, self.height))
-        icon_width = int(self.width * 0.6)
+        self.width = int(self.screen.get_width() * 0.07)
+        self.height = int(self.screen.get_height() * 0.19)
+        self.card = pygame.transform.scale(card_img, (self.width, self.height))
+        icon_width = int(self.width * 0.4)
         self.infantry = pygame.transform.scale(infantry_image, (icon_width, icon_width))
         self.cavalry = pygame.transform.scale(cavalry_image, (icon_width, icon_width))
         self.artillery = pygame.transform.scale(
@@ -102,27 +131,27 @@ class Card:
         if self.army_type == "Wild":
             self.screen.blit(self.card, (x, y))
             self.screen.blit(
-                self.infantry, (x + int(self.width * 0.2), y + int(self.height * 0.1))
+                self.infantry, (x + int(self.width * 0.3), y + int(self.height * 0.1))
             )
             self.screen.blit(
-                self.artillery, (x + int(self.width * 0.2), y + int(self.height * 0.4))
+                self.artillery, (x + int(self.width * 0.3), y + int(self.height * 0.4))
             )
             self.screen.blit(
-                self.cavalry, (x + int(self.width * 0.2), y + int(self.height * 0.7))
+                self.cavalry, (x + int(self.width * 0.3), y + int(self.height * 0.7))
             )
         else:
             self.screen.blit(self.card, (x, y))
-            draw_text(
+            draw_text2(
                 self.screen,
                 self.country_name,
-                16,
+                int(self.height * 0.13),
                 (0, 0, 0),
-                x + int(self.width * 0.2),
-                y + int(self.width * 0.2),
+                x + int(self.width * 0.18),
+                y + int(self.width * 0.07),
             )
             self.screen.blit(
                 self.army_type_image,
-                (x + int(self.width * 0.2), y + int(self.height * 0.5)),
+                (x + int(self.width * 0.27), y + int(self.height * 0.65)),
             )
 
 

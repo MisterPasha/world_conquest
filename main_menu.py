@@ -34,6 +34,46 @@ def draw_text(
     screen.blit(text_surface, text_rect)
 
 
+def draw_text2(screen, text, size, color, x, y, font=None):
+    """
+    Draw text on the screen with line breaks on spaces if the text exceeds a certain width.
+    :param screen: Pygame screen surface
+    :param text: Text to display
+    :param size: Font size
+    :param color: Color of the text
+    :param x: Initial X-coordinate of the text
+    :param y: Initial Y-coordinate of the text
+    :param font: Font to use
+    :return: None
+    """
+    max_line_width = 10
+    font = pygame.font.Font(font, size)
+    words = text.split(' ')
+    line = ''
+    for word in words:
+        # Check if adding the next word exceeds the line width
+        test_line = line + word + ' '
+        test_surface = font.render(test_line, True, color)
+
+        if test_surface.get_width() > max_line_width:
+            # If the line is too wide, draw the current line and start a new one
+            text_surface = font.render(line, True, color)
+            text_rect = text_surface.get_rect()
+            text_rect.topleft = (x, y)
+            screen.blit(text_surface, text_rect)
+            # Move to the next line
+            y += text_surface.get_height()
+            line = word + ' '
+        else:
+            line = test_line
+
+    # Draw the last line
+    text_surface = font.render(line, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.topleft = (x, y)
+    screen.blit(text_surface, text_rect)
+
+
 class MainMenu:
     # All images
     background_image = pygame.image.load("images\\background_main_high.png")

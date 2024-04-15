@@ -6,7 +6,7 @@ from main_menu import MainMenu
 from main_menu import draw_text
 from player import Human, AI
 import threading
-import os
+import os  # provides functions for interacting with the operating system
 
 pygame.init()
 

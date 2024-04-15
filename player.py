@@ -4,7 +4,7 @@ from dice import Dice  # Import Dice class from dice
 from collections import Counter
 from map import create_continents
 from deck import MissionCards
-import random
+import random  # RNG
 import math
 
 # Initialize pygame

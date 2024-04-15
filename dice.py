@@ -101,3 +101,5 @@ class Dice:
             dice_dict["w"][i + 1] = die_w
             dice_dict["r"][i + 1] = die_r
         return dice_dict
+
+# Finished

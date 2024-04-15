@@ -1,6 +1,6 @@
 import pygame  # Import the pygame library for game development
 import random  # RNG
-from main_menu import MainMenu # Import MainMenu class from main_menu
+from main_menu import MainMenu  # Import MainMenu class from main_menu
 from main_menu import draw_text  # Import draw_text class from main_menu
 from map import Map  # Import the Map class from map
 from dice import Dice  # Import the Dice class from dice, for rolling dice
@@ -144,7 +144,7 @@ class Game:
             self.events()
             self.draw()
             self.clock.tick(60)
-            if self.players and len(self.players) <= 1\
+            if self.players and len(self.players) <= 1 \
                     and self.game_state != self.MAIN_MENU:
                 self.gameplay_stage = self.GAME_OVER
                 self.winner = self.players[0]
@@ -154,7 +154,7 @@ class Game:
                   self.gameplay_stage == self.FORTIFY) and len(self.players) > 1 and \
                     isinstance(self.players[self.current_turn], AI):
                 self.switch_to_next_phase()
-                #pygame.time.delay(1000)
+                # pygame.time.delay(1000)
             pygame.display.update()  # pygame.display.flip() ?
 
     # Controls all event types

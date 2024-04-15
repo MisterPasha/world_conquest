@@ -44,7 +44,7 @@ def draw_text2(screen, text, size, color, x, y, font=None):
     :param x: Initial X-coordinate of the text
     :param y: Initial Y-coordinate of the text
     :param font: Font to use
-    :return: None
+    :return: [NONE]
     """
     max_line_width = 10
     font = pygame.font.Font(font, size)
@@ -202,7 +202,7 @@ class MainMenu:
     def draw_faq_menu(self):
         """
         Draw the FAQ menu on the screen
-        :return:
+        :return: [NONE]
         """
         self.screen.blit(
             self.new_game_paper,
@@ -258,6 +258,11 @@ class MainMenu:
         )
 
     def add_player_type(self, type_):
+        """
+        Adds a player type
+        :param type_: The type of player to add
+        :return: [NONE]
+        """
         self.player_types.append(type_)
 
     def set_opt_menu(self, state):
@@ -326,7 +331,6 @@ class MainMenu:
 
     def get_player_types(self):
         """
-
         :return: self.player_types: list
         """
         return self.player_types
@@ -481,8 +485,8 @@ class MainMenu:
 
     def change_secret_mission_mode(self):
         """
-
-        :return:
+        Toggles the secret mission mode
+        :return: [NONE]
         """
         if self.players + self.AI_agents > 2:
             self.secret_mission_mode = not self.secret_mission_mode
@@ -615,3 +619,5 @@ class MainMenu:
             b.change_image(self.P_or_AI_button_clicked)
             b.clicked = True
         return buttons1 + buttons2
+
+# Finished

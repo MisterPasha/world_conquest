@@ -154,7 +154,7 @@ class Game:
                   self.gameplay_stage == self.FORTIFY) and len(self.players) > 1 and \
                     isinstance(self.players[self.current_turn], AI):
                 self.switch_to_next_phase()
-                # pygame.time.delay(1000)
+                pygame.time.delay(1000)
             pygame.display.update()  # pygame.display.flip() ?
 
     # Controls all event types

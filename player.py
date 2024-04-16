@@ -430,9 +430,9 @@ class AI(Player):
         This function is choosing attacking country and defending country.
         First it finds all countries that bordering enemy territories and filters out potential countries to attack
         by checking their number of troops, it will not consider enemy countries that have higher number of troops
-        or have more than 80% of attacking country troops, as it can lead to loosing the battle.
+        or have more than 80% of attacking country troops, as it can lead to losing the battle.
         If it cannot find any suitable countries to attack it won't attack at all.
-        In 70% chance it will attack the country with least number of troops. And 30% chance it will choose randomly.
+        In 70% chance it will attack the country with the least number of troops. And 30% chance it will choose randomly.
 
         :param map_: Map
         :return: Attacking Country, Defending Country

@@ -1,11 +1,11 @@
 import pygame  # Import the pygame library for game development
 from main_menu import draw_text  # Import draw_text function from main_menu
 from dice import Dice  # Import Dice class from dice
-from collections import Counter
-from map import create_continents
-from deck import MissionCards
-import random
-import math
+from collections import Counter  # Import Counter class from collections
+from map import create_continents  # Import create_continents function from map
+from deck import MissionCards  # Import MissionCards class from deck
+import random  # RNG
+import math # Import math module
 
 # Initialize pygame
 pygame.init()
@@ -68,7 +68,7 @@ class Player:
         """
         Removes a troop
         :param num_of_troops:
-        :return:
+        :return: [NONE]
         """
         self.troops_holds -= num_of_troops
 
@@ -94,7 +94,6 @@ class Player:
         Removes one troop from available troops and adds it to held troops.
         'self.troops_available' & 'self.troops_holds' is updated
         :return: [NONE]
-        d
         """
         self.troops_available -= 1
         self.troops_holds += 1
@@ -177,7 +176,7 @@ class Player:
     def find_continents(self):
         """
         Checks which continents player holds and adds/removes them to the list
-        :return:
+        :return: [NONE]
         """
         continents = create_continents()
         continents_held = []
@@ -206,7 +205,7 @@ class Player:
         Removes set of same cards from the hand
         :param army_type:
         :param deck:
-        :return:
+        :return: [NONE]
         """
         counter = 0
         bonus_counter = 0
@@ -237,7 +236,7 @@ class Player:
         """
         removes a set of distinct cards from the hand
         :param deck:
-        :return:
+        :return: [NONE]
         """
         distinct_types = set()
         distinct_cards = []
@@ -263,7 +262,7 @@ class Player:
         Exchanges set of cards for the troops
         :param nth_set:
         :param deck:
-        :return:
+        :return: [NONE]
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
@@ -520,3 +519,5 @@ class AI(Player):
                 num_of_troops = random.randint(1, fortify_from_country.troops - 1)
                 fortify_to_country.add_troops(num_of_troops)
                 fortify_from_country.remove_troops(num_of_troops)
+
+# Finished

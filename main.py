@@ -34,3 +34,5 @@ pygame.display.flip()
 
 # Quit pygame
 pygame.quit()
+
+# Finished

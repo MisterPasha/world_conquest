@@ -4,7 +4,7 @@ from main_menu import draw_text, draw_text2  # Import draw_text class from main_
 from itertools import (
     zip_longest,
 )  # Import zip_longest for handling iterators of unequal length
-import os
+import os  # provides functions for interacting with the operating system
 
 # Initialize pygame
 pygame.init()
@@ -37,6 +37,11 @@ class Deck:
         self.cards = []
 
     def create_cards(self, map_):
+        """
+        Creates cards for each country on the map with corresponding units and images
+        :param map_: map object (with the country >.>)
+        :return: [NONE]
+        """
         card_images = self.load_card_images()
         width = int(self.screen.get_height() * 0.05)
         infantry = pygame.transform.scale(infantry_image, (width, width))
@@ -56,6 +61,10 @@ class Deck:
                 self.cards.append(Card(self.screen, card_image, None, unit, None))
 
     def load_card_images(self):
+        """
+        Loads card images from the 'card_images' folder
+        :return: 'images' (loaded cards)
+        """
         folder = "card_images"
         images = []
         for filename in os.listdir(folder):
@@ -184,9 +193,9 @@ class MissionCards:
             :return: 'True' if the player has completed the mission, 'False' otherwise.
             """
             if (
-                "Europe" in player_continents
-                and "Australia" in player_continents
-                and len(player_continents) >= 3
+                    "Europe" in player_continents
+                    and "Australia" in player_continents
+                    and len(player_continents) >= 3
             ):
                 return True
             return False
@@ -198,9 +207,9 @@ class MissionCards:
             :return: 'True' if the player has completed the mission, 'False' otherwise.
             """
             if (
-                "Europe" in player_continents
-                and "South America" in player_continents
-                and len(player_continents) >= 3
+                    "Europe" in player_continents
+                    and "South America" in player_continents
+                    and len(player_continents) >= 3
             ):
                 return True
             return False
@@ -232,8 +241,8 @@ class MissionCards:
             :return: 'True' if the player has completed the mission, 'False' otherwise.
             """
             if (
-                "North America" in player_continents
-                and "Australia" in player_continents
+                    "North America" in player_continents
+                    and "Australia" in player_continents
             ):
                 return True
             return False
@@ -289,3 +298,5 @@ class MissionCards:
         }
 
         return mission_dict[mission_id](player)
+
+# Finished

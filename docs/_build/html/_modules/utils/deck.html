@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils.deck &mdash; World Conquest 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            World Conquest
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Software_Eng</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">World Conquest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">utils.deck</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for utils.deck</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>  <span class="c1"># Import the pygame library for game development</span>
+<span class="kn">import</span> <span class="nn">random</span>  <span class="c1"># RNG</span>
+<span class="kn">from</span> <span class="nn">main_menu</span> <span class="kn">import</span> <span class="n">draw_text</span><span class="p">,</span> <span class="n">draw_text2</span>  <span class="c1"># Import draw_text class from main_menu</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">zip_longest</span><span class="p">,</span>
+<span class="p">)</span>  <span class="c1"># Import zip_longest for handling iterators of unequal length</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Initialize pygame</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="c1"># Load images</span>
+<span class="n">infantry_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">infantry.png&quot;</span><span class="p">)</span>
+<span class="n">cavalry_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">cavalry.png&quot;</span><span class="p">)</span>
+<span class="n">artillery_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">artillery.png&quot;</span><span class="p">)</span>
+<span class="n">card_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">empty_card.png&quot;</span><span class="p">)</span>
+
+<span class="n">mission_cards_</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task1.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task2.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task3.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task4.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task5.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task6.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task7.png&quot;</span><span class="p">),</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">mission_cards</span><span class="se">\\</span><span class="s2">task8.png&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="Deck">
+<a class="viewcode-back" href="../../utils.html#utils.deck.Deck">[docs]</a>
+<span class="k">class</span> <span class="nc">Deck</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Deck object</span>
+<span class="sd">        :param screen: The Pygame screen surface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Deck.create_cards">
+<a class="viewcode-back" href="../../utils.html#utils.deck.Deck.create_cards">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_cards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_</span><span class="p">):</span>
+        <span class="n">card_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_card_images</span><span class="p">()</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">)</span>
+        <span class="n">infantry</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">infantry_image</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">))</span>
+        <span class="n">cavalry</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">cavalry_image</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">))</span>
+        <span class="n">artillery</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">artillery_image</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">))</span>
+        <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Infantry&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">14</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Cavalry&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">14</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Artillery&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">14</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Wild&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">country</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">card_img</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="n">map_</span><span class="o">.</span><span class="n">countries</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">card_images</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;Infantry&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">card_img</span><span class="p">,</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">unit</span><span class="p">,</span> <span class="n">infantry</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;Cavalry&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">card_img</span><span class="p">,</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">unit</span><span class="p">,</span> <span class="n">cavalry</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;Artillery&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">Card</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">card_img</span><span class="p">,</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">unit</span><span class="p">,</span> <span class="n">artillery</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;Wild&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">card_image</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Deck.load_card_images">
+<a class="viewcode-back" href="../../utils.html#utils.deck.Deck.load_card_images">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_card_images</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">folder</span> <span class="o">=</span> <span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">card_images&quot;</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">images</span></div>
+
+
+<div class="viewcode-block" id="Deck.get_card">
+<a class="viewcode-back" href="../../utils.html#utils.deck.Deck.get_card">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_card</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a random card from the deck</span>
+<span class="sd">        :return: card</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cards</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cards</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">card</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Card">
+<a class="viewcode-back" href="../../utils.html#utils.deck.Card">[docs]</a>
+<span class="k">class</span> <span class="nc">Card</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">card_img</span><span class="p">,</span> <span class="n">country_name</span><span class="p">,</span> <span class="n">army_type</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Card object</span>
+
+<span class="sd">        :param screen: The Pygame screen surface</span>
+<span class="sd">        :param country_name: The name of the country associated with the card</span>
+<span class="sd">        :param army_type: The type of army associated with the card. (e.g., Infantry, Cavalry, Artillery)</span>
+<span class="sd">        :param img: The image representing the army type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country_name</span> <span class="o">=</span> <span class="n">country_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">army_type</span> <span class="o">=</span> <span class="n">army_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">army_type_image</span> <span class="o">=</span> <span class="n">img</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.19</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">card_img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="n">icon_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infantry</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">infantry_image</span><span class="p">,</span> <span class="p">(</span><span class="n">icon_width</span><span class="p">,</span> <span class="n">icon_width</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cavalry</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">cavalry_image</span><span class="p">,</span> <span class="p">(</span><span class="n">icon_width</span><span class="p">,</span> <span class="n">icon_width</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artillery</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">artillery_image</span><span class="p">,</span> <span class="p">(</span><span class="n">icon_width</span><span class="p">,</span> <span class="n">icon_width</span><span class="p">)</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Card.draw">
+<a class="viewcode-back" href="../../utils.html#utils.deck.Card.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the card on the screen</span>
+<span class="sd">        :param x: The x-coordinate</span>
+<span class="sd">        :param y: The y-coordinate</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">army_type</span> <span class="o">==</span> <span class="s2">&quot;Wild&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">card</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">infantry</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.3</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">artillery</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.3</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cavalry</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.3</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.7</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">card</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="n">draw_text2</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_name</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.13</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.18</span><span class="p">),</span>
+                <span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">army_type_image</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.27</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.65</span><span class="p">)),</span>
+            <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MissionCards">
+<a class="viewcode-back" href="../../utils.html#utils.deck.MissionCards">[docs]</a>
+<span class="k">class</span> <span class="nc">MissionCards</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes MissionCards object</span>
+<span class="sd">        :param screen: The pygame screen to draw the mission cards on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.22</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission_cards</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">card</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">card</span> <span class="ow">in</span> <span class="n">mission_cards_</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="MissionCards.draw">
+<a class="viewcode-back" href="../../utils.html#utils.deck.MissionCards.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">player_to_destroy</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws a mission card on the screen</span>
+<span class="sd">        :param id_: The id of the mission card to draw</span>
+<span class="sd">        :param x: The x-coordinate where the mission card will be drawn</span>
+<span class="sd">        :param y: The y-coordinate where the mission card will be drawn</span>
+<span class="sd">        :param player_to_destroy: The player whose armies need to be destroyed for the mission</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_cards</span><span class="p">[</span><span class="n">id_</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">id_</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="n">draw_text</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                <span class="n">player_to_destroy</span><span class="p">,</span>
+                <span class="mi">18</span><span class="p">,</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">x</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+                <span class="n">y</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">),</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MissionCards.mission_completed">
+<a class="viewcode-back" href="../../utils.html#utils.deck.MissionCards.mission_completed">[docs]</a>
+    <span class="k">def</span> <span class="nf">mission_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mission_id</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a player has completed a mission</span>
+<span class="sd">        :param mission_id:</span>
+<span class="sd">        :param player: The player object whose completion status is to be checked.</span>
+<span class="sd">        :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">player_continents</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">continent</span><span class="o">.</span><span class="n">continent_name</span> <span class="k">for</span> <span class="n">continent</span> <span class="ow">in</span> <span class="n">player</span><span class="o">.</span><span class="n">continents</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Capture Europe, Australia and one other continent</span>
+        <span class="k">def</span> <span class="nf">mission1</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 1</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;Europe&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span>
+                <span class="ow">and</span> <span class="s2">&quot;Australia&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">player_continents</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Capture Europe, South America and one other continent</span>
+        <span class="k">def</span> <span class="nf">mission2</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 2</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;Europe&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span>
+                <span class="ow">and</span> <span class="s2">&quot;South America&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">player_continents</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Capture North America and Africa</span>
+        <span class="k">def</span> <span class="nf">mission3</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 3</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;North America&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span> <span class="ow">and</span> <span class="s2">&quot;Africa&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Capture Asia and South America</span>
+        <span class="k">def</span> <span class="nf">mission4</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 4</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;Asia&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span> <span class="ow">and</span> <span class="s2">&quot;South America&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Capture North America and Australia</span>
+        <span class="k">def</span> <span class="nf">mission5</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 5</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;North America&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span>
+                <span class="ow">and</span> <span class="s2">&quot;Australia&quot;</span> <span class="ow">in</span> <span class="n">player_continents</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Capture 24 territories</span>
+        <span class="k">def</span> <span class="nf">mission6</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 6</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">player_</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">24</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Destroy all armies of a named opponent or, in case being the named player oneself -</span>
+        <span class="c1"># Capture 24 countries</span>
+        <span class="k">def</span> <span class="nf">mission7</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 7</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">player_</span><span class="o">.</span><span class="n">player_to_destroy</span> <span class="o">==</span> <span class="n">player_</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">player_</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">24</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">player_</span><span class="o">.</span><span class="n">player_to_destroy</span><span class="o">.</span><span class="n">playing</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Capture 18 territories and occupy each with 2 troops</span>
+        <span class="k">def</span> <span class="nf">mission8</span><span class="p">(</span><span class="n">player_</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a player has completed a mission 8</span>
+<span class="sd">            :return: &#39;True&#39; if the player has completed the mission, &#39;False&#39; otherwise.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">player_</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">troops</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">mission_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="n">mission1</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="n">mission2</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="n">mission3</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="n">mission4</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="n">mission5</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="n">mission6</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">:</span> <span class="n">mission7</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="n">mission8</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">mission_dict</span><span class="p">[</span><span class="n">mission_id</span><span class="p">](</span><span class="n">player</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Team 13.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

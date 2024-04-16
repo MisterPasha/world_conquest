@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils package &mdash; World Conquest 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=ce74c6a2"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="setup module" href="setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            World Conquest
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Software_Eng</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.button">utils.button module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.button.Button"><code class="docutils literal notranslate"><span class="pre">Button</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.countries">utils.countries module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.countries.Continent"><code class="docutils literal notranslate"><span class="pre">Continent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.countries.Country"><code class="docutils literal notranslate"><span class="pre">Country</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.countries.create_continents"><code class="docutils literal notranslate"><span class="pre">create_continents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.countries.create_neighbours"><code class="docutils literal notranslate"><span class="pre">create_neighbours()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.deck">utils.deck module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.deck.Card"><code class="docutils literal notranslate"><span class="pre">Card</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.deck.Deck"><code class="docutils literal notranslate"><span class="pre">Deck</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.deck.MissionCards"><code class="docutils literal notranslate"><span class="pre">MissionCards</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.dice">utils.dice module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.dice.Dice"><code class="docutils literal notranslate"><span class="pre">Dice</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.game">utils.game module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.game.Game"><code class="docutils literal notranslate"><span class="pre">Game</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#utils-main-module">utils.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.main_menu">utils.main_menu module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.main_menu.MainMenu"><code class="docutils literal notranslate"><span class="pre">MainMenu</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.main_menu.draw_text"><code class="docutils literal notranslate"><span class="pre">draw_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.main_menu.draw_text2"><code class="docutils literal notranslate"><span class="pre">draw_text2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.map">utils.map module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.map.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.player">utils.player module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.player.AI"><code class="docutils literal notranslate"><span class="pre">AI</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.player.Human"><code class="docutils literal notranslate"><span class="pre">Human</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.player.Player"><code class="docutils literal notranslate"><span class="pre">Player</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#utils-test-module">utils.test module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">World Conquest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Software_Eng</a></li>
+      <li class="breadcrumb-item active">utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="utils-package">
+<h1>utils package<a class="headerlink" href="#utils-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-utils.button">
+<span id="utils-button-module"></span><h2>utils.button module<a class="headerlink" href="#module-utils.button" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.button.Button">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.button.</span></span><span class="sig-name descname"><span class="pre">Button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hover_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.button.Button.change_image">
+<span class="sig-name descname"><span class="pre">change_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button.change_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button.change_image" title="Link to this definition"></a></dt>
+<dd><p>Change the button’s current image to a new image
+:param new_image: New image surface
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.button.Button.change_pos">
+<span class="sig-name descname"><span class="pre">change_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button.change_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button.change_pos" title="Link to this definition"></a></dt>
+<dd><p>Changes Button position with new x and y
+:param new_x:
+:param new_y:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.button.Button.change_text">
+<span class="sig-name descname"><span class="pre">change_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button.change_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button.change_text" title="Link to this definition"></a></dt>
+<dd><p>Change the text displayed on the button
+:param new_text: New text for the button
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.button.Button.check_click">
+<span class="sig-name descname"><span class="pre">check_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button.check_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button.check_click" title="Link to this definition"></a></dt>
+<dd><p>If click on self object is detected it triggers assigned function.
+Check if the button is clicked and execute its action if assigned
+:param event: Pygame event
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.button.Button.click">
+<span class="sig-name descname"><span class="pre">click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unclicked_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clicked_image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button.click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button.click" title="Link to this definition"></a></dt>
+<dd><p>Specific feature for “Switch” type buttons.
+Toggle between clicked and unclicked states of the button
+:param unclicked_image: Image surface for unclicked state
+:param clicked_image: Image surface for clicked state
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.button.Button.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/button.html#Button.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.button.Button.draw" title="Link to this definition"></a></dt>
+<dd><p>Change image when cursor hovers button
+:param screen: Pygame screen surface
+:return: [NONE]</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.countries">
+<span id="utils-countries-module"></span><h2>utils.countries module<a class="headerlink" href="#module-utils.countries" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.countries.Continent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.countries.</span></span><span class="sig-name descname"><span class="pre">Continent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Continent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Continent" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Continent.add_country">
+<span class="sig-name descname"><span class="pre">add_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Continent.add_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Continent.add_country" title="Link to this definition"></a></dt>
+<dd><p>Adds a country to the continent
+:param country: The name of the country to be added.
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Continent.get_bonus">
+<span class="sig-name descname"><span class="pre">get_bonus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Continent.get_bonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Continent.get_bonus" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the bonus value associated with the continent.
+:return: The bonus value for controlling the entire continent ‘bonuses[self.continent_name]’</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.countries.Country">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.countries.</span></span><span class="sig-name descname"><span class="pre">Country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.add_troops">
+<span class="sig-name descname"><span class="pre">add_troops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_troops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.add_troops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.add_troops" title="Link to this definition"></a></dt>
+<dd><p>Add troops to the country and update the button text with the new troop count
+:param num_troops: The number of troops to add
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.check_click">
+<span class="sig-name descname"><span class="pre">check_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.check_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.check_click" title="Link to this definition"></a></dt>
+<dd><p>Checks clicks for country button
+:param event:
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.draw" title="Link to this definition"></a></dt>
+<dd><p>Draws a country image with appropriate color
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.fill_with_color">
+<span class="sig-name descname"><span class="pre">fill_with_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.fill_with_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.fill_with_color" title="Link to this definition"></a></dt>
+<dd><p>Function that fills countries with specified colour
+:param image: The original image to fill
+:param color: The colour to fill the image with
+:return: The new image with the specified colour ‘final_image’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.find_country_middle">
+<span class="sig-name descname"><span class="pre">find_country_middle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.find_country_middle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.find_country_middle" title="Link to this definition"></a></dt>
+<dd><p>Ensure the image is in a format that supports per-pixel access.
+Finds a middle pixel of the country.
+:return: The coordinates of the middle pixel (‘middle_x, middle_y’), or [NONE] if no non-transparent pixels are found.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.get_name" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the name of the country
+:return: The name of the country ‘self.country_name’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.remove_troops">
+<span class="sig-name descname"><span class="pre">remove_troops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_troops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.remove_troops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.remove_troops" title="Link to this definition"></a></dt>
+<dd><p>Remove troops from the country and update the button text with the new troop count
+:param num_troops: The number of troops to remove
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.set_button">
+<span class="sig-name descname"><span class="pre">set_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.set_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.set_button" title="Link to this definition"></a></dt>
+<dd><p>Creates a country button
+:return: The button for the country ‘button’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.set_button_color">
+<span class="sig-name descname"><span class="pre">set_button_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.set_button_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.set_button_color" title="Link to this definition"></a></dt>
+<dd><p>Sets a country button with a colour of the country, but a little bit darker
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.set_color">
+<span class="sig-name descname"><span class="pre">set_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.set_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.set_color" title="Link to this definition"></a></dt>
+<dd><p>Sets an owner’s colour
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.set_highlight_color">
+<span class="sig-name descname"><span class="pre">set_highlight_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.set_highlight_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.set_highlight_color" title="Link to this definition"></a></dt>
+<dd><p>Sets a colour of the country when highlighted
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.countries.Country.set_owner">
+<span class="sig-name descname"><span class="pre">set_owner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#Country.set_owner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.Country.set_owner" title="Link to this definition"></a></dt>
+<dd><p>Set the owner of the country
+:param new_owner: The certain player
+:return: [NONE]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.countries.create_continents">
+<span class="sig-prename descclassname"><span class="pre">utils.countries.</span></span><span class="sig-name descname"><span class="pre">create_continents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#create_continents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.create_continents" title="Link to this definition"></a></dt>
+<dd><p>Creates and initializes Continent objects
+:return: A list of Continent objects ‘continents’</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.countries.create_neighbours">
+<span class="sig-prename descclassname"><span class="pre">utils.countries.</span></span><span class="sig-name descname"><span class="pre">create_neighbours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/countries.html#create_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.countries.create_neighbours" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of a country and its neighbours
+:return: ‘dictionary’ Neighbours</p>
+</dd></dl>
+
+</section>
+<section id="module-utils.deck">
+<span id="utils-deck-module"></span><h2>utils.deck module<a class="headerlink" href="#module-utils.deck" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.deck.Card">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.deck.</span></span><span class="sig-name descname"><span class="pre">Card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">card_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">country_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">army_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#Card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.Card" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.deck.Card.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#Card.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.Card.draw" title="Link to this definition"></a></dt>
+<dd><p>Draw the card on the screen
+:param x: The x-coordinate
+:param y: The y-coordinate
+:return: [NONE]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.deck.Deck">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.deck.</span></span><span class="sig-name descname"><span class="pre">Deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#Deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.Deck" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.deck.Deck.create_cards">
+<span class="sig-name descname"><span class="pre">create_cards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#Deck.create_cards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.Deck.create_cards" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.deck.Deck.get_card">
+<span class="sig-name descname"><span class="pre">get_card</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#Deck.get_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.Deck.get_card" title="Link to this definition"></a></dt>
+<dd><p>Get a random card from the deck
+:return: card</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.deck.Deck.load_card_images">
+<span class="sig-name descname"><span class="pre">load_card_images</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#Deck.load_card_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.Deck.load_card_images" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.deck.MissionCards">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.deck.</span></span><span class="sig-name descname"><span class="pre">MissionCards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#MissionCards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.MissionCards" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.deck.MissionCards.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_to_destroy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#MissionCards.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.MissionCards.draw" title="Link to this definition"></a></dt>
+<dd><p>Draws a mission card on the screen
+:param <a href="#id1"><span class="problematic" id="id2">id_</span></a>: The id of the mission card to draw
+:param x: The x-coordinate where the mission card will be drawn
+:param y: The y-coordinate where the mission card will be drawn
+:param player_to_destroy: The player whose armies need to be destroyed for the mission
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.deck.MissionCards.mission_completed">
+<span class="sig-name descname"><span class="pre">mission_completed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/deck.html#MissionCards.mission_completed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.deck.MissionCards.mission_completed" title="Link to this definition"></a></dt>
+<dd><p>Checks if a player has completed a mission
+:param mission_id:
+:param player: The player object whose completion status is to be checked.
+:return: ‘True’ if the player has completed the mission, ‘False’ otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.dice">
+<span id="utils-dice-module"></span><h2>utils.dice module<a class="headerlink" href="#module-utils.dice" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.dice.Dice">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.dice.</span></span><span class="sig-name descname"><span class="pre">Dice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/dice.html#Dice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dice.Dice" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.dice.Dice.animation">
+<span class="sig-name descname"><span class="pre">animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nums</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/dice.html#Dice.animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dice.Dice.animation" title="Link to this definition"></a></dt>
+<dd><p>Displays an animation for dice rolls
+:param nums: List of dice values rolled
+:param name: Name of the player who rolled the dice
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.dice.Dice.create_dice">
+<span class="sig-name descname"><span class="pre">create_dice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/dice.html#Dice.create_dice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dice.Dice.create_dice" title="Link to this definition"></a></dt>
+<dd><p>Prepares and returns a dictionary mapping each die face value (1 through 6) to its corresponding scaled image.
+:return: dice_dict (Dictionary mapping die face values to images)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.dice.Dice.draw_dice_r">
+<span class="sig-name descname"><span class="pre">draw_dice_r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nums</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/dice.html#Dice.draw_dice_r"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dice.Dice.draw_dice_r" title="Link to this definition"></a></dt>
+<dd><p>Draws the red dice images on the screen based on the rolls provided in <cite>nums</cite>.
+It positions each die image on the screen
+:param nums: List of dice values rolled
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.dice.Dice.draw_dice_w">
+<span class="sig-name descname"><span class="pre">draw_dice_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nums</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/dice.html#Dice.draw_dice_w"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dice.Dice.draw_dice_w" title="Link to this definition"></a></dt>
+<dd><p>Draws the white dice images on the screen based on the rolls provided in <cite>nums</cite>.
+It positions each die image on the screen
+:param nums: List of dice values rolled
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.dice.Dice.throw">
+<span class="sig-name descname"><span class="pre">throw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/dice.html#Dice.throw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dice.Dice.throw" title="Link to this definition"></a></dt>
+<dd><p>Simulates the dice roll using random integer 1-6
+:return: ‘value’ The result of the role</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.game">
+<span id="utils-game-module"></span><h2>utils.game module<a class="headerlink" href="#module-utils.game" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.game.Game">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.game.</span></span><span class="sig-name descname"><span class="pre">Game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.ATTACK">
+<span class="sig-name descname"><span class="pre">ATTACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#utils.game.Game.ATTACK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.CHOOSE_FIRST_TURN">
+<span class="sig-name descname"><span class="pre">CHOOSE_FIRST_TURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#utils.game.Game.CHOOSE_FIRST_TURN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.DRAFT">
+<span class="sig-name descname"><span class="pre">DRAFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#utils.game.Game.DRAFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.EDIT">
+<span class="sig-name descname"><span class="pre">EDIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#utils.game.Game.EDIT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.EXIT">
+<span class="sig-name descname"><span class="pre">EXIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#utils.game.Game.EXIT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.FORTIFY">
+<span class="sig-name descname"><span class="pre">FORTIFY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#utils.game.Game.FORTIFY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.GAMEPLAY_1">
+<span class="sig-name descname"><span class="pre">GAMEPLAY_1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#utils.game.Game.GAMEPLAY_1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.GAMEPLAY_2">
+<span class="sig-name descname"><span class="pre">GAMEPLAY_2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#utils.game.Game.GAMEPLAY_2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.GAME_OVER">
+<span class="sig-name descname"><span class="pre">GAME_OVER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#utils.game.Game.GAME_OVER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.HOLD">
+<span class="sig-name descname"><span class="pre">HOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#utils.game.Game.HOLD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.MAIN_MENU">
+<span class="sig-name descname"><span class="pre">MAIN_MENU</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#utils.game.Game.MAIN_MENU" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.SETUP">
+<span class="sig-name descname"><span class="pre">SETUP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#utils.game.Game.SETUP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.add_to_neighbours">
+<span class="sig-name descname"><span class="pre">add_to_neighbours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.add_to_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.add_to_neighbours" title="Link to this definition"></a></dt>
+<dd><p>Adds country to the selected country’s “Neighbours”
+This country will be considered as neighbour country and will now be able to interact with
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.attack_country">
+<span class="sig-name descname"><span class="pre">attack_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.attack_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.attack_country" title="Link to this definition"></a></dt>
+<dd><p>Simulates Attacking the country
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.button_hover_image">
+<span class="sig-name descname"><span class="pre">button_hover_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3840x1342x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.button_hover_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.button_image">
+<span class="sig-name descname"><span class="pre">button_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3840x1342x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.button_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.cancel" title="Link to this definition"></a></dt>
+<dd><p>Function for “Cancel” button in “Change country name” window.
+It cancels the input and closes window
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.change_name">
+<span class="sig-name descname"><span class="pre">change_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.change_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.change_name" title="Link to this definition"></a></dt>
+<dd><p>Changes name of the country and adapts new name in relevant data structures
+:param new_name: String
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.check_state_gameplay">
+<span class="sig-name descname"><span class="pre">check_state_gameplay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.check_state_gameplay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.check_state_gameplay" title="Link to this definition"></a></dt>
+<dd><p>Keeps track of current game states in objects and activates necessary functions during GAMEPLAY1 state
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.check_state_main_menu">
+<span class="sig-name descname"><span class="pre">check_state_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.check_state_main_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.check_state_main_menu" title="Link to this definition"></a></dt>
+<dd><p>Keeps track of current game states in objects and activates necessary functions.
+(for gameplay setup) during MAIN MENU state
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.choose_first_turn">
+<span class="sig-name descname"><span class="pre">choose_first_turn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.choose_first_turn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.choose_first_turn" title="Link to this definition"></a></dt>
+<dd><p>This function handles the decision on which player goes first
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.create_buttons">
+<span class="sig-name descname"><span class="pre">create_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.create_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.create_buttons" title="Link to this definition"></a></dt>
+<dd><p>Creates all necessary buttons for gameplay.
+So far just back button
+:return: buttons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.create_next_phase_button">
+<span class="sig-name descname"><span class="pre">create_next_phase_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.create_next_phase_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.create_next_phase_button" title="Link to this definition"></a></dt>
+<dd><p>Creates a button to switch between phases
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.deal_initial_troops_to_players">
+<span class="sig-name descname"><span class="pre">deal_initial_troops_to_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.deal_initial_troops_to_players"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.deal_initial_troops_to_players" title="Link to this definition"></a></dt>
+<dd><p>Depending on number of players it deals different amount of initial troops during setup
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.deal_mission_cards">
+<span class="sig-name descname"><span class="pre">deal_mission_cards</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.deal_mission_cards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.deal_mission_cards" title="Link to this definition"></a></dt>
+<dd><p>Randomly deals mission cards to the players
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.dice_animate">
+<span class="sig-name descname"><span class="pre">dice_animate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.dice_animate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.dice_animate" title="Link to this definition"></a></dt>
+<dd><p>Specific function for “Choose who goes first” gameplay phase
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.divide_countries">
+<span class="sig-name descname"><span class="pre">divide_countries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.divide_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.divide_countries" title="Link to this definition"></a></dt>
+<dd><p>Specific function for 2 player game.
+It sets randomly initial 14 owned countries to each player and sets the rest as neutral.
+Adds 1 troop to each country
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw" title="Link to this definition"></a></dt>
+<dd><p>Draws all elements on the screen during different stages of the game
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw_buttons">
+<span class="sig-name descname"><span class="pre">draw_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw_buttons" title="Link to this definition"></a></dt>
+<dd><p>Draws buttons
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw_card_bonus_info">
+<span class="sig-name descname"><span class="pre">draw_card_bonus_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw_card_bonus_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw_card_bonus_info" title="Link to this definition"></a></dt>
+<dd><p>Draw next card trade bonus info
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw_change_name_window">
+<span class="sig-name descname"><span class="pre">draw_change_name_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw_change_name_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw_change_name_window" title="Link to this definition"></a></dt>
+<dd><p>Draws window to change a country name
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw_clicks_notification">
+<span class="sig-name descname"><span class="pre">draw_clicks_notification</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw_clicks_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw_clicks_notification" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw_edit_map_notification">
+<span class="sig-name descname"><span class="pre">draw_edit_map_notification</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw_edit_map_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw_edit_map_notification" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.draw_win_window">
+<span class="sig-name descname"><span class="pre">draw_win_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.draw_win_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.draw_win_window" title="Link to this definition"></a></dt>
+<dd><p>Draws Win Window when someone has won
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.edit_map">
+<span class="sig-name descname"><span class="pre">edit_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.edit_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.edit_map" title="Link to this definition"></a></dt>
+<dd><p>Enables Map editing
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.events">
+<span class="sig-name descname"><span class="pre">events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.events" title="Link to this definition"></a></dt>
+<dd><p>Detects events during running and handles them
+:return:</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.font1">
+<span class="sig-name descname"><span class="pre">font1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'..\\fonts\\font1.ttf'</span></em><a class="headerlink" href="#utils.game.Game.font1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.get_card_bonus">
+<span class="sig-name descname"><span class="pre">get_card_bonus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.get_card_bonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.get_card_bonus" title="Link to this definition"></a></dt>
+<dd><p>Get next card trade bonus number
+:return: troops_to_add: int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.handle_ai_actions">
+<span class="sig-name descname"><span class="pre">handle_ai_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.handle_ai_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.handle_ai_actions" title="Link to this definition"></a></dt>
+<dd><p>Handles AI bot actions during different gameplay phases
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.handle_country_clicks">
+<span class="sig-name descname"><span class="pre">handle_country_clicks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mouse_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_button</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.handle_country_clicks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.handle_country_clicks" title="Link to this definition"></a></dt>
+<dd><p>This function is specifically for country buttons.
+It triggers different methods depending on gameplay stage
+:param mouse_pos: Holds mouse position coordinates
+:param event_button: Holds event button type. like left/right mouse click, wheel up/down
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.handle_profile_clicks">
+<span class="sig-name descname"><span class="pre">handle_profile_clicks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mouse_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_button</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.handle_profile_clicks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.handle_profile_clicks" title="Link to this definition"></a></dt>
+<dd><p>Handles player profile clicks
+Sells set of cards if have any
+:param mouse_pos:
+:param event_button:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.highlight_captured">
+<span class="sig-name descname"><span class="pre">highlight_captured</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">highlight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.highlight_captured"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.highlight_captured" title="Link to this definition"></a></dt>
+<dd><p>Makes colour of just captured country brighter
+:param highlight:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.highlight_connected_countries">
+<span class="sig-name descname"><span class="pre">highlight_connected_countries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.highlight_connected_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.highlight_connected_countries" title="Link to this definition"></a></dt>
+<dd><p>Highlights connected countries during Fortify stage
+:param country:
+:param highlight:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.highlight_neighbour_countries">
+<span class="sig-name descname"><span class="pre">highlight_neighbour_countries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.highlight_neighbour_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.highlight_neighbour_countries" title="Link to this definition"></a></dt>
+<dd><p>Makes colours of neighbouring countries brighter to highlight them during attack
+:param country:
+:param highlight:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.move_troop_from_captured">
+<span class="sig-name descname"><span class="pre">move_troop_from_captured</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.move_troop_from_captured"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.move_troop_from_captured" title="Link to this definition"></a></dt>
+<dd><p>Moves troop back from captured to selected territory during Attack
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.move_troop_from_fortified">
+<span class="sig-name descname"><span class="pre">move_troop_from_fortified</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.move_troop_from_fortified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.move_troop_from_fortified" title="Link to this definition"></a></dt>
+<dd><p>Moves troop back from captured to selected territory during Fortify
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.move_troop_to_captured">
+<span class="sig-name descname"><span class="pre">move_troop_to_captured</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">troops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.move_troop_to_captured"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.move_troop_to_captured" title="Link to this definition"></a></dt>
+<dd><p>Moves troop to the captured territory during Attack
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.move_troop_to_fortified">
+<span class="sig-name descname"><span class="pre">move_troop_to_fortified</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.move_troop_to_fortified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.move_troop_to_fortified" title="Link to this definition"></a></dt>
+<dd><p>Moves troop to the captured territory during Fortify
+:return:</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.notif_click_img">
+<span class="sig-name descname"><span class="pre">notif_click_img</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(558x387x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.notif_click_img" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.notif_edit_img">
+<span class="sig-name descname"><span class="pre">notif_edit_img</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(558x387x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.notif_edit_img" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.occupy_country">
+<span class="sig-name descname"><span class="pre">occupy_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.occupy_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.occupy_country" title="Link to this definition"></a></dt>
+<dd><p>Gives certain amount of available troops to the players.
+Players placing their troops until no available troops remain.
+Then switching to the next gameplay stage
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.opt_window_paper_image">
+<span class="sig-name descname"><span class="pre">opt_window_paper_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(628x679x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.opt_window_paper_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.paper_img">
+<span class="sig-name descname"><span class="pre">paper_img</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3621x2075x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.paper_img" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.pass_turn">
+<span class="sig-name descname"><span class="pre">pass_turn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.pass_turn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.pass_turn" title="Link to this definition"></a></dt>
+<dd><p>Passes turn to the next player
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.place_troop">
+<span class="sig-name descname"><span class="pre">place_troop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.place_troop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.place_troop" title="Link to this definition"></a></dt>
+<dd><p>Places troop to the country
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.remove_from_neighbours">
+<span class="sig-name descname"><span class="pre">remove_from_neighbours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.remove_from_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.remove_from_neighbours" title="Link to this definition"></a></dt>
+<dd><p>removes country from the selected country’s “Neighbours”
+This country will not be now considered as neighbour country
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.run" title="Link to this definition"></a></dt>
+<dd><p>Runs The whole logic of the game
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.select_country">
+<span class="sig-name descname"><span class="pre">select_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.select_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.select_country" title="Link to this definition"></a></dt>
+<dd><p>When clicked on the country This function assigns it as Selected country,
+that later will be used.
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.set_option_window">
+<span class="sig-name descname"><span class="pre">set_option_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.set_option_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.set_option_window" title="Link to this definition"></a></dt>
+<dd><p>Sets Boolean for option window
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.game.Game.switch_to_next_phase">
+<span class="sig-name descname"><span class="pre">switch_to_next_phase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/game.html#Game.switch_to_next_phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.game.Game.switch_to_next_phase" title="Link to this definition"></a></dt>
+<dd><p>This function is triggered when “Next Phase” button is clicked
+Switches gameplay phase to the next phase and calls relevant functions needed for
+specific phases
+:return:</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.game.Game.win_window">
+<span class="sig-name descname"><span class="pre">win_window</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3621x2075x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.game.Game.win_window" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="utils-main-module">
+<h2>utils.main module<a class="headerlink" href="#utils-main-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-utils.main_menu">
+<span id="utils-main-menu-module"></span><h2>utils.main_menu module<a class="headerlink" href="#module-utils.main_menu" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.main_menu.</span></span><span class="sig-name descname"><span class="pre">MainMenu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.P_or_AI_button">
+<span class="sig-name descname"><span class="pre">P_or_AI_button</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(1149x1149x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.P_or_AI_button" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.P_or_AI_button_clicked">
+<span class="sig-name descname"><span class="pre">P_or_AI_button_clicked</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(1149x1149x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.P_or_AI_button_clicked" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.add_player">
+<span class="sig-name descname"><span class="pre">add_player</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.add_player"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.add_player" title="Link to this definition"></a></dt>
+<dd><p>Add a player to the game if the total number of players (human and AI) is less than 6
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.add_player_type">
+<span class="sig-name descname"><span class="pre">add_player_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.add_player_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.add_player_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.background_image">
+<span class="sig-name descname"><span class="pre">background_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3840x2147x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.background_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.button_hover_image">
+<span class="sig-name descname"><span class="pre">button_hover_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3840x1342x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.button_hover_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.button_image">
+<span class="sig-name descname"><span class="pre">button_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(3840x1342x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.button_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.button_paper_hover_image">
+<span class="sig-name descname"><span class="pre">button_paper_hover_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(936x382x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.button_paper_hover_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.button_paper_image">
+<span class="sig-name descname"><span class="pre">button_paper_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(936x382x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.button_paper_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.change_secret_mission_mode">
+<span class="sig-name descname"><span class="pre">change_secret_mission_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.change_secret_mission_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.change_secret_mission_mode" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.change_state">
+<span class="sig-name descname"><span class="pre">change_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.change_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.change_state" title="Link to this definition"></a></dt>
+<dd><p>Changes the state of the game
+:param new_state: The new state to be set
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.check_clicks">
+<span class="sig-name descname"><span class="pre">check_clicks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.check_clicks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.check_clicks" title="Link to this definition"></a></dt>
+<dd><p>Check for mouse clicks on buttons in the menu
+:param event: Pygame event object
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.create_faq_menu_buttons">
+<span class="sig-name descname"><span class="pre">create_faq_menu_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.create_faq_menu_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.create_faq_menu_buttons" title="Link to this definition"></a></dt>
+<dd><p>Create buttons for the FAQ menu
+:return: A list of FAQ menu buttons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.create_main_menu_buttons">
+<span class="sig-name descname"><span class="pre">create_main_menu_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.create_main_menu_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.create_main_menu_buttons" title="Link to this definition"></a></dt>
+<dd><p>Create buttons for the main menu
+:return: A list of main menu buttons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.create_new_game_menu_buttons">
+<span class="sig-name descname"><span class="pre">create_new_game_menu_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.create_new_game_menu_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.create_new_game_menu_buttons" title="Link to this definition"></a></dt>
+<dd><p>Create buttons for the new game menu
+:return: A list of new game menu buttons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.create_player_slots">
+<span class="sig-name descname"><span class="pre">create_player_slots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.create_player_slots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.create_player_slots" title="Link to this definition"></a></dt>
+<dd><p>Create player slots
+:return: A list of player slots</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.create_small_buttons">
+<span class="sig-name descname"><span class="pre">create_small_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.create_small_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.create_small_buttons" title="Link to this definition"></a></dt>
+<dd><p>Creates small buttons for player selection
+:return: A list of small buttons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.draw" title="Link to this definition"></a></dt>
+<dd><p>Draw the main menu on the screen
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.draw_faq_menu">
+<span class="sig-name descname"><span class="pre">draw_faq_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.draw_faq_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.draw_faq_menu" title="Link to this definition"></a></dt>
+<dd><p>Draw the FAQ menu on the screen
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.draw_icon">
+<span class="sig-name descname"><span class="pre">draw_icon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.draw_icon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.draw_icon" title="Link to this definition"></a></dt>
+<dd><p>Draw icons (Human and AI) beside a player slot
+:param slot: Player slot Button object
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.draw_opt_menu">
+<span class="sig-name descname"><span class="pre">draw_opt_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.draw_opt_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.draw_opt_menu" title="Link to this definition"></a></dt>
+<dd><p>Draw the options (new game) menu on the screen
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.font1">
+<span class="sig-name descname"><span class="pre">font1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'..\\fonts\\font1.ttf'</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.font1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.get_num_ai_players">
+<span class="sig-name descname"><span class="pre">get_num_ai_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.get_num_ai_players"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.get_num_ai_players" title="Link to this definition"></a></dt>
+<dd><p>Get the number of AI players in the game
+:return: The number of AI players</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.get_num_players">
+<span class="sig-name descname"><span class="pre">get_num_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.get_num_players"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.get_num_players" title="Link to this definition"></a></dt>
+<dd><p>Get the number of human players in the game
+:return: The number of human players</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.get_player_types">
+<span class="sig-name descname"><span class="pre">get_player_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.get_player_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.get_player_types" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self.player_types: list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.get_state" title="Link to this definition"></a></dt>
+<dd><p>Get the current state of the game
+:return: The current state</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.human_image">
+<span class="sig-name descname"><span class="pre">human_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(326x255x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.human_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.logo_image">
+<span class="sig-name descname"><span class="pre">logo_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(4000x3390x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.logo_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.new_game_paper">
+<span class="sig-name descname"><span class="pre">new_game_paper</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(628x679x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.new_game_paper" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.player_images">
+<span class="sig-name descname"><span class="pre">player_images</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;Surface(856x953x32</span> <span class="pre">SW)&gt;,</span> <span class="pre">&lt;Surface(858x955x32</span> <span class="pre">SW)&gt;,</span> <span class="pre">&lt;Surface(856x944x32</span> <span class="pre">SW)&gt;,</span> <span class="pre">&lt;Surface(847x944x32</span> <span class="pre">SW)&gt;,</span> <span class="pre">&lt;Surface(858x955x32</span> <span class="pre">SW)&gt;,</span> <span class="pre">&lt;Surface(849x946x32</span> <span class="pre">SW)&gt;]</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.player_images" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.player_slot_image">
+<span class="sig-name descname"><span class="pre">player_slot_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(112x112x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.player_slot_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.remove_player">
+<span class="sig-name descname"><span class="pre">remove_player</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.remove_player"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.remove_player" title="Link to this definition"></a></dt>
+<dd><p>Remove a player from the game
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.robot_image">
+<span class="sig-name descname"><span class="pre">robot_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Surface(326x255x32</span> <span class="pre">SW)&gt;</span></em><a class="headerlink" href="#utils.main_menu.MainMenu.robot_image" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.set_faq_menu">
+<span class="sig-name descname"><span class="pre">set_faq_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.set_faq_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.set_faq_menu" title="Link to this definition"></a></dt>
+<dd><p>Sets the state of the FAQ menu
+:param state: Boolean indicating whether the menu should be displayed or not
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.set_opt_menu">
+<span class="sig-name descname"><span class="pre">set_opt_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.set_opt_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.set_opt_menu" title="Link to this definition"></a></dt>
+<dd><p>Set the state of the options (for new game) menu
+:param state: Boolean indicating whether the menu should be displayed or not
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.set_setting_menu">
+<span class="sig-name descname"><span class="pre">set_setting_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.set_setting_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.set_setting_menu" title="Link to this definition"></a></dt>
+<dd><p>Sets the state of the setting menu
+:param state: Boolean indicating whether the menu should be displayed or not
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.main_menu.MainMenu.swap_to">
+<span class="sig-name descname"><span class="pre">swap_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#MainMenu.swap_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.MainMenu.swap_to" title="Link to this definition"></a></dt>
+<dd><p>Swaps the button’s functionality between human and AI selection
+:param button: The button to swap
+:param player: The player type to swap to (Human or AI)
+:return: The action function to execute the swap</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.main_menu.draw_text">
+<span class="sig-prename descclassname"><span class="pre">utils.main_menu.</span></span><span class="sig-name descname"><span class="pre">draw_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#draw_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.draw_text" title="Link to this definition"></a></dt>
+<dd><p>Draw text on the screen
+:param screen: Pygame screen surface
+:param text: Text to display
+:param size: Font size
+:param color: Color of the text
+:param x: X-coordinate of the text
+:param y: Y-coordinate of the text
+:param font: Font to use
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.main_menu.draw_text2">
+<span class="sig-prename descclassname"><span class="pre">utils.main_menu.</span></span><span class="sig-name descname"><span class="pre">draw_text2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/main_menu.html#draw_text2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.main_menu.draw_text2" title="Link to this definition"></a></dt>
+<dd><p>Draw text on the screen with line breaks on spaces if the text exceeds a certain width.
+:param screen: Pygame screen surface
+:param text: Text to display
+:param size: Font size
+:param color: Color of the text
+:param x: Initial X-coordinate of the text
+:param y: Initial Y-coordinate of the text
+:param font: Font to use
+:return: None</p>
+</dd></dl>
+
+</section>
+<section id="module-utils.map">
+<span id="utils-map-module"></span><h2>utils.map module<a class="headerlink" href="#module-utils.map" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.map.Map">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.map.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.all_countries_have_owner">
+<span class="sig-name descname"><span class="pre">all_countries_have_owner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.all_countries_have_owner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.all_countries_have_owner" title="Link to this definition"></a></dt>
+<dd><p>Checks if all countries have an owner
+:return: boolean</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.change_turn">
+<span class="sig-name descname"><span class="pre">change_turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">turn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.change_turn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.change_turn" title="Link to this definition"></a></dt>
+<dd><p>Keeps track of player turn here to indicate their turn somehow, for now it’s just green triangle
+:param turn:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.check_clicks">
+<span class="sig-name descname"><span class="pre">check_clicks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.check_clicks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.check_clicks" title="Link to this definition"></a></dt>
+<dd><p>Checks clicks on buttons and countries
+:param event:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.create_buttons">
+<span class="sig-name descname"><span class="pre">create_buttons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.create_buttons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.create_buttons" title="Link to this definition"></a></dt>
+<dd><p>Creates all necessary buttons for gameplay.
+So far just back button
+:return: buttons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.create_countries">
+<span class="sig-name descname"><span class="pre">create_countries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.create_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.create_countries" title="Link to this definition"></a></dt>
+<dd><p>Start a single thread to load all images
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.create_players">
+<span class="sig-name descname"><span class="pre">create_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.create_players"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.create_players" title="Link to this definition"></a></dt>
+<dd><p>Creates players.
+So far creates only Human Players, will be changed when we implement AI
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.create_turn_indicator">
+<span class="sig-name descname"><span class="pre">create_turn_indicator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.create_turn_indicator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.create_turn_indicator" title="Link to this definition"></a></dt>
+<dd><p>Another dummy thing, just to see who’s turn it is right now.
+Were going to think about something better than green triangle
+:return: turn_indicator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.draw" title="Link to this definition"></a></dt>
+<dd><p>Draws all necessary elements on the map
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.draw_button">
+<span class="sig-name descname"><span class="pre">draw_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.draw_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.draw_button" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.draw_dice_plate">
+<span class="sig-name descname"><span class="pre">draw_dice_plate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.draw_dice_plate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.draw_dice_plate" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.draw_turn_indicator">
+<span class="sig-name descname"><span class="pre">draw_turn_indicator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.draw_turn_indicator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.draw_turn_indicator" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.drop_highlights">
+<span class="sig-name descname"><span class="pre">drop_highlights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.drop_highlights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.drop_highlights" title="Link to this definition"></a></dt>
+<dd><p>Drops highlights from each country
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.get_connected_countries">
+<span class="sig-name descname"><span class="pre">get_connected_countries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.get_connected_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.get_connected_countries" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.get_continents">
+<span class="sig-name descname"><span class="pre">get_continents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.get_continents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.get_continents" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.get_neighbours">
+<span class="sig-name descname"><span class="pre">get_neighbours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.get_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.get_neighbours" title="Link to this definition"></a></dt>
+<dd><p>Returns neighbour country names
+:param country_name:
+:return: self.neighbours[country_name]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.get_neighbours_countries">
+<span class="sig-name descname"><span class="pre">get_neighbours_countries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.get_neighbours_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.get_neighbours_countries" title="Link to this definition"></a></dt>
+<dd><p>Returns neighbour country objects
+:param country:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.get_players">
+<span class="sig-name descname"><span class="pre">get_players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.get_players"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.get_players" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of Player objects
+:return: self.player_profiles</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.get_state" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self.state</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.load_all_images">
+<span class="sig-name descname"><span class="pre">load_all_images</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.load_all_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.load_all_images" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.load_country_image">
+<span class="sig-name descname"><span class="pre">load_country_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.load_country_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.load_country_image" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>image_path</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.set_players_and_ai">
+<span class="sig-name descname"><span class="pre">set_players_and_ai</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">players</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_types</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.set_players_and_ai"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.set_players_and_ai" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>player_types</strong> – </p></li>
+<li><p><strong>players</strong> – </p></li>
+<li><p><strong>ai</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.map.Map.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/map.html#Map.set_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.map.Map.set_state" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_state</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.player">
+<span id="utils-player-module"></span><h2>utils.player module<a class="headerlink" href="#module-utils.player" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.player.AI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.player.</span></span><span class="sig-name descname"><span class="pre">AI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#AI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.AI" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#utils.player.Player" title="utils.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.AI.choose_country_to_attack">
+<span class="sig-name descname"><span class="pre">choose_country_to_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#AI.choose_country_to_attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.AI.choose_country_to_attack" title="Link to this definition"></a></dt>
+<dd><p>This function is choosing attacking country and defending country.
+First it finds all countries that bordering enemy territories and filters out potential countries to attack
+by checking their number of troops, it will not consider enemy countries that have higher number of troops
+or have more than 80% of attacking country troops, as it can lead to loosing the battle.
+If it cannot find any suitable countries to attack it won’t attack at all.
+In 70% chance it will attack the country with least number of troops. And 30% chance it will choose randomly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>map</strong> – Map</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Attacking Country, Defending Country</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.AI.fortify">
+<span class="sig-name descname"><span class="pre">fortify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#AI.fortify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.AI.fortify" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.AI.occupy_country">
+<span class="sig-name descname"><span class="pre">occupy_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gameplay1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#AI.occupy_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.AI.occupy_country" title="Link to this definition"></a></dt>
+<dd><p>Occupy country during setup.
+If all countries have owner then place troop in owned country. with probability 10% it places troops
+randomly, or 90% chance on the country that is bordering enemy territory
+to bring more attacking or defending power
+:param <a href="#id3"><span class="problematic" id="id4">map_</span></a>: Map
+:param gameplay1: bool
+:return: [NONE]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.player.Human">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.player.</span></span><span class="sig-name descname"><span class="pre">Human</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Human"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Human" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#utils.player.Player" title="utils.player.Player"><code class="xref py py-class docutils literal notranslate"><span class="pre">Player</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.player.Player">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.player.</span></span><span class="sig-name descname"><span class="pre">Player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.add_avail_troops">
+<span class="sig-name descname"><span class="pre">add_avail_troops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_of_troops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.add_avail_troops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.add_avail_troops" title="Link to this definition"></a></dt>
+<dd><p>Adds troops that need to be placed.
+‘self.troops_available’ is updated
+:param num_of_troops: Number of troops to add
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.add_card">
+<span class="sig-name descname"><span class="pre">add_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">card</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.add_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.add_card" title="Link to this definition"></a></dt>
+<dd><p>Adds a card to the player’s collection
+:param card: The card to be added
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.add_country">
+<span class="sig-name descname"><span class="pre">add_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.add_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.add_country" title="Link to this definition"></a></dt>
+<dd><p>Add country to player’s owned countries
+:param country: Country object to add
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.all_neighbours_owned">
+<span class="sig-name descname"><span class="pre">all_neighbours_owned</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.all_neighbours_owned"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.all_neighbours_owned" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.attack">
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_country</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defending_country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.attack" title="Link to this definition"></a></dt>
+<dd><p>Execute attack between human player’s country and defending country
+:param my_country: Player’s country object
+:param defending_country: Defending country object
+:return: Tuple containing information about the outcome of the attack</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.calculate_num_of_draft_troops">
+<span class="sig-name descname"><span class="pre">calculate_num_of_draft_troops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.calculate_num_of_draft_troops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.calculate_num_of_draft_troops" title="Link to this definition"></a></dt>
+<dd><p>Calculates a number of troops to get during Draft phase
+:return: num_of_avail_troops</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.draw_profile">
+<span class="sig-name descname"><span class="pre">draw_profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.draw_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.draw_profile" title="Link to this definition"></a></dt>
+<dd><p>Draws the player’s profile on the map along with additional information. This method draws the profile image
+on the screen and displays the number of troops held by the player and the number of troops available for
+placement it also displays any cards the player holds when the mouse is over the profile
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.find_continents">
+<span class="sig-name descname"><span class="pre">find_continents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.find_continents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.find_continents" title="Link to this definition"></a></dt>
+<dd><p>Checks which continents player holds and adds/removes them to the list
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.get_card_bonus">
+<span class="sig-name descname"><span class="pre">get_card_bonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nth_set</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.get_card_bonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.get_card_bonus" title="Link to this definition"></a></dt>
+<dd><p>Gives number of troops from selling cards
+:param nth_set:
+:return: troops_to_add</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.get_color">
+<span class="sig-name descname"><span class="pre">get_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.get_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.get_color" title="Link to this definition"></a></dt>
+<dd><p>Get player’s colour as RGB tuple
+:return: Player’s colour</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.get_color_name">
+<span class="sig-name descname"><span class="pre">get_color_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.get_color_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.get_color_name" title="Link to this definition"></a></dt>
+<dd><p>Get players colour’s name
+:return: Name of the player’s colour</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.have_set_of_cards">
+<span class="sig-name descname"><span class="pre">have_set_of_cards</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.have_set_of_cards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.have_set_of_cards" title="Link to this definition"></a></dt>
+<dd><p>Checks if player has a set of cards
+:return: boolean</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.remove_avail_troop">
+<span class="sig-name descname"><span class="pre">remove_avail_troop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.remove_avail_troop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.remove_avail_troop" title="Link to this definition"></a></dt>
+<dd><p>Removes one troop from available troops and adds it to held troops.
+‘self.troops_available’ &amp; ‘self.troops_holds’ is updated
+:return: [NONE]
+d</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.remove_country">
+<span class="sig-name descname"><span class="pre">remove_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.remove_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.remove_country" title="Link to this definition"></a></dt>
+<dd><p>Remove country from player’s owned countries
+:param country: Country object to remove
+:return: [NONE]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.remove_distinct_cards">
+<span class="sig-name descname"><span class="pre">remove_distinct_cards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.remove_distinct_cards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.remove_distinct_cards" title="Link to this definition"></a></dt>
+<dd><p>removes a set of distinct cards from the hand
+:param deck:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.remove_set_cards">
+<span class="sig-name descname"><span class="pre">remove_set_cards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">army_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.remove_set_cards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.remove_set_cards" title="Link to this definition"></a></dt>
+<dd><p>Removes set of same cards from the hand
+:param army_type:
+:param deck:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.remove_troops">
+<span class="sig-name descname"><span class="pre">remove_troops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_of_troops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.remove_troops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.remove_troops" title="Link to this definition"></a></dt>
+<dd><p>Removes a troop
+:param num_of_troops:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.sell_cards">
+<span class="sig-name descname"><span class="pre">sell_cards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nth_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.sell_cards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.sell_cards" title="Link to this definition"></a></dt>
+<dd><p>Exchanges set of cards for the troops
+:param nth_set:
+:param deck:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.player.Player.set_pos_size">
+<span class="sig-name descname"><span class="pre">set_pos_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils/player.html#Player.set_pos_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.player.Player.set_pos_size" title="Link to this definition"></a></dt>
+<dd><p>Set Position and size of the profile image
+:param x: X coordinate of the position
+:param y: Y coordinate of the position
+:param width: Width of the image
+:param height: Height of the image
+:return: [NONE]</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="utils-test-module">
+<h2>utils.test module<a class="headerlink" href="#utils-test-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utils" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup.html" class="btn btn-neutral float-left" title="setup module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Team 13.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

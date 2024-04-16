@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils.dice &mdash; World Conquest 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            World Conquest
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Software_Eng</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">World Conquest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">utils.dice</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for utils.dice</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>  <span class="c1"># Import the pygame library for game development</span>
+<span class="kn">import</span> <span class="nn">random</span>  <span class="c1"># RNG</span>
+<span class="kn">from</span> <span class="nn">main_menu</span> <span class="kn">import</span> <span class="n">draw_text</span>  <span class="c1"># Import draw_text class from main_menu</span>
+
+<span class="c1"># Initialize pygame</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Dice">
+<a class="viewcode-back" href="../../utils.html#utils.dice.Dice">[docs]</a>
+<span class="k">class</span> <span class="nc">Dice</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise DiceHandler in accordance to the screen</span>
+<span class="sd">        + dictionary of dice images</span>
+<span class="sd">        :param screen: Pygame screen surface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_dice</span><span class="p">()</span>
+
+        <span class="c1"># Loading dice face images.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_w</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">die1.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">die2.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">die3.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">die4.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">die5.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">die6.png&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_r</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">red_die1.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">red_die2.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">red_die3.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">red_die4.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">red_die5.png&quot;</span><span class="p">),</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">red_die6.png&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="Dice.throw">
+<a class="viewcode-back" href="../../utils.html#utils.dice.Dice.throw">[docs]</a>
+    <span class="k">def</span> <span class="nf">throw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates the dice roll using random integer 1-6</span>
+<span class="sd">        :return: &#39;value&#39; The result of the role</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Dice.animation">
+<a class="viewcode-back" href="../../utils.html#utils.dice.Dice.animation">[docs]</a>
+    <span class="k">def</span> <span class="nf">animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays an animation for dice rolls</span>
+<span class="sd">        :param nums: List of dice values rolled</span>
+<span class="sd">        :param name: Name of the player who rolled the dice</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">draw_text</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> rolled a total of </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">133</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.7</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_dice_w</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Dice.draw_dice_w">
+<a class="viewcode-back" href="../../utils.html#utils.dice.Dice.draw_dice_w">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_dice_w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws the white dice images on the screen based on the rolls provided in `nums`.</span>
+<span class="sd">        It positions each die image on the screen</span>
+<span class="sd">        :param nums: List of dice values rolled</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.94</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.93</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="mf">0.06</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dice_dict</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">][</span><span class="n">num</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Dice.draw_dice_r">
+<a class="viewcode-back" href="../../utils.html#utils.dice.Dice.draw_dice_r">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_dice_r</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws the red dice images on the screen based on the rolls provided in `nums`.</span>
+<span class="sd">        It positions each die image on the screen</span>
+<span class="sd">        :param nums: List of dice values rolled</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.91</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.93</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="mf">0.06</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dice_dict</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">][</span><span class="n">num</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Dice.create_dice">
+<a class="viewcode-back" href="../../utils.html#utils.dice.Dice.create_dice">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_dice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepares and returns a dictionary mapping each die face value (1 through 6) to its corresponding scaled image.</span>
+<span class="sd">        :return: dice_dict (Dictionary mapping die face values to images)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.04</span><span class="p">)</span>
+        <span class="n">dice_w</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">die_img</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span> <span class="k">for</span> <span class="n">die_img</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dice_w</span>
+        <span class="p">]</span>
+        <span class="n">dice_r</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">die_img</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span> <span class="k">for</span> <span class="n">die_img</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dice_r</span>
+        <span class="p">]</span>
+        <span class="n">dice_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">die_w</span><span class="p">,</span> <span class="n">die_r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dice_w</span><span class="p">,</span> <span class="n">dice_r</span><span class="p">)):</span>
+            <span class="n">dice_dict</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">][</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">die_w</span>
+            <span class="n">dice_dict</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">][</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">die_r</span>
+        <span class="k">return</span> <span class="n">dice_dict</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Team 13.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

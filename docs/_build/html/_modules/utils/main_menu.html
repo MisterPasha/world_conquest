@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils.main_menu &mdash; World Conquest 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            World Conquest
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Software_Eng</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">World Conquest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">utils.main_menu</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for utils.main_menu</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>  <span class="c1"># Import the pygame library for game development</span>
+<span class="kn">from</span> <span class="nn">button</span> <span class="kn">import</span> <span class="n">Button</span>  <span class="c1"># Importing Button class from another module</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># Importing numpy for array manipulation</span>
+
+<span class="c1"># Initialize pygame</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="draw_text">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.draw_text">[docs]</a>
+<span class="k">def</span> <span class="nf">draw_text</span><span class="p">(</span>
+    <span class="c1"># Parameters for the function</span>
+    <span class="n">screen</span><span class="p">,</span>
+    <span class="n">text</span><span class="p">,</span>
+    <span class="n">size</span><span class="p">,</span>
+    <span class="n">color</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">font</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw text on the screen</span>
+<span class="sd">    :param screen: Pygame screen surface</span>
+<span class="sd">    :param text: Text to display</span>
+<span class="sd">    :param size: Font size</span>
+<span class="sd">    :param color: Color of the text</span>
+<span class="sd">    :param x: X-coordinate of the text</span>
+<span class="sd">    :param y: Y-coordinate of the text</span>
+<span class="sd">    :param font: Font to use</span>
+<span class="sd">    :return: [NONE]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="n">text_surface</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+    <span class="n">text_rect</span> <span class="o">=</span> <span class="n">text_surface</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+    <span class="n">text_rect</span><span class="o">.</span><span class="n">topleft</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text_surface</span><span class="p">,</span> <span class="n">text_rect</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="draw_text2">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.draw_text2">[docs]</a>
+<span class="k">def</span> <span class="nf">draw_text2</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw text on the screen with line breaks on spaces if the text exceeds a certain width.</span>
+<span class="sd">    :param screen: Pygame screen surface</span>
+<span class="sd">    :param text: Text to display</span>
+<span class="sd">    :param size: Font size</span>
+<span class="sd">    :param color: Color of the text</span>
+<span class="sd">    :param x: Initial X-coordinate of the text</span>
+<span class="sd">    :param y: Initial Y-coordinate of the text</span>
+<span class="sd">    :param font: Font to use</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">max_line_width</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="c1"># Check if adding the next word exceeds the line width</span>
+        <span class="n">test_line</span> <span class="o">=</span> <span class="n">line</span> <span class="o">+</span> <span class="n">word</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="n">test_surface</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">test_line</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">test_surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">max_line_width</span><span class="p">:</span>
+            <span class="c1"># If the line is too wide, draw the current line and start a new one</span>
+            <span class="n">text_surface</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+            <span class="n">text_rect</span> <span class="o">=</span> <span class="n">text_surface</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+            <span class="n">text_rect</span><span class="o">.</span><span class="n">topleft</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text_surface</span><span class="p">,</span> <span class="n">text_rect</span><span class="p">)</span>
+            <span class="c1"># Move to the next line</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="n">text_surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">word</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">test_line</span>
+
+    <span class="c1"># Draw the last line</span>
+    <span class="n">text_surface</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+    <span class="n">text_rect</span> <span class="o">=</span> <span class="n">text_surface</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+    <span class="n">text_rect</span><span class="o">.</span><span class="n">topleft</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text_surface</span><span class="p">,</span> <span class="n">text_rect</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MainMenu">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu">[docs]</a>
+<span class="k">class</span> <span class="nc">MainMenu</span><span class="p">:</span>
+    <span class="c1"># All images</span>
+    <span class="n">background_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">background_main_high.png&quot;</span><span class="p">)</span>
+    <span class="n">button_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_high.png&quot;</span><span class="p">)</span>
+    <span class="n">button_hover_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_hover.png&quot;</span><span class="p">)</span>
+    <span class="n">logo_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">logo.png&quot;</span><span class="p">)</span>
+    <span class="n">new_game_paper</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">new_game_paper_resized.png&quot;</span><span class="p">)</span>
+    <span class="n">button_paper_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_paper.png&quot;</span><span class="p">)</span>
+    <span class="n">button_paper_hover_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_paper_hover.png&quot;</span><span class="p">)</span>
+    <span class="n">player_slot_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_slot.png&quot;</span><span class="p">)</span>
+    <span class="n">player_images</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># Player images</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_1.png&quot;</span><span class="p">),</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_2.png&quot;</span><span class="p">),</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_3.png&quot;</span><span class="p">),</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_4.png&quot;</span><span class="p">),</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_5.png&quot;</span><span class="p">),</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">player_6.png&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">robot_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">robot.png&quot;</span><span class="p">)</span>
+    <span class="n">human_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">human.png&quot;</span><span class="p">)</span>
+    <span class="n">P_or_AI_button</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">choose_P_AI_button.png&quot;</span><span class="p">)</span>
+    <span class="n">P_or_AI_button_clicked</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">choose_P_AI_button_clicked.png&quot;</span><span class="p">)</span>
+    <span class="n">font1</span> <span class="o">=</span> <span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">fonts</span><span class="se">\\</span><span class="s2">font1.ttf&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the main menu</span>
+<span class="sd">        :param screen: Pygame screen surface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_menu</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_menu</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faq_menu</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Load images and scale them accordingly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">background_image</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logo_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logo_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_game_paper</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_game_paper</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">human_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">human_image</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.055</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.055</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot_image</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.055</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.055</span><span class="p">))</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Initialize various attributes and elements of the menu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_slots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_player_slots</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_small_buttons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_menu_buttons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_main_menu_buttons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_menu_buttons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_new_game_menu_buttons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faq_menu_buttons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_faq_menu_buttons</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="MainMenu.draw">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the main menu on the screen</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Draw background, logo, buttons, etc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background_image</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logo_image</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_menu</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu_buttons</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_opt_menu</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">faq_menu</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_faq_menu</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.draw_opt_menu">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.draw_opt_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_opt_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the options (new game) menu on the screen</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Draw background, buttons, player slots, etc.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_menu</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">new_game_paper</span><span class="p">,</span>
+                <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">)),</span>
+            <span class="p">)</span>
+            <span class="n">draw_text</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                <span class="s2">&quot;Players&quot;</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.14</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.14</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.18</span><span class="p">),</span>
+                <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">draw_text</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                <span class="s2">&quot;Mission Cards&quot;</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.48</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.42</span><span class="p">),</span>
+                <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_slots</span><span class="p">:</span>
+                <span class="n">slot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_icon</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_menu_buttons</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.draw_faq_menu">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.draw_faq_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_faq_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the FAQ menu on the screen</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_game_paper</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">draw_text</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+            <span class="s2">&quot;FAQ&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.17</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.14</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.18</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">faq_menu_buttons</span><span class="p">:</span>
+            <span class="n">button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.check_clicks">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.check_clicks">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_clicks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check for mouse clicks on buttons in the menu</span>
+<span class="sd">        :param event: Pygame event object</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check for clicks on buttons based on the menu state</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_menu</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu_buttons</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">faq_menu_buttons</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_menu_buttons</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.draw_icon">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.draw_icon">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_icon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw icons (Human and AI) beside a player slot</span>
+<span class="sd">        :param slot: Player slot Button object</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">human_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">slot</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">slot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">slot</span><span class="o">.</span><span class="n">y</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot_image</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">slot</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">slot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">slot</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.06</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.add_player_type">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.add_player_type">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_player_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.set_opt_menu">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.set_opt_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_opt_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the state of the options (for new game) menu</span>
+<span class="sd">        :param state: Boolean indicating whether the menu should be displayed or not</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_menu</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_slots</span><span class="p">:</span>
+            <span class="n">slot</span><span class="o">.</span><span class="n">change_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_slot_image</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.set_setting_menu">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.set_setting_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_setting_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the state of the setting menu</span>
+<span class="sd">        :param state: Boolean indicating whether the menu should be displayed or not</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_menu</span> <span class="o">=</span> <span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.set_faq_menu">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.set_faq_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_faq_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the state of the FAQ menu</span>
+<span class="sd">        :param state: Boolean indicating whether the menu should be displayed or not</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faq_menu</span> <span class="o">=</span> <span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.change_state">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.change_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">change_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes the state of the game</span>
+<span class="sd">        :param new_state: The new state to be set</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">new_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">new_state</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.get_state">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.get_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current state of the game</span>
+<span class="sd">        :return: The current state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.get_num_players">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.get_num_players">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_num_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of human players in the game</span>
+<span class="sd">        :return: The number of human players</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.get_num_ai_players">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.get_num_ai_players">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_num_ai_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of AI players in the game</span>
+<span class="sd">        :return: The number of AI players</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.get_player_types">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.get_player_types">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_player_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return: self.player_types: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.add_player">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.add_player">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a player to the game if the total number of players (human and AI) is less than 6</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_player_type</span><span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player_slots</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">change_image</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_images</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.remove_player">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.remove_player">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a player from the game</span>
+<span class="sd">        :return: [NONE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">player_slots</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">change_image</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_slot_image</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">clicked</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">clicked</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">-=</span> <span class="mi">1</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">+</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">click</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span><span class="p">]</span><span class="o">.</span><span class="n">click</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.create_main_menu_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.create_main_menu_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_main_menu_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create buttons for the main menu</span>
+<span class="sd">        :return: A list of main menu buttons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">play</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)),</span>
+            <span class="s2">&quot;Play&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_opt_menu</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">)),</span>
+            <span class="s2">&quot;Settings&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_setting_menu</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">FAQ</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)),</span>
+            <span class="s2">&quot;FAQ&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_faq_menu</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>  <span class="c1"># Use lambda to defer execution</span>
+        <span class="p">)</span>
+        <span class="n">quit_b</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">1.4</span><span class="p">)),</span>
+            <span class="s2">&quot;Quit&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_state</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">play</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">FAQ</span><span class="p">,</span> <span class="n">quit_b</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.create_new_game_menu_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.create_new_game_menu_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_new_game_menu_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create buttons for the new game menu</span>
+<span class="sd">        :return: A list of new game menu buttons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">play</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.63</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">1.7</span><span class="p">)),</span>
+            <span class="s2">&quot;Play&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.15</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_state</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.13</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">1.7</span><span class="p">)),</span>
+            <span class="s2">&quot;Back&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.15</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_opt_menu</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_paper_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_paper_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.45</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.23</span><span class="p">)),</span>
+            <span class="s2">&quot;Add&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.06</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.17</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_player</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">remove</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_paper_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_paper_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.65</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.23</span><span class="p">)),</span>
+            <span class="s2">&quot;Remove&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.06</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.17</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_player</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">secret_mission</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.73</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.435</span><span class="p">)),</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.035</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.035</span><span class="p">),</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_secret_mission_mode</span><span class="p">(),</span>
+            <span class="n">hover</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">play</span><span class="p">,</span> <span class="n">back</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">remove</span><span class="p">,</span> <span class="n">secret_mission</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.change_secret_mission_mode">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.change_secret_mission_mode">[docs]</a>
+    <span class="k">def</span> <span class="nf">change_secret_mission_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">new_menu_buttons</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">change_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">new_menu_buttons</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">change_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.create_faq_menu_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.create_faq_menu_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_faq_menu_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create buttons for the FAQ menu</span>
+<span class="sd">        :return: A list of FAQ menu buttons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.13</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">1.7</span><span class="p">)),</span>
+            <span class="s2">&quot;Back&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.15</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_faq_menu</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">back</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.create_player_slots">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.create_player_slots">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_player_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create player slots</span>
+<span class="sd">        :return: A list of player slots</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">slots1</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Button</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_slot_image</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_slot_image</span><span class="p">,</span>
+                <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="n">i</span><span class="p">)),</span>
+                <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+                <span class="n">hover</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">slots2</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Button</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_slot_image</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_slot_image</span><span class="p">,</span>
+                <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.53</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="n">i</span><span class="p">)),</span>
+                <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.12</span><span class="p">),</span>
+                <span class="n">hover</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">slots1</span> <span class="o">+</span> <span class="n">slots2</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.swap_to">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.swap_to">[docs]</a>
+    <span class="k">def</span> <span class="nf">swap_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Swaps the button&#39;s functionality between human and AI selection</span>
+<span class="sd">        :param button: The button to swap</span>
+<span class="sd">        :param player: The player type to swap to (Human or AI)</span>
+<span class="sd">        :return: The action function to execute the swap</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">action</span><span class="p">():</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">player</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span> <span class="ow">and</span> <span class="n">button</span><span class="o">.</span><span class="n">clicked</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">click</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;human&quot;</span>
+            <span class="k">if</span> <span class="n">player</span> <span class="o">==</span> <span class="s2">&quot;ai&quot;</span> <span class="ow">and</span> <span class="n">button</span><span class="o">.</span><span class="n">clicked</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">small_buttons</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">click</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">AI_agents</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ai&quot;</span>
+
+        <span class="k">return</span> <span class="n">action</span></div>
+
+
+<div class="viewcode-block" id="MainMenu.create_small_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.main_menu.MainMenu.create_small_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_small_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates small buttons for player selection</span>
+<span class="sd">        :return: A list of small buttons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">buttons1</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">buttons2</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_slots</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">slot</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">slot</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">button1</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">slot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">),</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.018</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.035</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.035</span><span class="p">),</span>
+                <span class="n">hover</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">button2</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">slot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">),</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.035</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.035</span><span class="p">),</span>
+                <span class="n">hover</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">button1</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">swap_to</span><span class="p">(</span><span class="n">button1</span><span class="p">,</span> <span class="s2">&quot;human&quot;</span><span class="p">)</span>
+            <span class="n">button2</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">swap_to</span><span class="p">(</span><span class="n">button2</span><span class="p">,</span> <span class="s2">&quot;ai&quot;</span><span class="p">)</span>
+            <span class="n">buttons1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">button1</span><span class="p">)</span>
+            <span class="n">buttons2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">button2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buttons1</span><span class="p">:</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">change_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_or_AI_button_clicked</span><span class="p">)</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">clicked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">buttons1</span> <span class="o">+</span> <span class="n">buttons2</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Team 13.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

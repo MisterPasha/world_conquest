@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils.game &mdash; World Conquest 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            World Conquest
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Software_Eng</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">World Conquest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">utils.game</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for utils.game</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">main_menu</span> <span class="kn">import</span> <span class="n">MainMenu</span>
+<span class="kn">from</span> <span class="nn">main_menu</span> <span class="kn">import</span> <span class="n">draw_text</span>
+<span class="kn">from</span> <span class="nn">map</span> <span class="kn">import</span> <span class="n">Map</span>
+<span class="kn">from</span> <span class="nn">dice</span> <span class="kn">import</span> <span class="n">Dice</span>
+<span class="kn">from</span> <span class="nn">button</span> <span class="kn">import</span> <span class="n">Button</span>
+<span class="kn">from</span> <span class="nn">deck</span> <span class="kn">import</span> <span class="n">Deck</span>
+<span class="kn">from</span> <span class="nn">deck</span> <span class="kn">import</span> <span class="n">MissionCards</span>
+<span class="kn">from</span> <span class="nn">player</span> <span class="kn">import</span> <span class="n">AI</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Game">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game">[docs]</a>
+<span class="k">class</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="n">win_window</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">win_window.png&quot;</span><span class="p">)</span>
+    <span class="n">paper_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">gameplay_paper.png&quot;</span><span class="p">)</span>
+    <span class="n">button_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_high.png&quot;</span><span class="p">)</span>
+    <span class="n">button_hover_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_hover.png&quot;</span><span class="p">)</span>
+    <span class="n">opt_window_paper_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">new_game_paper_resized.png&quot;</span><span class="p">)</span>
+    <span class="n">notif_edit_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">notification_edit_map.png&quot;</span><span class="p">)</span>
+    <span class="n">notif_click_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">notification_clicks.png&quot;</span><span class="p">)</span>
+    <span class="n">font1</span> <span class="o">=</span> <span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">fonts</span><span class="se">\\</span><span class="s2">font1.ttf&quot;</span>
+
+    <span class="c1"># Game States</span>
+    <span class="n">EXIT</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">MAIN_MENU</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">GAMEPLAY_1</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 3-6 players game</span>
+    <span class="n">GAMEPLAY_2</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 2 players game</span>
+
+    <span class="c1"># Gameplay stages</span>
+    <span class="n">CHOOSE_FIRST_TURN</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SETUP</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">DRAFT</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">ATTACK</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">FORTIFY</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">EDIT</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">HOLD</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">GAME_OVER</span> <span class="o">=</span> <span class="mi">7</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">clock</span><span class="p">,</span> <span class="n">window_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param screen:</span>
+<span class="sd">        :param clock:</span>
+<span class="sd">        :param window_size:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">clock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># image paper in gameplay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paper_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paper_img</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win_window</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">win_window</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_window_paper_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opt_window_paper_image</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_name_window</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opt_window_paper_image</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.18</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.17</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notif_edit_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notif_edit_img</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notif_click_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notif_click_img</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)))</span>
+
+        <span class="c1"># set initial state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span>
+
+        <span class="c1"># set initial gameplay stage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHOOSE_FIRST_TURN</span>
+
+        <span class="c1"># List of Player objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Winner Player object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">winner</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Current player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">turn</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># initialise MainMenu object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span> <span class="o">=</span> <span class="n">MainMenu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+
+        <span class="c1"># initialise Map object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countries_divided</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_window</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># All necessary dice attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice</span> <span class="o">=</span> <span class="n">Dice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="c1"># Dice attributes for first turn selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_thrown</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Lists of dice during attacking phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_dice</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defend_dice</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Attributes for attacking phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Holds country that is currently selected</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Boolean whether any country is selected</span>
+
+        <span class="c1"># Boolean whether any country has been captured now, used when moving troops to captured country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Holds captured country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Counts how many countries the player captured during his turn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">captured_countries_in_turn</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Buttons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_next_phase_button</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">option_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok_button</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_buttons</span><span class="p">()</span>
+
+        <span class="c1"># Initialise Deck object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deck</span> <span class="o">=</span> <span class="n">Deck</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for card sets that are sold</span>
+
+        <span class="c1"># Attributes for Fortify phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># holds fortifying country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fortify_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Defines whether secret mission mode is enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission_card</span> <span class="o">=</span> <span class="n">MissionCards</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+
+        <span class="c1"># input box to change name of the country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_box</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+
+    <span class="c1"># Main running loop</span>
+<div class="viewcode-block" id="Game.run">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs The whole logic of the game</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>\
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAME_OVER</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">winner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_win_window</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span> <span class="ow">or</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span> <span class="ow">or</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORTIFY</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> \
+                    <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">switch_to_next_phase</span><span class="p">()</span>
+                <span class="c1">#pygame.time.delay(1000)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>  <span class="c1"># pygame.display.flip() ?</span></div>
+
+
+    <span class="c1"># Controls all event types</span>
+<div class="viewcode-block" id="Game.events">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.events">[docs]</a>
+    <span class="k">def</span> <span class="nf">events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detects events during running and handles them</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">check_clicks</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">check_clicks</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">option_button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">custom_button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">handle_country_clicks</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">handle_profile_clicks</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_BACKSPACE</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">unicode</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+    <span class="c1"># Draws all elements on the screen</span>
+<div class="viewcode-block" id="Game.draw">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws all elements on the screen during different stages of the game</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_state_main_menu</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_state_gameplay</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_buttons</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_card_bonus_info</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_change_name_window</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHOOSE_FIRST_TURN</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paper_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice_animate</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice</span><span class="o">.</span><span class="n">draw_dice_w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defend_dice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice</span><span class="o">.</span><span class="n">draw_dice_r</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_dice</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">mission_id</span> \
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mission_card</span><span class="o">.</span><span class="n">mission_completed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">mission_id</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">winner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">draw_win_window</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAME_OVER</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLD</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_edit_map_notification</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_clicks_notification</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.check_state_main_menu">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.check_state_main_menu">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_state_main_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Keeps track of current game states in objects and activates necessary functions.</span>
+<span class="sd">        (for gameplay setup) during MAIN MENU state</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">create_countries</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">secret_mission_mode</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span><span class="p">)</span>
+            <span class="c1"># When decision on number of players has been done it passes it to Map</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">set_players_and_ai</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_num_players</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_num_ai_players</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_player_types</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">create_players</span><span class="p">()</span>
+            <span class="c1"># Define players</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">get_players</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deal_initial_troops_to_players</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">change_text</span><span class="p">(</span><span class="s2">&quot;Play&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">create_countries</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">secret_mission_mode</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">set_players_and_ai</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_num_players</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_num_ai_players</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_player_types</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">create_players</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">get_players</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deal_initial_troops_to_players</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EXIT</span></div>
+
+
+<div class="viewcode-block" id="Game.check_state_gameplay">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.check_state_gameplay">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_state_gameplay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Keeps track of current game states in objects and activates necessary functions during GAMEPLAY1 state</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHOOSE_FIRST_TURN</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAIN_MENU</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_menu</span><span class="o">.</span><span class="n">change_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHOOSE_FIRST_TURN</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choose_first_turn</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHOOSE_FIRST_TURN</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choose_first_turn</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">42</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">create_cards</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">)</span></div>
+
+
+    <span class="c1"># pass turn to the next player</span>
+<div class="viewcode-block" id="Game.pass_turn">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.pass_turn">[docs]</a>
+    <span class="k">def</span> <span class="nf">pass_turn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes turn to the next player</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">change_turn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SETUP</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_ai_actions</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.choose_first_turn">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.choose_first_turn">[docs]</a>
+    <span class="k">def</span> <span class="nf">choose_first_turn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function handles the decision on which player goes first</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">change_turn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span>
+        <span class="p">):</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice</span><span class="o">.</span><span class="n">throw</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="p">]</span>  <span class="c1"># makes list of 3 random dice values, like 3 dice thrown</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dice_thrown</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation_start_time</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_start_time</span> <span class="o">&gt;=</span> <span class="mi">2500</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dice_thrown</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dice_thrown</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">change_turn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dice_thrown</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLD</span></div>
+
+
+<div class="viewcode-block" id="Game.dice_animate">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.dice_animate">[docs]</a>
+    <span class="k">def</span> <span class="nf">dice_animate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specific function for &quot;Choose who goes first&quot; gameplay phase</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span><span class="p">:</span>
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">current_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_start_time</span> <span class="o">&lt;</span> <span class="mi">3000</span><span class="p">:</span>  <span class="c1"># 2 seconds</span>
+                <span class="c1"># Call the dice.animation method to display the animation</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dice</span><span class="o">.</span><span class="n">animation</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dice_thrown</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dice_throw_index</span><span class="p">]</span><span class="o">.</span><span class="n">get_color_name</span><span class="p">(),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">showing_dice_animation</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.divide_countries">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.divide_countries">[docs]</a>
+    <span class="k">def</span> <span class="nf">divide_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specific function for 2 player game.</span>
+<span class="sd">        It sets randomly initial 14 owned countries to each player and sets the rest as neutral.</span>
+<span class="sd">        Adds 1 troop to each country</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rand_ints</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">42</span><span class="p">),</span> <span class="mi">42</span><span class="p">)</span>
+        <span class="n">part_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand_ints</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span>
+        <span class="n">set1</span> <span class="o">=</span> <span class="n">rand_ints</span><span class="p">[:</span><span class="n">part_size</span><span class="p">]</span>
+        <span class="n">set2</span> <span class="o">=</span> <span class="n">rand_ints</span><span class="p">[</span><span class="n">part_size</span><span class="p">:</span> <span class="n">part_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">set3</span> <span class="o">=</span> <span class="n">rand_ints</span><span class="p">[</span><span class="n">part_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:]</span>
+        <span class="k">for</span> <span class="n">country_index</span> <span class="ow">in</span> <span class="n">set1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">]</span><span class="o">.</span><span class="n">set_owner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">]</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_avail_troop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">add_country</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">country_index</span> <span class="ow">in</span> <span class="n">set2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">]</span><span class="o">.</span><span class="n">set_owner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">]</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">remove_avail_troop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_country</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">country_index</span> <span class="ow">in</span> <span class="n">set3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">[</span><span class="n">country_index</span><span class="p">]</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countries_divided</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Game.handle_country_clicks">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.handle_country_clicks">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_country_clicks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouse_pos</span><span class="p">,</span> <span class="n">event_button</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is specifically for country buttons.</span>
+<span class="sd">        It triggers different methods depending on gameplay stage</span>
+<span class="sd">        :param mouse_pos: Holds mouse position coordinates</span>
+<span class="sd">        :param event_button: Holds event button type. like left/right mouse click, wheel up/down</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">mouse_pos</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SETUP</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">occupy_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">attack_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">select_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="ow">and</span> <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">move_troop_to_captured</span><span class="p">()</span>
+                        <span class="k">elif</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="ow">and</span> <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">move_troop_from_captured</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORTIFY</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">country</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">highlight_connected_countries</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">elif</span> <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fortify_counter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span> <span class="o">=</span> <span class="n">country</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">fortify_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="k">if</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span> <span class="o">==</span> <span class="n">country</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">move_troop_to_fortified</span><span class="p">()</span>
+                                <span class="k">elif</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span> <span class="o">==</span> <span class="n">country</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">move_troop_from_fortified</span><span class="p">()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">select_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">place_troop</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">country</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">:</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">highlight_neighbour_countries</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+                                    <span class="k">elif</span> <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span><span class="p">:</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_neighbours</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span><span class="p">:</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">add_to_neighbours</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">select_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">==</span> <span class="n">country</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span> <span class="o">=</span> <span class="kc">False</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="n">country</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">input_box</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="mi">60</span><span class="p">,</span> <span class="n">country</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">30</span><span class="p">,</span>
+                                                             <span class="mi">200</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">change_pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">50</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">change_pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span>
+                                                              <span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">50</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.change_name">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.change_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">change_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes name of the country and adapts new name in relevant data structures</span>
+<span class="sd">        :param new_name: String</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="ow">and</span> <span class="n">new_name</span> <span class="ow">and</span> <span class="n">new_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">old_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">():</span>
+                        <span class="n">v</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                        <span class="n">v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">()]</span>
+            <span class="c1"># Remove the old key-value pair</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">()]</span>
+            <span class="c1"># Insert the value with the new key</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">():</span>
+                    <span class="n">country</span><span class="o">.</span><span class="n">country_name</span> <span class="o">=</span> <span class="n">new_name</span>
+                    <span class="k">break</span>
+            <span class="k">for</span> <span class="n">card</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">card</span><span class="o">.</span><span class="n">country_name</span> <span class="o">==</span> <span class="n">old_name</span><span class="p">:</span>
+                    <span class="n">card</span><span class="o">.</span><span class="n">country_name</span> <span class="o">=</span> <span class="n">new_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Game.cancel">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.cancel">[docs]</a>
+    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for &quot;Cancel&quot; button in &quot;Change country name&quot; window.</span>
+<span class="sd">        It cancels the input and closes window</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_box_open</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Game.add_to_neighbours">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.add_to_neighbours">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_to_neighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds country to the selected country&#39;s &quot;Neighbours&quot;</span>
+<span class="sd">        This country will be considered as neighbour country and will now be able to interact with</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Game.remove_from_neighbours">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.remove_from_neighbours">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_from_neighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        removes country from the selected country&#39;s &quot;Neighbours&quot;</span>
+<span class="sd">        This country will not be now considered as neighbour country</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">()]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">()]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.place_troop">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.place_troop">[docs]</a>
+    <span class="k">def</span> <span class="nf">place_troop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Places troop to the country</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_player</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">current_player</span><span class="o">.</span><span class="n">troops_available</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">current_player</span> <span class="o">==</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span><span class="p">:</span>
+            <span class="n">country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">current_player</span><span class="o">.</span><span class="n">remove_avail_troop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.get_card_bonus">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.get_card_bonus">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_card_bonus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get next card trade bonus number</span>
+<span class="sd">        :return: troops_to_add: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nth_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">nth_set</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">troops_to_add</span> <span class="o">=</span> <span class="n">nth_set</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">nth_set</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">troops_to_add</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">troops_to_add</span> <span class="o">=</span> <span class="p">(</span><span class="n">nth_set</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">15</span>
+        <span class="k">return</span> <span class="n">troops_to_add</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_card_bonus_info">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw_card_bonus_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_card_bonus_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw next card trade bonus info</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">draw_text</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;Next Trade: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_card_bonus</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="mi">30</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.88</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.occupy_country">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.occupy_country">[docs]</a>
+    <span class="k">def</span> <span class="nf">occupy_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gives certain amount of available troops to the players.</span>
+<span class="sd">        Players placing their troops until no available troops remain.</span>
+<span class="sd">        Then switching to the next gameplay stage</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_player</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">current_player</span><span class="o">.</span><span class="n">troops_available</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">42</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span><span class="p">:</span>  <span class="c1"># 3-6 player game</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">all_countries_have_owner</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">country</span><span class="o">.</span><span class="n">set_owner</span><span class="p">(</span><span class="n">current_player</span><span class="p">)</span>
+                            <span class="n">country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="n">current_player</span><span class="o">.</span><span class="n">remove_avail_troop</span><span class="p">()</span>
+                            <span class="n">current_player</span><span class="o">.</span><span class="n">add_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">pass_turn</span><span class="p">()</span>
+                        <span class="k">elif</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">current_player</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You are doing something naughty!&quot;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="n">current_player</span><span class="p">:</span>
+                        <span class="n">country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">current_player</span><span class="o">.</span><span class="n">remove_avail_troop</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pass_turn</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">:</span>  <span class="c1"># 2 player game</span>
+                    <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">current_player</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You are doing something naughty!&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">current_player</span><span class="o">.</span><span class="n">remove_avail_troop</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pass_turn</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.move_troop_to_captured">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.move_troop_to_captured">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_troop_to_captured</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">troops</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves troop to the captured territory during Attack</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">troops</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="n">troops</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="n">troops</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.move_troop_from_captured">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.move_troop_from_captured">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_troop_from_captured</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves troop back from captured to selected territory during Attack</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">troops</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_dice</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.move_troop_to_fortified">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.move_troop_to_fortified">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_troop_to_fortified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves troop to the captured territory during Fortify</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">troops</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.move_troop_from_fortified">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.move_troop_from_fortified">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_troop_from_fortified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves troop back from captured to selected territory during Fortify</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span><span class="o">.</span><span class="n">troops</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fortifying_country</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.attack_country">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.attack_country">[docs]</a>
+    <span class="k">def</span> <span class="nf">attack_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates Attacking the country</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_player</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">country</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">:</span>  <span class="c1"># Unselect Country by second click</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">highlight_neighbour_countries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># self.country_selected = None</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;unselected&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span>
+                <span class="n">country</span> <span class="ow">in</span> <span class="n">current_player</span><span class="o">.</span><span class="n">countries</span>
+        <span class="p">):</span>  <span class="c1"># Error message when trying to attack own country</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Can&#39;t attack yourself &quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">get_neighbours</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">get_name</span><span class="p">()):</span>  <span class="c1"># Attack!</span>
+            <span class="n">attacker_lost_armies</span><span class="p">,</span> <span class="n">defender_lost_armies</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">current_player</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">,</span> <span class="n">country</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attack_dice</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defend_dice</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="n">country</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="n">defender_lost_armies</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="n">attacker_lost_armies</span><span class="p">)</span>
+            <span class="n">current_player</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="n">attacker_lost_armies</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">country</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="n">defender_lost_armies</span><span class="p">)</span>
+            <span class="c1"># If opponents country has 0 troops now, then overtake</span>
+            <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">troops</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span> <span class="o">=</span> <span class="n">country</span>
+                <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">remove_country</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">troops_holds</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">owner</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">-=</span> <span class="mi">1</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">-=</span> <span class="mi">1</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">owner</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">set_owner</span><span class="p">(</span><span class="n">current_player</span><span class="p">)</span>
+                <span class="n">current_player</span><span class="o">.</span><span class="n">add_country</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">add_troops</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">remove_troops</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">highlight_captured</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured_countries_in_turn</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">drop_highlights</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You can only attack neighbour countries&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.select_country">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.select_country">[docs]</a>
+    <span class="k">def</span> <span class="nf">select_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When clicked on the country This function assigns it as Selected country,</span>
+<span class="sd">        that later will be used.</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_player</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">highlight_captured</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">current_player</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">country</span><span class="o">.</span><span class="n">troops</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">current_player</span><span class="o">.</span><span class="n">all_neighbours_owned</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="n">country</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">highlight_neighbour_countries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORTIFY</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="n">country</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">highlight_connected_countries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># else:</span>
+            <span class="c1">#     self.selected = True</span>
+            <span class="c1">#     self.captured = False</span>
+            <span class="c1">#     self.country_selected = country</span>
+            <span class="c1">#     if self.gameplay_stage == self.ATTACK:</span>
+            <span class="c1">#         self.highlight_neighbour_countries(self.country_selected, True)</span>
+            <span class="c1">#     elif self.gameplay_stage == self.FORTIFY:</span>
+            <span class="c1">#         self.highlight_connected_countries(self.country_selected, True)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="n">country</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">highlight_neighbour_countries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.highlight_connected_countries">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.highlight_connected_countries">[docs]</a>
+    <span class="k">def</span> <span class="nf">highlight_connected_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">highlight</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Highlights connected countries during Fortify stage</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :param highlight:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">adjacent_countries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">selected_country</span><span class="p">):</span>
+            <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">selected_country</span><span class="p">)</span>
+            <span class="n">adjacent_countries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_country</span><span class="p">)</span>
+            <span class="n">neighbour_countries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">get_neighbours_countries</span><span class="p">(</span><span class="n">selected_country</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">neighbour</span> <span class="ow">in</span> <span class="n">neighbour_countries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">neighbour</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span> <span class="ow">and</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="n">selected_country</span><span class="o">.</span><span class="n">owner</span><span class="p">:</span>
+                    <span class="n">dfs</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+
+        <span class="n">dfs</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">adjacent_countries</span><span class="p">:</span>
+            <span class="n">country</span><span class="o">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">highlight</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.highlight_captured">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.highlight_captured">[docs]</a>
+    <span class="k">def</span> <span class="nf">highlight_captured</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">highlight</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes colour of just captured country brighter</span>
+<span class="sd">        :param highlight:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">captured_country</span><span class="o">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">highlight</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.highlight_neighbour_countries">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.highlight_neighbour_countries">[docs]</a>
+    <span class="k">def</span> <span class="nf">highlight_neighbour_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">highlight</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes colours of neighbouring countries brighter to highlight them during attack</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :param highlight:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">neighbour_country_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">get_neighbours</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="ow">in</span> <span class="n">neighbour_country_names</span>
+                    <span class="ow">and</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">countries</span>
+            <span class="p">):</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">highlight</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.deal_initial_troops_to_players">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.deal_initial_troops_to_players">[docs]</a>
+    <span class="k">def</span> <span class="nf">deal_initial_troops_to_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Depending on number of players it deals different amount of initial troops during setup</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">troops</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">troops</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">troops</span> <span class="o">=</span> <span class="mi">35</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">troops</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">troops</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">troops</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">add_avail_troops</span><span class="p">(</span><span class="n">troops</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.switch_to_next_phase">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.switch_to_next_phase">[docs]</a>
+    <span class="k">def</span> <span class="nf">switch_to_next_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is triggered when &quot;Next Phase&quot; button is clicked</span>
+<span class="sd">        Switches gameplay phase to the next phase and calls relevant functions needed for</span>
+<span class="sd">        specific phases</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLD</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SETUP</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">drop_highlights</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries_divided</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">42</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">divide_countries</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">countries_divided</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">change_text</span><span class="p">(</span><span class="s2">&quot;Draft&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_ai_actions</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SETUP</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">troops_available</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span>
+            <span class="c1"># Give bonus troops for number of countries</span>
+            <span class="n">num_of_avail_troops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">calculate_num_of_draft_troops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">add_avail_troops</span><span class="p">(</span><span class="n">num_of_avail_troops</span><span class="p">)</span>
+            <span class="c1"># Give bonus armies for captured continent</span>
+            <span class="n">current_player_continents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">continents</span>
+            <span class="k">if</span> <span class="n">current_player_continents</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">continent</span> <span class="ow">in</span> <span class="n">current_player_continents</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">add_avail_troops</span><span class="p">(</span><span class="n">continent</span><span class="o">.</span><span class="n">get_bonus</span><span class="p">())</span>
+            <span class="c1"># Deal mission cards to players</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_mission_mode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deal_mission_cards</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">change_text</span><span class="p">(</span><span class="s2">&quot;Attack&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_ai_actions</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORTIFY</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">change_text</span><span class="p">(</span><span class="s2">&quot;End&quot;</span><span class="p">)</span>
+            <span class="c1"># If at least one country has been captured by current player he gets a card</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured_countries_in_turn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">add_card</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">get_card</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">cards</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">sell_cards</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">captured_countries_in_turn</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">drop_highlights</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_ai_actions</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORTIFY</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pass_turn</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">turn</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">num_of_avail_troops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">calculate_num_of_draft_troops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">add_avail_troops</span><span class="p">(</span><span class="n">num_of_avail_troops</span><span class="p">)</span>
+            <span class="c1"># Give bonus armies for captured continent</span>
+            <span class="n">current_player_continents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">continents</span>
+            <span class="k">if</span> <span class="n">current_player_continents</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">continent</span> <span class="ow">in</span> <span class="n">current_player_continents</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">add_avail_troops</span><span class="p">(</span><span class="n">continent</span><span class="o">.</span><span class="n">get_bonus</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">change_text</span><span class="p">(</span><span class="s2">&quot;Attack&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">drop_highlights</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fortify_counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_ai_actions</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">troops_available</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_phase_button</span><span class="o">.</span><span class="n">change_text</span><span class="p">(</span><span class="s2">&quot;Fortify&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">drop_highlights</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">],</span> <span class="n">AI</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_ai_actions</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.deal_mission_cards">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.deal_mission_cards">[docs]</a>
+    <span class="k">def</span> <span class="nf">deal_mission_cards</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Randomly deals mission cards to the players</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">random_indexes</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">random_indexes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">id_</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+                <span class="n">player</span><span class="o">.</span><span class="n">mission_id</span> <span class="o">=</span> <span class="n">id_</span>
+                <span class="n">player</span><span class="o">.</span><span class="n">player_to_destroy</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">player</span><span class="o">.</span><span class="n">mission_id</span> <span class="o">=</span> <span class="n">id_</span></div>
+
+
+<div class="viewcode-block" id="Game.create_next_phase_button">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.create_next_phase_button">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_next_phase_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a button to switch between phases</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">button_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;images</span><span class="se">\\</span><span class="s2">button_high.png&quot;</span><span class="p">)</span>
+        <span class="n">button_hover_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;images</span><span class="se">\\</span><span class="s2">button_hover.png&quot;</span><span class="p">)</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">)</span>
+        <span class="n">font_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">-</span> <span class="n">width</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">button_image</span><span class="p">,</span>
+                        <span class="n">button_hover_image</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                        <span class="s2">&quot;PLAY&quot;</span><span class="p">,</span>
+                        <span class="n">font_size</span><span class="p">,</span>
+                        <span class="n">width</span><span class="p">,</span>
+                        <span class="n">height</span><span class="p">,</span>
+                        <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">switch_to_next_phase</span><span class="p">()</span>
+                        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">button</span></div>
+
+
+<div class="viewcode-block" id="Game.handle_profile_clicks">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.handle_profile_clicks">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_profile_clicks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouse_pos</span><span class="p">,</span> <span class="n">event_button</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles player profile clicks</span>
+<span class="sd">        Sells set of cards if have any</span>
+<span class="sd">        :param mouse_pos:</span>
+<span class="sd">        :param event_button:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">mouse_pos</span><span class="p">)</span> <span class="ow">and</span> <span class="n">event_button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">have_set_of_cards</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">sell_cards</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_win_window">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw_win_window">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_win_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws Win Window when someone has won</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">win_window</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">draw_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">winner</span><span class="o">.</span><span class="n">color_str</span><span class="si">}</span><span class="s2"> Won!&quot;</span><span class="p">,</span>
+                  <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span>
+                  <span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+                  <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="mi">60</span><span class="p">),</span>
+                  <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">),</span>
+                  <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_edit_map_notification">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw_edit_map_notification">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_edit_map_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notif_edit_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">notif_edit_img</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="mi">10</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_clicks_notification">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw_clicks_notification">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_clicks_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notif_click_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">notif_click_img</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="mi">10</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Game.set_option_window">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.set_option_window">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_option_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets Boolean for option window</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_window</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_window</span></div>
+
+
+<div class="viewcode-block" id="Game.edit_map">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.edit_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">edit_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables Map editing</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLD</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opt_window</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Game.create_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.create_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates all necessary buttons for gameplay.</span>
+<span class="sd">        So far just back button</span>
+<span class="sd">        :return: buttons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="s2">&quot;| | |&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_option_window</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">customise</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)),</span>
+            <span class="s2">&quot;Edit&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.04</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">edit_map</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">ok</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s2">&quot;Ok&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.03</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_text</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">cancel</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_image</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s2">&quot;Cancel&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.03</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">opt</span><span class="p">,</span> <span class="n">customise</span><span class="p">,</span> <span class="n">ok</span><span class="p">,</span> <span class="n">cancel</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws buttons</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">option_button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_window</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt_window_paper_image</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.07</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">custom_button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">draw_button</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">EDIT</span><span class="p">:</span>
+            <span class="n">draw_text</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                <span class="s2">&quot;Map Editor Mode&quot;</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.35</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.draw_change_name_window">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.draw_change_name_window">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_change_name_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws window to change a country name</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">txt_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_text</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_name_window</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">40</span><span class="p">))</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">txt_surface</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_box</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.handle_ai_actions">
+<a class="viewcode-back" href="../../utils.html#utils.game.Game.handle_ai_actions">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_ai_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles AI bot actions during different gameplay phases</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ai</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SETUP</span><span class="p">:</span>
+            <span class="n">ai</span><span class="o">.</span><span class="n">occupy_country</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">troops_available</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pass_turn</span><span class="p">()</span>
+                    <span class="k">break</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRAFT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ai</span><span class="o">.</span><span class="n">have_set_of_cards</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">ai</span><span class="o">.</span><span class="n">sell_cards</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nth_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="p">)</span>
+            <span class="k">while</span> <span class="n">ai</span><span class="o">.</span><span class="n">troops_available</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ai</span><span class="o">.</span><span class="n">occupy_country</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAMEPLAY_1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ATTACK</span><span class="p">:</span>
+            <span class="n">attacking</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.7</span>
+            <span class="k">while</span> <span class="n">attacking</span><span class="p">:</span>
+                <span class="n">attacking_country</span><span class="p">,</span> <span class="n">defending_country</span> <span class="o">=</span> <span class="n">ai</span><span class="o">.</span><span class="n">choose_country_to_attack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span> <span class="o">=</span> <span class="n">attacking_country</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_selected</span><span class="p">:</span>
+                    <span class="k">while</span> <span class="n">attacking_country</span><span class="o">.</span><span class="n">troops</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">attack_country</span><span class="p">(</span><span class="n">defending_country</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">captured</span><span class="p">:</span>
+                        <span class="n">num_of_troops</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">attacking_country</span><span class="o">.</span><span class="n">troops</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">move_troop_to_captured</span><span class="p">(</span><span class="n">troops</span><span class="o">=</span><span class="n">num_of_troops</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">captured</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">prob</span><span class="p">:</span>
+                        <span class="n">attacking</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">attacking</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gameplay_stage</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORTIFY</span><span class="p">:</span>
+            <span class="n">ai</span><span class="o">.</span><span class="n">fortify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Team 13.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

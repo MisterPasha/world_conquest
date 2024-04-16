@@ -3,13 +3,13 @@ from button import Button  # Importing Button class
 
 # Initialize pygame
 pygame.init()
+# The button image for country selection
+country_button_image = pygame.image.load("images\\country_button.png")
 
 
 class Country:
-    # The button image for country selection
-    country_button_image = pygame.image.load("images\\country_button.png")
-
-    def __init__(self, screen, image, name):
+    def __init__(
+            self, screen, image, name):
         """
         Initializes a country object
         :param screen: The Pygame screen surface
@@ -161,7 +161,7 @@ class Country:
         color = pygame.Color(new_color)
 
         # Create the button with the appropriate color and text
-        btn = self.fill_with_color(self.country_button_image, color)
+        btn = self.fill_with_color(country_button_image, color)
         button = Button(
             btn,
             btn,
@@ -181,7 +181,7 @@ class Country:
         """
         new_color = tuple(color - 20 for color in self.color)
         color = pygame.Color(new_color)
-        new_btn_color = self.fill_with_color(self.country_button_image, color)
+        new_btn_color = self.fill_with_color(country_button_image, color)
         self.country_btn.change_image(new_btn_color)
 
     def set_highlight_color(self):

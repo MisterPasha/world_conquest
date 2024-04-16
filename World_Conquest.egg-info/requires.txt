@@ -1,0 +1,7 @@
+numpy
+requests
+pygame
+
+[dev]
+pytest
+sphinx

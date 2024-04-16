@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils.map &mdash; World Conquest 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            World Conquest
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Software_Eng</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">World Conquest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">utils.map</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for utils.map</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pygame</span>  <span class="c1"># Import the pygame library for game development</span>
+<span class="kn">from</span> <span class="nn">button</span> <span class="kn">import</span> <span class="n">Button</span>  <span class="c1"># Importing Button class</span>
+<span class="kn">from</span> <span class="nn">countries</span> <span class="kn">import</span> <span class="n">Country</span>
+<span class="kn">from</span> <span class="nn">countries</span> <span class="kn">import</span> <span class="n">create_continents</span><span class="p">,</span> <span class="n">create_neighbours</span>
+<span class="kn">from</span> <span class="nn">main_menu</span> <span class="kn">import</span> <span class="n">MainMenu</span>
+<span class="kn">from</span> <span class="nn">main_menu</span> <span class="kn">import</span> <span class="n">draw_text</span>
+<span class="kn">from</span> <span class="nn">player</span> <span class="kn">import</span> <span class="n">Human</span><span class="p">,</span> <span class="n">AI</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="c1"># ...</span>
+<span class="n">plate_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">dice_table.png&quot;</span><span class="p">)</span>
+<span class="n">map_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">map.png&quot;</span><span class="p">)</span>
+<span class="n">ports_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">ports.png&quot;</span><span class="p">)</span>
+<span class="n">sea_paths_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">sea_paths.png&quot;</span><span class="p">)</span>
+<span class="n">load_window_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">load_window.png&quot;</span><span class="p">)</span>
+
+<span class="n">button_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_high.png&quot;</span><span class="p">)</span>
+<span class="n">button_hover_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">images</span><span class="se">\\</span><span class="s2">button_hover.png&quot;</span><span class="p">)</span>
+<span class="n">font1</span> <span class="o">=</span> <span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">fonts</span><span class="se">\\</span><span class="s2">font1.ttf&quot;</span>
+
+<span class="c1"># Color sets</span>
+<span class="n">YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mi">206</span><span class="p">,</span> <span class="mi">222</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">PINK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">171</span><span class="p">,</span> <span class="mi">198</span><span class="p">)</span>
+<span class="n">BROWN</span> <span class="o">=</span> <span class="p">(</span><span class="mi">184</span><span class="p">,</span> <span class="mi">149</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+<span class="n">GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mi">84</span><span class="p">,</span> <span class="mi">199</span><span class="p">,</span> <span class="mi">153</span><span class="p">)</span>
+<span class="n">RED</span> <span class="o">=</span> <span class="p">(</span><span class="mi">168</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">67</span><span class="p">)</span>
+<span class="n">BLUE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">57</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">196</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Map">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map">[docs]</a>
+<span class="k">class</span> <span class="nc">Map</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param screen:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AI_players</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">map_img</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plate_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">plate_img</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mf">4.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mf">4.5</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ports_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">ports_img</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sea_paths_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">sea_paths_img</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_window_img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">load_window_img</span><span class="p">,</span> <span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_buttons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">countries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighbours</span> <span class="o">=</span> <span class="n">create_neighbours</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continents</span> <span class="o">=</span> <span class="n">create_continents</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">COLORS</span> <span class="o">=</span> <span class="p">[</span><span class="n">YELLOW</span><span class="p">,</span> <span class="n">PINK</span><span class="p">,</span> <span class="n">BROWN</span><span class="p">,</span> <span class="n">GREEN</span><span class="p">,</span> <span class="n">RED</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">COLORS_STR</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;Pink&quot;</span><span class="p">,</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span> <span class="s2">&quot;Green&quot;</span><span class="p">,</span> <span class="s2">&quot;Red&quot;</span><span class="p">,</span> <span class="s2">&quot;Blue&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">turn_indicator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_turn_indicator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Map.draw">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws all necessary elements on the map</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sea_paths_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+                <span class="n">country</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()):</span>
+                    <span class="n">draw_text</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">country</span><span class="o">.</span><span class="n">country_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.04</span><span class="p">),</span>
+                        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">country_btn</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">30</span><span class="p">),</span>
+                    <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ports_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">draw_profile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_dice_plate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_turn_indicator</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">42</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_window_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Map.draw_button">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.draw_button">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Map.check_clicks">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.check_clicks">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_clicks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks clicks on buttons and countries</span>
+<span class="sd">        :param event:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">check_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Map.drop_highlights">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.drop_highlights">[docs]</a>
+    <span class="k">def</span> <span class="nf">drop_highlights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Drops highlights from each country</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Map.get_state">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.get_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return: self.state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="Map.set_state">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.set_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param new_state:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">new_state</span></div>
+
+
+    <span class="c1"># Sets number of human and AI players</span>
+<div class="viewcode-block" id="Map.set_players_and_ai">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.set_players_and_ai">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_players_and_ai</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">players</span><span class="p">,</span> <span class="n">ai</span><span class="p">,</span> <span class="n">player_types</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param player_types:</span>
+<span class="sd">        :param players:</span>
+<span class="sd">        :param ai:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="n">players</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AI_players</span> <span class="o">=</span> <span class="n">ai</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_types</span> <span class="o">=</span> <span class="n">player_types</span></div>
+
+
+<div class="viewcode-block" id="Map.create_buttons">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.create_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates all necessary buttons for gameplay.</span>
+<span class="sd">        So far just back button</span>
+<span class="sd">        :return: buttons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="n">button_image</span><span class="p">,</span>
+            <span class="n">button_hover_image</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)),</span>
+            <span class="s2">&quot;Back&quot;</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.04</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="n">font</span><span class="o">=</span><span class="n">font1</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">back</span></div>
+
+
+<div class="viewcode-block" id="Map.create_players">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.create_players">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates players.</span>
+<span class="sd">        So far creates only Human Players, will be changed when we implement AI</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_profiles</span> <span class="o">=</span> <span class="n">MainMenu</span><span class="o">.</span><span class="n">player_images</span>
+        <span class="n">players_in_game</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">player</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
+                <span class="n">players_in_game</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">Human</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">all_profiles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLORS_STR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">player</span> <span class="o">==</span> <span class="s2">&quot;ai&quot;</span><span class="p">:</span>
+                <span class="n">players_in_game</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">AI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">all_profiles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLORS_STR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">players_in_game</span><span class="p">):</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_x</span> <span class="o">*</span> <span class="mf">0.08</span><span class="p">)</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">width</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">set_pos_size</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">-</span> <span class="n">width</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span>
+                <span class="n">width</span><span class="p">,</span>
+                <span class="n">height</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span> <span class="o">=</span> <span class="n">players_in_game</span></div>
+
+
+<div class="viewcode-block" id="Map.get_players">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.get_players">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of Player objects</span>
+<span class="sd">        :return: self.player_profiles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span></div>
+
+
+<div class="viewcode-block" id="Map.create_turn_indicator">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.create_turn_indicator">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_turn_indicator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Another dummy thing, just to see who&#39;s turn it is right now.</span>
+<span class="sd">        Were going to think about something better than green triangle</span>
+<span class="sd">        :return: turn_indicator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_y</span> <span class="o">*</span> <span class="mf">0.05</span>
+        <span class="n">turn_indicator</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;images</span><span class="se">\\</span><span class="s2">green_dot.png&quot;</span><span class="p">)</span>
+        <span class="n">turn_indicator</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">turn_indicator</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">turn_indicator</span></div>
+
+
+    <span class="c1"># Same as above</span>
+<div class="viewcode-block" id="Map.draw_turn_indicator">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.draw_turn_indicator">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_turn_indicator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">turn_indicator</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_profiles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">turn_indicator</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Map.draw_dice_plate">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.draw_dice_plate">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_dice_plate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plate_img</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">plate_img</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">plate_img</span><span class="o">.</span><span class="n">get_height</span><span class="p">(),</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Map.all_countries_have_owner">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.all_countries_have_owner">[docs]</a>
+    <span class="k">def</span> <span class="nf">all_countries_have_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if all countries have an owner</span>
+<span class="sd">        :return: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">country</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Map.change_turn">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.change_turn">[docs]</a>
+    <span class="k">def</span> <span class="nf">change_turn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Keeps track of player turn here to indicate their turn somehow, for now it&#39;s just green triangle</span>
+<span class="sd">        :param turn:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_turn</span> <span class="o">=</span> <span class="n">turn</span></div>
+
+
+<div class="viewcode-block" id="Map.load_country_image">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.load_country_image">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_country_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param name:</span>
+<span class="sd">        :param image_path:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Load the image and create a Country object</span>
+        <span class="n">country</span> <span class="o">=</span> <span class="n">Country</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">(),</span> <span class="n">name</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>  <span class="c1"># Ensure thread-safe append</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">country</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Map.load_all_images">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.load_all_images">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_all_images</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="s2">&quot;..</span><span class="se">\\</span><span class="s2">country_imgs&quot;</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+        <span class="n">countries</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">create_neighbours</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">file</span><span class="p">,</span> <span class="n">country_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">countries</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_country_image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="n">country_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Map.create_countries">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.create_countries">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Start a single thread to load all images</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">load_all_images</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Map.get_continents">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.get_continents">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_continents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">continents</span></div>
+
+
+<div class="viewcode-block" id="Map.get_neighbours">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.get_neighbours">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_neighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns neighbour country names</span>
+<span class="sd">        :param country_name:</span>
+<span class="sd">        :return: self.neighbours[country_name]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighbours</span><span class="p">[</span><span class="n">country_name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Map.get_neighbours_countries">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.get_neighbours_countries">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_neighbours_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns neighbour country objects</span>
+<span class="sd">        :param country:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">country_name</span> <span class="o">=</span> <span class="n">country</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+        <span class="n">neighbour_country_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_neighbours</span><span class="p">(</span><span class="n">country_name</span><span class="p">)</span>
+        <span class="n">countries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">countries</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="ow">in</span> <span class="n">neighbour_country_names</span><span class="p">:</span>
+                <span class="n">countries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">countries</span></div>
+
+
+<div class="viewcode-block" id="Map.get_connected_countries">
+<a class="viewcode-back" href="../../utils.html#utils.map.Map.get_connected_countries">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_connected_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country</span><span class="p">):</span>
+        <span class="n">adjacent_countries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">selected_country</span><span class="p">):</span>
+            <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">selected_country</span><span class="p">)</span>
+            <span class="n">adjacent_countries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_country</span><span class="p">)</span>
+            <span class="n">neighbour_countries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_neighbours_countries</span><span class="p">(</span><span class="n">selected_country</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">neighbour</span> <span class="ow">in</span> <span class="n">neighbour_countries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">neighbour</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span> <span class="ow">and</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="n">selected_country</span><span class="o">.</span><span class="n">owner</span><span class="p">:</span>
+                    <span class="n">dfs</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+
+        <span class="n">dfs</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">adjacent_countries</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Team 13.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

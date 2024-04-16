@@ -26,7 +26,8 @@ class Dice:
         pygame.image.load("images\\red_die6.png"),
     ]
 
-    def __init__(self, screen):
+    def __init__(
+            self, screen):
         """
         Initialise DiceHandler in accordance to the screen
         + dictionary of dice images

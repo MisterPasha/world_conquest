@@ -1,14 +1,14 @@
-#from game import Game
-#import unittest
-#from unittest.mock import Mock, patch, MagicMock
-#import pygame  # Import the pygame library for game development
-#from button import Button  # Importing Button class from another module
-#from main_menu import MainMenu
-#from player import Player
-#from countries import Country
-#from map import Map
-#from countries import Continent
-#from deck import Deck, Card
+# from game import Game
+# import unittest
+# from unittest.mock import Mock, patch, MagicMock
+# import pygame  # Import the pygame library for game development
+# from button import Button  # Importing Button class from another module
+# from main_menu import MainMenu
+# from player import Player
+# from countries import Country
+# from map import Map
+# from countries import Continent
+# from deck import Deck, Card
 
 
 # class TestButton(unittest.TestCase):
@@ -199,7 +199,7 @@
 #         self.assertEqual(self.country.troops, 2)
 
 
-#class TestMap(unittest.TestCase):
+# class TestMap(unittest.TestCase):
 #    def setUp(self):
 #        """
 #
@@ -258,7 +258,7 @@
 #        self.assertEqual(self.map.current_turn, 1)
 #
 #
-#class TestContinent(unittest.TestCase):
+# class TestContinent(unittest.TestCase):
 #    def setUp(self):
 #        """
 #        Setup method to create a continent object before each test.
@@ -296,7 +296,7 @@
 #        with self.assertRaises(KeyError):
 #            invalid_continent.get_bonus()
 #
-#class TestDeck(unittest.TestCase):
+# class TestDeck(unittest.TestCase):
 #    def setUp(self):
 #        """
 #        Setup method to create a mocked Pygame screen object before each test.
@@ -351,7 +351,9 @@ class TestPlayer(unittest.TestCase):
         self.mock_profile_img = Mock()  # Mock the player's profile image
         self.color = (255, 255, 255)  # White
         self.color_str = "white"
-        self.player = Player(self.mock_screen, self.mock_profile_img, self.color, self.color_str)
+        self.player = Player(
+            self.mock_screen, self.mock_profile_img, self.color, self.color_str
+        )
 
     @patch("player.pygame.image.load")
     @patch("player.pygame.transform.scale")
@@ -382,7 +384,9 @@ class TestPlayer(unittest.TestCase):
             with self.subTest(i=i):
                 self.player.countries = [Mock(spec=Country) for _ in range(i)]
                 expected_troops = 3
-                self.assertEqual(self.player.calculate_num_of_draft_troops(), expected_troops)
+                self.assertEqual(
+                    self.player.calculate_num_of_draft_troops(), expected_troops
+                )
 
         # Test for more than 9 countries
         self.player.countries = [Mock(spec=Country) for _ in range(11)]
@@ -408,7 +412,9 @@ class TestPlayer(unittest.TestCase):
         deck.cards = []
         # Create three infantry cards and add them to the player's hand
         for _ in range(3):
-            self.player.cards.append(Card(self.mock_screen, "Country", "Infantry", None))
+            self.player.cards.append(
+                Card(self.mock_screen, "Country", "Infantry", None)
+            )
         # Add a wild card as well
         self.player.cards.append(Card(self.mock_screen, "Wild", "Wild", None))
 
@@ -421,9 +427,11 @@ class TestPlayer(unittest.TestCase):
         deck = Mock()
         deck.cards = []
         # Add one of each type to the player's hand
-        self.player.cards = [Card(self.mock_screen, "Country1", "Infantry", None),
-                             Card(self.mock_screen, "Country2", "Cavalry", None),
-                             Card(self.mock_screen, "Country3", "Artillery", None)]
+        self.player.cards = [
+            Card(self.mock_screen, "Country1", "Infantry", None),
+            Card(self.mock_screen, "Country2", "Cavalry", None),
+            Card(self.mock_screen, "Country3", "Artillery", None),
+        ]
         self.player.remove_distinct_cards(deck)
         # Check that the player's hand is empty and the deck received the cards
         self.assertEqual(len(self.player.cards), 0)
@@ -436,7 +444,9 @@ class TestPlayer(unittest.TestCase):
         deck = Mock()
         deck.cards = []
         # Add cards to ensure a set can be sold
-        self.player.cards = [Card(self.mock_screen, "Country1", "Infantry", None) for _ in range(3)]
+        self.player.cards = [
+            Card(self.mock_screen, "Country1", "Infantry", None) for _ in range(3)
+        ]
         initial_troops = self.player.troops_available
         nth_set = 1  # First set sold
         self.player.sell_cards(nth_set, deck)
@@ -465,4 +475,3 @@ class TestPlayer(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

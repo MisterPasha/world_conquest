@@ -7,18 +7,18 @@ pygame.mixer.init()
 
 class Button:
     def __init__(
-            # To be initialized
-            self,
-            original_image,
-            hover_image,
-            pos,
-            text,
-            font_size,
-            width,
-            height,
-            font=None,
-            action=None,
-            hover=True,
+        # To be initialized
+        self,
+        original_image,
+        hover_image,
+        pos,
+        text,
+        font_size,
+        width,
+        height,
+        font=None,
+        action=None,
+        hover=True,
     ):
         """
         Initialize a Button object
@@ -127,5 +127,6 @@ class Button:
         """
         self.position = (new_x, new_y)
         self.rect = self.image.get_rect(topleft=(new_x, new_y))
+
 
 # Finished

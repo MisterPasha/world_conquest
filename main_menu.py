@@ -48,11 +48,11 @@ def draw_text2(screen, text, size, color, x, y, font=None):
     """
     max_line_width = 10
     font = pygame.font.Font(font, size)
-    words = text.split(' ')
-    line = ''
+    words = text.split(" ")
+    line = ""
     for word in words:
         # Check if adding the next word exceeds the line width
-        test_line = line + word + ' '
+        test_line = line + word + " "
         test_surface = font.render(test_line, True, color)
 
         if test_surface.get_width() > max_line_width:
@@ -63,7 +63,7 @@ def draw_text2(screen, text, size, color, x, y, font=None):
             screen.blit(text_surface, text_rect)
             # Move to the next line
             y += text_surface.get_height()
-            line = word + ' '
+            line = word + " "
         else:
             line = test_line
 
@@ -84,6 +84,7 @@ class MainMenu:
     button_paper_image = pygame.image.load("images\\button_paper.png")
     button_paper_hover_image = pygame.image.load("images\\button_paper_hover.png")
     player_slot_image = pygame.image.load("images\\player_slot.png")
+    QRCode = pygame.image.load("images\\QRFrame.png")
     player_images = [
         # Player images
         pygame.image.load("images\\player_1.png"),
@@ -126,6 +127,10 @@ class MainMenu:
             (int(screen.get_width() * 0.4), int(screen.get_height() * 0.9)),
         )
 
+        self.QRCode = pygame.transform.scale(
+            self.QRCode,
+            (int(screen.get_width() * 0.5), int(screen.get_height() * 0.9)),
+        )
         self.center_x, self.center_y = screen.get_width() / 2, screen.get_height() / 2
 
         self.human_image = pygame.transform.scale(
@@ -205,12 +210,12 @@ class MainMenu:
         :return: [NONE]
         """
         self.screen.blit(
-            self.new_game_paper,
+            self.QRCode,
             (int(self.center_x * 0.08), int(self.center_y * 0.12)),
         )
         draw_text(
             self.screen,
-            "FAQ",
+            "",
             int(self.center_y * 0.17),
             (0, 0, 0),
             int(self.center_x * 0.14),
@@ -619,5 +624,6 @@ class MainMenu:
             b.change_image(self.P_or_AI_button_clicked)
             b.clicked = True
         return buttons1 + buttons2
+
 
 # Finished

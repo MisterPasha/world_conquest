@@ -50,9 +50,13 @@ class Deck:
         units = ["Infantry"] * 14 + ["Cavalry"] * 14 + ["Artillery"] * 14 + ["Wild"] * 2
         for country, unit, card_img in zip_longest(map_.countries, units, card_images):
             if unit == "Infantry":
-                self.cards.append(Card(self.screen, card_img, country.get_name(), unit, infantry))
+                self.cards.append(
+                    Card(self.screen, card_img, country.get_name(), unit, infantry)
+                )
             elif unit == "Cavalry":
-                self.cards.append(Card(self.screen, card_img, country.get_name(), unit, cavalry))
+                self.cards.append(
+                    Card(self.screen, card_img, country.get_name(), unit, cavalry)
+                )
             elif unit == "Artillery":
                 self.cards.append(
                     Card(self.screen, card_img, country.get_name(), unit, artillery)
@@ -193,9 +197,9 @@ class MissionCards:
             :return: 'True' if the player has completed the mission, 'False' otherwise.
             """
             if (
-                    "Europe" in player_continents
-                    and "Australia" in player_continents
-                    and len(player_continents) >= 3
+                "Europe" in player_continents
+                and "Australia" in player_continents
+                and len(player_continents) >= 3
             ):
                 return True
             return False
@@ -207,9 +211,9 @@ class MissionCards:
             :return: 'True' if the player has completed the mission, 'False' otherwise.
             """
             if (
-                    "Europe" in player_continents
-                    and "South America" in player_continents
-                    and len(player_continents) >= 3
+                "Europe" in player_continents
+                and "South America" in player_continents
+                and len(player_continents) >= 3
             ):
                 return True
             return False
@@ -241,8 +245,8 @@ class MissionCards:
             :return: 'True' if the player has completed the mission, 'False' otherwise.
             """
             if (
-                    "North America" in player_continents
-                    and "Australia" in player_continents
+                "North America" in player_continents
+                and "Australia" in player_continents
             ):
                 return True
             return False
@@ -298,5 +302,6 @@ class MissionCards:
         }
 
         return mission_dict[mission_id](player)
+
 
 # Finished

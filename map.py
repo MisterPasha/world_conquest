@@ -179,7 +179,9 @@ class Map:
         for i, player in enumerate(self.player_types):
             if player == "human":
                 players_in_game.append(
-                    Human(self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i])
+                    Human(
+                        self.screen, all_profiles[i], self.COLORS[i], self.COLORS_STR[i]
+                    )
                 )
             elif player == "ai":
                 players_in_game.append(
@@ -221,7 +223,10 @@ class Map:
         :return: [NONE]
         """
         if len(self.player_profiles) > 1:
-            x = self.player_profiles[self.current_turn].pos[0] - self.turn_indicator.get_width()
+            x = (
+                self.player_profiles[self.current_turn].pos[0]
+                - self.turn_indicator.get_width()
+            )
             y = self.player_profiles[self.current_turn].pos[1]
             self.screen.blit(self.turn_indicator, (x, y))
 
@@ -331,10 +336,14 @@ class Map:
             adjacent_countries.append(selected_country)
             neighbour_countries = self.get_neighbours_countries(selected_country)
             for neighbour in neighbour_countries:
-                if neighbour not in visited and neighbour.owner == selected_country.owner:
+                if (
+                    neighbour not in visited
+                    and neighbour.owner == selected_country.owner
+                ):
                     dfs(neighbour)
 
         dfs(country)
         return adjacent_countries
+
 
 # Finished

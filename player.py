@@ -5,7 +5,7 @@ from collections import Counter  # Import Counter class from collections
 from map import create_continents  # Import create_continents function from map
 from deck import MissionCards  # Import MissionCards class from deck
 import random  # RNG
-import math # Import math module
+import math  # Import math module
 
 # Initialize pygame
 pygame.init()
@@ -134,14 +134,19 @@ class Player:
 
         # If the mouse is over the profile, display the information window and any cards the player holds
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.screen.blit(self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1]))
+            self.screen.blit(
+                self.info_window, (int(self.screen.get_width() * 0.35), self.pos[1])
+            )
             # Draw the text indicating the number of troops held by the player
             draw_text(
                 self.screen,  # Pygame screen surface
                 f"{self.troops_holds}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
+                int(
+                    int(self.screen.get_width() * 0.35)
+                    + self.info_window.get_width() * 0.87
+                ),
                 int(self.pos[1] + self.info_window.get_height() * 0.7),
             )
             draw_text(
@@ -149,20 +154,31 @@ class Player:
                 f"{len(self.countries)}",
                 int(self.size[0] * 0.7),  # Font size
                 (173, 28, 28),
-                int(int(self.screen.get_width() * 0.35) + self.info_window.get_width() * 0.87),
+                int(
+                    int(self.screen.get_width() * 0.35)
+                    + self.info_window.get_width() * 0.87
+                ),
                 int(self.pos[1] + self.info_window.get_height() * 0.3),
             )
             for i, card in enumerate(self.cards):
-                card.draw(int(self.screen.get_width() * 0.37) + i * card.width,
-                          self.pos[1] + self.info_window.get_height() * 0.1)
+                card.draw(
+                    int(self.screen.get_width() * 0.37) + i * card.width,
+                    self.pos[1] + self.info_window.get_height() * 0.1,
+                )
             if self.mission_id:
                 if self.mission_id == 7:
-                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
-                                           int(self.pos[1] + self.info_window.get_height() * 0.1),
-                                           self.player_to_destroy.color_str)
+                    self.mission_card.draw(
+                        self.mission_id,
+                        int(self.screen.get_width() * 0.27),
+                        int(self.pos[1] + self.info_window.get_height() * 0.1),
+                        self.player_to_destroy.color_str,
+                    )
                 else:
-                    self.mission_card.draw(self.mission_id, int(self.screen.get_width() * 0.27),
-                                           int(self.pos[1] + self.info_window.get_height() * 0.1))
+                    self.mission_card.draw(
+                        self.mission_id,
+                        int(self.screen.get_width() * 0.27),
+                        int(self.pos[1] + self.info_window.get_height() * 0.1),
+                    )
 
     def calculate_num_of_draft_troops(self):
         """
@@ -183,7 +199,10 @@ class Player:
         countries_held = [country.country_name for country in self.countries]
         for continent in continents:
             # Check if the player holds all countries in the continent
-            if all(country in countries_held for country in continent.countries_in_continent):
+            if all(
+                country in countries_held
+                for country in continent.countries_in_continent
+            ):
                 continents_held.append(continent)
         self.continents = continents_held
 
@@ -266,7 +285,9 @@ class Player:
         """
         cards = [card.army_type for card in self.cards]
         card_dict = Counter(cards)
-        wild_cards = card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
+        wild_cards = (
+            card_dict["Wild"] - 1 if card_dict["Wild"] > 1 else card_dict["Wild"]
+        )
         if max(card_dict.values()) >= 3:
             army_type = max(card_dict, key=card_dict.get)
             self.remove_set_cards(army_type, deck)
@@ -449,7 +470,9 @@ class AI(Player):
                         attack_defend_countries.setdefault(country, []).append(c)
         for k, v in attack_defend_countries.items():
             for country in v[:]:
-                if country.troops >= k.troops or country.troops > math.ceil(k.troops * 0.8):
+                if country.troops >= k.troops or country.troops > math.ceil(
+                    k.troops * 0.8
+                ):
                     attack_defend_countries[k].remove(country)
         while not found and i < 100 and attack_defend_countries:
             attacking_country = random.choice(list(attack_defend_countries.keys()))
@@ -462,7 +485,9 @@ class AI(Player):
         else:
             prob = 0.7
             if random.random() > prob:
-                defending_country = random.choice(attack_defend_countries[attacking_country])
+                defending_country = random.choice(
+                    attack_defend_countries[attacking_country]
+                )
             else:
                 defending_country = attack_defend_countries[attacking_country][0]
                 least_troops = attack_defend_countries[attacking_country][0].troops
@@ -479,7 +504,9 @@ class AI(Player):
         for country in self.countries:
             if country.troops > 1:
                 potential_countries[country] = country.troops
-        potential_countries = sorted(potential_countries.items(), key=lambda item: item[1], reverse=True)
+        potential_countries = sorted(
+            potential_countries.items(), key=lambda item: item[1], reverse=True
+        )
         potential_countries = dict(potential_countries)
 
         for country, value in potential_countries.items():
@@ -497,7 +524,9 @@ class AI(Player):
             connected_countries = map_.get_connected_countries(fortify_from_country)
             for country in connected_countries:
                 connected_dict[country] = country.troops
-            connected_dict = sorted(potential_countries.items(), key=lambda item: item[1])
+            connected_dict = sorted(
+                potential_countries.items(), key=lambda item: item[1]
+            )
             connected_dict = dict(connected_dict)
             for country in connected_dict.keys():
                 neighbour_countries = map_.get_neighbours_countries(country)
@@ -519,5 +548,6 @@ class AI(Player):
                 num_of_troops = random.randint(1, fortify_from_country.troops - 1)
                 fortify_to_country.add_troops(num_of_troops)
                 fortify_from_country.remove_troops(num_of_troops)
+
 
 # Finished

@@ -176,6 +176,7 @@ class Game:
             ):
                 self.switch_to_next_phase()
                 pygame.time.delay(1000)
+                # Comment out for testing ^^^^
             pygame.display.update()  # pygame.display.flip() ?
 
     # Controls all event types

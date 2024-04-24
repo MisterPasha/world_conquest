@@ -73,6 +73,7 @@ class Country:
         self.image = self.fill_with_color(self.plain_image, color)
         self.set_highlight_color()
 
+# Reference: https://stackoverflow.com/questions/56209634/is-it-possible-to-change-sprite-colours-in-pygame
     def set_color(self):
         """
         Sets an owner's colour
